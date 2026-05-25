@@ -83,7 +83,7 @@ ANALYSIS_PROMPT_ZH = """分析这个来自 GitHub Actions 的 CI 失败日志。
 LANG_PROMPTS = {"zh": ANALYSIS_PROMPT_ZH, "en": ANALYSIS_PROMPT_EN}
 
 
-_current_lang = "zh"
+_current_lang = "en"
 
 
 def set_analysis_lang(lang: str):

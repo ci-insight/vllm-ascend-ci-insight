@@ -25,7 +25,7 @@ def main():
     parser.add_argument("--pr", type=int, help="Analyze a specific PR only")
     parser.add_argument("--analyze-only", action="store_true", help="Re-analyze cached raw data")
     parser.add_argument("--no-analyze", action="store_true", help="Only collect data, skip analysis")
-    parser.add_argument("--lang", choices=["zh", "en"], default="zh", help="Analysis output language (default: zh)")
+    parser.add_argument("--lang", choices=["zh", "en"], default="en", help="Analysis output language (default: en)")
     args = parser.parse_args()
 
     set_analysis_lang(args.lang)

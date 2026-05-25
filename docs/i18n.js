@@ -67,7 +67,7 @@ const I18N = {
   },
 };
 
-let currentLang = localStorage.getItem("ascend-lang") || "zh";
+let currentLang = localStorage.getItem("ascend-lang") || "en";
 
 function t(key) {
   return I18N[currentLang]?.[key] || I18N.en[key] || key;
