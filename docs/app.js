@@ -72,7 +72,7 @@ async function openDetail(prNumber) {
   modal.classList.add("open");
 
   try {
-    const resp = await fetch(`../${report.json_path}`);
+    const resp = await fetch(report.json_path);
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     const data = await resp.json();
     renderDetail(data);
