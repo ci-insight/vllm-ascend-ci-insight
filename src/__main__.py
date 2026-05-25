@@ -67,16 +67,27 @@ def main():
     else:
         print("[2/3] Skipping analysis (--no-analyze)")
 
-    # Phase 3: Report
+    # Phase 3: Report (skip reports with all-fallback analyses)
     print("\n[3/3] Generating reports...")
+    valid_reports = []
+    skipped = 0
     for report in reports:
-        generate_report(report)
+        has_valid = any(a.confidence > 0 for a in report.analyses)
+        if has_valid:
+            generate_report(report)
+            valid_reports.append(report)
+        else:
+            skipped += 1
+            print(f"  Skipping PR #{report.pr_number}: all analyses failed (rate limited)")
 
-    update_index(reports)
+    if valid_reports:
+        update_index(valid_reports)
+    else:
+        print("  No valid reports to index.")
 
     print()
     print("=" * 60)
-    print(f"  Done! {len(reports)} PR(s) analyzed.")
+    print(f"  Done! {len(valid_reports)} PR(s) analyzed, {skipped} skipped.")
     print(f"  Reports: reports/")
     print(f"  Dashboard: open dashboard/index.html")
     print("=" * 60)
