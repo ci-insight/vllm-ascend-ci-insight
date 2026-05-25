@@ -2,9 +2,10 @@
 # ascend-ci-insight: One-command CI failure analysis
 #
 # Usage:
-#   ./scripts/run.sh              # Analyze last 7 days
+#   ./scripts/run.sh              # Analyze last 7 days (Chinese output)
 #   ./scripts/run.sh --days 14    # Analyze last 14 days
 #   ./scripts/run.sh --pr 9495    # Analyze specific PR
+#   ./scripts/run.sh --lang en    # English output
 
 set -euo pipefail
 

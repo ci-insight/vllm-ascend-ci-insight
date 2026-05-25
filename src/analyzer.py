@@ -26,7 +26,7 @@ MAX_RETRIES = 3
 # Track last call time for rate limiting
 _last_call_time: float = 0.0
 
-ANALYSIS_PROMPT = """Analyze this CI failure log from a GitHub Actions run. The project is vllm-ascend, a community-maintained Ascend NPU hardware plugin for vLLM.
+ANALYSIS_PROMPT_EN = """Analyze this CI failure log from a GitHub Actions run. The project is vllm-ascend, a community-maintained Ascend NPU hardware plugin for vLLM.
 
 Focus on:
 1. The actual error messages (not setup/checkout noise)
@@ -53,6 +53,47 @@ Severity guide:
 Log to analyze:
 """
 
+ANALYSIS_PROMPT_ZH = """分析这个来自 GitHub Actions 的 CI 失败日志。项目是 vllm-ascend，一个社区维护的 Ascend NPU 硬件插件，用于 vLLM 推理框架。
+
+重点关注：
+1. 实际错误信息（忽略环境初始化、checkout 等噪音）
+2. 具体哪个代码改动可能导致了这个失败
+3. 错误信息或堆栈中提到的文件路径
+4. 属于哪种已知模式（lint、测试、构建、依赖、环境问题）
+
+只返回 JSON 对象（不要 markdown，不要代码块），字段如下：
+{
+  "error_snippets": ["3-5条最关键的错误日志行，保持简短"],
+  "root_cause": "简洁的1-3句根因分析，用中文",
+  "related_files": ["错误中提及或可能相关的文件路径数组"],
+  "fix_suggestions": ["1-3条可操作的修复建议，用中文"],
+  "severity": "取值为: critical, high, medium, low",
+  "confidence": 0-100
+}
+
+严重度说明：
+- critical: 构建破坏、合入阻塞、或 CI 基础设施故障
+- high: 测试失败表明存在真实 bug
+- medium: lint/格式化问题、轻度测试不稳定
+- low: 弃用警告、非阻塞性问题
+
+要分析的日志：
+"""
+
+LANG_PROMPTS = {"zh": ANALYSIS_PROMPT_ZH, "en": ANALYSIS_PROMPT_EN}
+
+
+_current_lang = "zh"
+
+
+def set_analysis_lang(lang: str):
+    global _current_lang
+    _current_lang = lang if lang in LANG_PROMPTS else "zh"
+
+
+def get_analysis_lang() -> str:
+    return _current_lang
+
 
 def _claude_analyze(text: str) -> dict:
     """Send text to claude -p for analysis, return parsed JSON.
@@ -61,7 +102,7 @@ def _claude_analyze(text: str) -> dict:
     """
     global _last_call_time
 
-    prompt = ANALYSIS_PROMPT + text
+    prompt = LANG_PROMPTS.get(_current_lang, ANALYSIS_PROMPT_EN) + text
 
     for attempt in range(MAX_RETRIES):
         # Rate limiting: ensure minimum gap between calls

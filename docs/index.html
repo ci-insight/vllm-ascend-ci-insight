@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +8,7 @@
 </head>
 <body>
 <header>
-  <h1>vllm-ascend CI Insight</h1>
+  <h1 id="pageTitle">vllm-ascend CI Insight</h1>
   <div class="header-controls">
     <div class="filters">
       <input type="text" id="searchInput" placeholder="Search PR title, number..." />
@@ -22,6 +22,7 @@
     </div>
     <div class="stats" id="stats"></div>
     <button id="refreshBtn" onclick="loadReports()">Refresh</button>
+    <button id="langToggle" onclick="toggleLang()">English</button>
   </div>
 </header>
 
@@ -36,6 +37,7 @@
   </div>
 </div>
 
+<script src="i18n.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

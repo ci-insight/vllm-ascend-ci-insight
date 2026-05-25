@@ -12,7 +12,7 @@ import sys
 from pathlib import Path
 
 from .collector import find_failed_prs
-from .analyzer import analyze_report, AnalysisCache
+from .analyzer import analyze_report, AnalysisCache, set_analysis_lang
 from .reporter import generate_report, update_index
 
 
@@ -25,12 +25,15 @@ def main():
     parser.add_argument("--pr", type=int, help="Analyze a specific PR only")
     parser.add_argument("--analyze-only", action="store_true", help="Re-analyze cached raw data")
     parser.add_argument("--no-analyze", action="store_true", help="Only collect data, skip analysis")
+    parser.add_argument("--lang", choices=["zh", "en"], default="zh", help="Analysis output language (default: zh)")
     args = parser.parse_args()
+
+    set_analysis_lang(args.lang)
 
     print("=" * 60)
     print("  vllm-ascend CI Insight")
     print("=" * 60)
-    print(f"  Looking back {args.days} days, max {args.limit} runs")
+    print(f"  Looking back {args.days} days, max {args.limit} runs, lang={args.lang}")
     print()
 
     # Phase 1: Collect
