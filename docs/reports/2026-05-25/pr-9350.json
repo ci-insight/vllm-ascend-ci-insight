@@ -1,0 +1,78 @@
+{
+  "pr_number": 9350,
+  "pr_title": "[Feat][Ops] Add A5 compressor support",
+  "pr_author": "maoxx241",
+  "pr_url": "https://github.com/vllm-project/vllm-ascend/pull/9350",
+  "analyzed_at": "2026-05-25T03:56:40.730054+00:00",
+  "runs": [
+    {
+      "run_id": 26137921206,
+      "workflow_name": "E2E-Light",
+      "conclusion": "failure",
+      "branch": "feature/compressor-a5-fusion",
+      "pr_number": 9350,
+      "created_at": "2026-05-20T02:40:24Z",
+      "event": "pull_request",
+      "jobs": [
+        {
+          "job_id": 76877044365,
+          "job_name": "lint / validate-pr-title",
+          "conclusion": "failure",
+          "started_at": "",
+          "completed_at": "",
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Initialize containers",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Validate PR title prefix",
+              "conclusion": "failure",
+              "number": 3
+            },
+            {
+              "name": "Stop containers",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "number": 7
+            }
+          ],
+          "raw_log": "﻿2026-05-20T02:41:35.5694584Z Current runner version: '2.332.0'\n2026-05-20T02:41:35.5701253Z Runner name: 'linux-amd64-cpu-8-hk-bn7xw-runner-l749q'\n2026-05-20T02:41:35.5702077Z Runner group name: 'Default'\n2026-05-20T02:41:35.5702900Z Machine name: 'linux-amd64-cpu-8-hk-bn7xw-runner-l749q'\n2026-05-20T02:41:35.5705608Z ##[group]GITHUB_TOKEN Permissions\n2026-05-20T02:41:35.5707917Z Contents: read\n2026-05-20T02:41:35.5708641Z Metadata: read\n2026-05-20T02:41:35.5709098Z ##[endgroup]\n2026-05-20T02:41:35.5711237Z Secret source: None\n2026-05-20T02:41:35.5711845Z Prepare workflow directory\n2026-05-20T02:41:35.6468424Z Prepare all required actions\n2026-05-20T02:41:35.6529797Z Uses: vllm-project/vllm-ascend/.github/workflows/_pre_commit.yml@refs/pull/9350/merge (90f96c5045e9cafe9049c615ad5e7a447e1feeec)\n2026-05-20T02:41:35.6534381Z ##[group] Inputs\n2026-05-20T02:41:35.6534958Z   vllm: 0d4d334eaa583b9c09aa4eb7538c22db99fd84b3\n2026-05-20T02:41:35.6535599Z ##[endgroup]\n2026-05-20T02:41:35.6536339Z Complete job name: lint / validate-pr-title\n2026-05-20T02:41:35.7293780Z ##[group]Run '/home/runner/k8s/index.js'\n2026-05-20T02:41:35.7302465Z shell: /home/runner/externals/node20/bin/node {0}\n2026-05-20T02:41:35.7303629Z ##[endgroup]\n2026-05-20T02:41:51.4561864Z (node:51) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.\n2026-05-20T02:41:51.4563514Z (Use `node --trace-deprecation ...` to show where the warning was created)\n2026-05-20T02:41:51.8756290Z ##[group]Run # Fail if PR title is empty\n2026-05-20T02:41:51.8756867Z \u001b[36;1m# Fail if PR title is empty\u001b[0m\n2026-05-20T02:41:51.8757240Z \u001b[36;1mif [ -z \"$PR_TITLE\" ]; then\u001b[0m\n2026-05-20T02:41:51.8757604Z \u001b[36;1m  echo \"::error::PR title cannot be empty\"\u001b[0m\n2026-05-20T02:41:51.8758137Z \u001b[36;1m  exit 1\u001b[0m\n2026-05-20T02:41:51.8758423Z \u001b[36;1mfi\u001b[0m\n2026-05-20T02:41:51.8758684Z \u001b[36;1m\u001b[0m\n2026-05-20T02:41:51.8758993Z \u001b[36;1mecho \"Checking PR title: $PR_TITLE\"\u001b[0m\n2026-05-20T02:41:51.8759334Z \u001b[36;1m\u001b[0m\n2026-05-20T02:41:51.8759623Z \u001b[36;1m# Define valid prefixes (case-sensitive)\u001b[0m\n2026-05-20T02:41:51.8760141Z \u001b[36;1m# Check if PR title contains any valid prefix (not necessarily at the start)\u001b[0m\n2026-05-20T02:41:51.8760766Z \u001b[36;1mVALID_PREFIXES='\\[(BugFix|Performance|Test|CI|Feature|Doc|Misc|Community|Refactor)\\]'\u001b[0m\n2026-05-20T02:41:51.8761239Z \u001b[36;1m\u001b[0m\n2026-05-20T02:41:51.8761579Z \u001b[36;1m# Check if PR title contains a valid prefix\u001b[0m\n2026-05-20T02:41:51.8762087Z \u001b[36;1mif ! echo \"$PR_TITLE\" | grep -qE \"$VALID_PREFIXES\"; then\u001b[0m\n2026-05-20T02:41:51.8762854Z \u001b[36;1m  echo \"::error::PR title must contain one of the following prefixes: [BugFix], [Performance], [Test], [CI], [Feature], [Doc], [Misc], [Community], [Refactor]\"\u001b[0m\n2026-05-20T02:41:51.8763700Z \u001b[36;1m  echo \"::error::Example: '[Feature] Add new optimization pass' or 'Add new feature [Feature]'\"\u001b[0m\n2026-05-20T02:41:51.8764167Z \u001b[36;1m  exit 1\u001b[0m\n2026-05-20T02:41:51.8764445Z \u001b[36;1mfi\u001b[0m\n2026-05-20T02:41:51.8764675Z \u001b[36;1m\u001b[0m\n2026-05-20T02:41:51.8764967Z \u001b[36;1mecho \"✓ PR title prefix is valid\"\u001b[0m\n2026-05-20T02:41:51.8768250Z shell: sh -e {0}\n2026-05-20T02:41:51.8768573Z env:\n2026-05-20T02:41:51.8768890Z   PR_TITLE: [Feat][Ops] Add A5 compressor support\n2026-05-20T02:41:51.8769239Z ##[endgroup]\n2026-05-20T02:41:51.8980958Z ##[group]Run '/home/runner/k8s/index.js'\n2026-05-20T02:41:51.8982188Z shell: /home/runner/externals/node20/bin/node {0}\n2026-05-20T02:41:51.8982578Z ##[endgroup]\n2026-05-20T02:41:52.3483826Z (node:73) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.\n2026-05-20T02:41:52.3484752Z (Use `node --trace-deprecation ...` to show where the warning was created)\n2026-05-20T02:41:52.6880646Z Checking PR title: [Feat][Ops] Add A5 compressor support\n2026-05-20T02:41:52.6904065Z ##[error]PR title must contain one of the following prefixes: [BugFix], [Performance], [Test], [CI], [Feature], [Doc], [Misc], [Community], [Refactor]\n2026-05-20T02:41:52.6913143Z ##[error]Example: '[Feature] Add new optimization pass' or 'Add new feature [Feature]'\n2026-05-20T02:41:52.7041846Z ##[error]Error: failed to run script step: Error: command terminated with non-zero exit code: command terminated with exit code 1\n2026-05-20T02:41:52.7106875Z ##[error]Process completed with exit code 1.\n2026-05-20T02:41:52.7321385Z ##[error]Executing the custom container implementation failed. Please contact your self hosted runner administrator.\n2026-05-20T02:41:52.7381984Z ##[group]Run '/home/runner/k8s/index.js'\n2026-05-20T02:41:52.7383230Z shell: /home/runner/externals/node20/bin/node {0}\n2026-05-20T02:41:52.7383537Z ##[endgroup]\n2026-05-20T02:41:53.2587866Z Cleaning up orphan processes\n"
+        }
+      ]
+    }
+  ],
+  "analyses": [
+    {
+      "job_name": "lint / validate-pr-title",
+      "job_id": 76877044365,
+      "conclusion": "failure",
+      "error_snippets": [
+        "PR title must contain one of the following prefixes: [BugFix], [Performance], [Test], [CI], [Feature], [Doc], [Misc], [Community], [Refactor]",
+        "PR_TITLE: [Feat][Ops] Add A5 compressor support",
+        "Error: command terminated with non-zero exit code: command terminated with exit code 1",
+        "Process completed with exit code 1."
+      ],
+      "root_cause": "The PR title '[Feat][Ops] Add A5 compressor support' uses '[Feat]' as a prefix, which is not in the allowed list. The validator expects '[Feature]' (full word), not the abbreviated '[Feat]'. This is a PR title validation failure in the 'lint / validate-pr-title' job, not a build or test failure.",
+      "related_files": [
+        ".github/workflows/_pre_commit.yml"
+      ],
+      "fix_suggestions": [
+        "Change the PR title from '[Feat][Ops] Add A5 compressor support' to '[Feature][Ops] Add A5 compressor support' (replace Feat with Feature).",
+        "If '[Feat]' should be a supported shorthand, add it to the VALID_PREFIXES regex in .github/workflows/_pre_commit.yml."
+      ],
+      "severity": "medium",
+      "confidence": 98
+    }
+  ]
+}

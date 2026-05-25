@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>vllm-ascend CI Insight</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>vllm-ascend CI Insight</h1>
+  <div class="header-controls">
+    <div class="filters">
+      <input type="text" id="searchInput" placeholder="Search PR title, number..." />
+      <select id="severityFilter">
+        <option value="">All Severities</option>
+        <option value="critical">Critical</option>
+        <option value="high">High</option>
+        <option value="medium">Medium</option>
+        <option value="low">Low</option>
+      </select>
+    </div>
+    <div class="stats" id="stats"></div>
+    <button id="refreshBtn" onclick="loadReports()">Refresh</button>
+  </div>
+</header>
+
+<main id="reportList">
+  <div class="loading">Loading reports...</div>
+</main>
+
+<div id="detailModal" class="modal" onclick="if(event.target===this)closeDetail()">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeDetail()">&times;</button>
+    <div id="detailContent"></div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

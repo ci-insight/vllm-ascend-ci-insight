@@ -1,0 +1,78 @@
+{
+  "pr_number": 9486,
+  "pr_title": "feat(compressor): 支持rope_sin/rope_cos输入为float类型",
+  "pr_author": "1132509010",
+  "pr_url": "https://github.com/vllm-project/vllm-ascend/pull/9486",
+  "analyzed_at": "2026-05-25T04:51:52.587286+00:00",
+  "runs": [
+    {
+      "run_id": 26329027258,
+      "workflow_name": "E2E-Light",
+      "conclusion": "failure",
+      "branch": "CF",
+      "pr_number": 9486,
+      "created_at": "2026-05-23T09:15:45Z",
+      "event": "pull_request",
+      "jobs": [
+        {
+          "job_id": 77511763907,
+          "job_name": "lint / validate-pr-title",
+          "conclusion": "failure",
+          "started_at": "",
+          "completed_at": "",
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Initialize containers",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Validate PR title prefix",
+              "conclusion": "failure",
+              "number": 3
+            },
+            {
+              "name": "Stop containers",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "number": 7
+            }
+          ],
+          "raw_log": "﻿2026-05-23T09:16:11.6089665Z Current runner version: '2.334.0'\n2026-05-23T09:16:11.6096501Z Runner name: 'linux-amd64-cpu-8-hk-frp8k-runner-mdzht'\n2026-05-23T09:16:11.6097349Z Runner group name: 'Default'\n2026-05-23T09:16:11.6098394Z Machine name: 'linux-amd64-cpu-8-hk-frp8k-runner-mdzht'\n2026-05-23T09:16:11.6101464Z ##[group]GITHUB_TOKEN Permissions\n2026-05-23T09:16:11.6103947Z Contents: read\n2026-05-23T09:16:11.6104434Z Metadata: read\n2026-05-23T09:16:11.6104913Z ##[endgroup]\n2026-05-23T09:16:11.6106924Z Secret source: None\n2026-05-23T09:16:11.6107509Z Prepare workflow directory\n2026-05-23T09:16:11.6891544Z Prepare all required actions\n2026-05-23T09:16:11.6951646Z Uses: vllm-project/vllm-ascend/.github/workflows/_pre_commit.yml@refs/pull/9486/merge (21be0e057c489d4d9b42272e4e3c42d5fc431a97)\n2026-05-23T09:16:11.6956218Z ##[group] Inputs\n2026-05-23T09:16:11.6956769Z   vllm: 0d4d334eaa583b9c09aa4eb7538c22db99fd84b3\n2026-05-23T09:16:11.6957450Z ##[endgroup]\n2026-05-23T09:16:11.6958240Z Complete job name: lint / validate-pr-title\n2026-05-23T09:16:11.7748544Z ##[group]Run '/home/runner/k8s/index.js'\n2026-05-23T09:16:11.7757374Z shell: /home/runner/externals/node20/bin/node {0}\n2026-05-23T09:16:11.7758644Z ##[endgroup]\n2026-05-23T09:16:27.4693998Z (node:56) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.\n2026-05-23T09:16:27.4695041Z (Use `node --trace-deprecation ...` to show where the warning was created)\n2026-05-23T09:16:27.8684464Z ##[group]Run # Fail if PR title is empty\n2026-05-23T09:16:27.8685016Z \u001b[36;1m# Fail if PR title is empty\u001b[0m\n2026-05-23T09:16:27.8685423Z \u001b[36;1mif [ -z \"$PR_TITLE\" ]; then\u001b[0m\n2026-05-23T09:16:27.8685795Z \u001b[36;1m  echo \"::error::PR title cannot be empty\"\u001b[0m\n2026-05-23T09:16:27.8686188Z \u001b[36;1m  exit 1\u001b[0m\n2026-05-23T09:16:27.8686810Z \u001b[36;1mfi\u001b[0m\n2026-05-23T09:16:27.8687111Z \u001b[36;1m\u001b[0m\n2026-05-23T09:16:27.8687465Z \u001b[36;1mecho \"Checking PR title: $PR_TITLE\"\u001b[0m\n2026-05-23T09:16:27.8687864Z \u001b[36;1m\u001b[0m\n2026-05-23T09:16:27.8688407Z \u001b[36;1m# Define valid prefixes (case-sensitive)\u001b[0m\n2026-05-23T09:16:27.8688913Z \u001b[36;1m# Check if PR title contains any valid prefix (not necessarily at the start)\u001b[0m\n2026-05-23T09:16:27.8689570Z \u001b[36;1mVALID_PREFIXES='\\[(BugFix|Performance|Test|CI|Feature|Doc|Misc|Community|Refactor)\\]'\u001b[0m\n2026-05-23T09:16:27.8690067Z \u001b[36;1m\u001b[0m\n2026-05-23T09:16:27.8690407Z \u001b[36;1m# Check if PR title contains a valid prefix\u001b[0m\n2026-05-23T09:16:27.8690949Z \u001b[36;1mif ! echo \"$PR_TITLE\" | grep -qE \"$VALID_PREFIXES\"; then\u001b[0m\n2026-05-23T09:16:27.8691783Z \u001b[36;1m  echo \"::error::PR title must contain one of the following prefixes: [BugFix], [Performance], [Test], [CI], [Feature], [Doc], [Misc], [Community], [Refactor]\"\u001b[0m\n2026-05-23T09:16:27.8692683Z \u001b[36;1m  echo \"::error::Example: '[Feature] Add new optimization pass' or 'Add new feature [Feature]'\"\u001b[0m\n2026-05-23T09:16:27.8693202Z \u001b[36;1m  exit 1\u001b[0m\n2026-05-23T09:16:27.8693497Z \u001b[36;1mfi\u001b[0m\n2026-05-23T09:16:27.8693800Z \u001b[36;1m\u001b[0m\n2026-05-23T09:16:27.8694119Z \u001b[36;1mecho \"✓ PR title prefix is valid\"\u001b[0m\n2026-05-23T09:16:27.8696927Z shell: sh -e {0}\n2026-05-23T09:16:27.8697285Z env:\n2026-05-23T09:16:27.8697709Z   PR_TITLE: feat(compressor): 支持rope_sin/rope_cos输入为float类型\n2026-05-23T09:16:27.8698316Z ##[endgroup]\n2026-05-23T09:16:27.8978327Z ##[group]Run '/home/runner/k8s/index.js'\n2026-05-23T09:16:27.8979398Z shell: /home/runner/externals/node20/bin/node {0}\n2026-05-23T09:16:27.8979771Z ##[endgroup]\n2026-05-23T09:16:28.3503587Z (node:78) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.\n2026-05-23T09:16:28.3504521Z (Use `node --trace-deprecation ...` to show where the warning was created)\n2026-05-23T09:16:28.6695363Z Checking PR title: feat(compressor): 支持rope_sin/rope_cos输入为float类型\n2026-05-23T09:16:28.6713953Z ##[error]PR title must contain one of the following prefixes: [BugFix], [Performance], [Test], [CI], [Feature], [Doc], [Misc], [Community], [Refactor]\n2026-05-23T09:16:28.6721952Z ##[error]Example: '[Feature] Add new optimization pass' or 'Add new feature [Feature]'\n2026-05-23T09:16:28.6749349Z ##[error]Error: failed to run script step: Error: command terminated with non-zero exit code: command terminated with exit code 1\n2026-05-23T09:16:28.6808395Z ##[error]Process completed with exit code 1.\n2026-05-23T09:16:28.7015823Z ##[error]Executing the custom container implementation failed. Please contact your self hosted runner administrator.\n2026-05-23T09:16:28.7073945Z ##[group]Run '/home/runner/k8s/index.js'\n2026-05-23T09:16:28.7075008Z shell: /home/runner/externals/node20/bin/node {0}\n2026-05-23T09:16:28.7075313Z ##[endgroup]\n2026-05-23T09:16:29.2686130Z Cleaning up orphan processes\n"
+        }
+      ]
+    }
+  ],
+  "analyses": [
+    {
+      "job_name": "lint / validate-pr-title",
+      "job_id": 77511763907,
+      "conclusion": "failure",
+      "error_snippets": [
+        "PR_TITLE: feat(compressor): 支持rope_sin/rope_cos输入为float类型",
+        "PR title must contain one of the following prefixes: [BugFix], [Performance], [Test], [CI], [Feature], [Doc], [Misc], [Community], [Refactor]",
+        "Example: '[Feature] Add new optimization pass' or 'Add new feature [Feature]'",
+        "Error: failed to run script step: Error: command terminated with non-zero exit code: command terminated with exit code 1"
+      ],
+      "root_cause": "The PR title uses conventional commit format 'feat(compressor): ...' instead of the project's required bracket-prefix format. The validate-pr-title CI check requires bracket tags like [Feature], [BugFix], [CI], etc., and the conventional commit 'feat:' prefix does not match any of the allowed bracket patterns.",
+      "related_files": [
+        ".github/workflows/_pre_commit.yml"
+      ],
+      "fix_suggestions": [
+        "Change the PR title to use a bracket prefix, e.g. '[Feature][Compressor] Support rope_sin/rope_cos float input type' or 'Support rope_sin/rope_cos float input type [Feature]'",
+        "Alternatively, update the validate-pr-title regex in _pre_commit.yml to also accept conventional commit prefixes like 'feat:', 'fix:', etc. if the project wants to support both formats"
+      ],
+      "severity": "medium",
+      "confidence": 98
+    }
+  ]
+}

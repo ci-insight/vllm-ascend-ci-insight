@@ -1,0 +1,239 @@
+{
+  "pr_number": 9316,
+  "pr_title": "GQA kvcache supports FP8 quantization.",
+  "pr_author": "pichangping",
+  "pr_url": "https://github.com/vllm-project/vllm-ascend/pull/9316",
+  "analyzed_at": "2026-05-25T03:57:30.766464+00:00",
+  "runs": [
+    {
+      "run_id": 26153357208,
+      "workflow_name": "E2E-Light",
+      "conclusion": "failure",
+      "branch": "FP8",
+      "pr_number": 9316,
+      "created_at": "2026-05-20T09:19:15Z",
+      "event": "pull_request",
+      "jobs": [
+        {
+          "job_id": 76926255238,
+          "job_name": "lint / validate-pr-title",
+          "conclusion": "failure",
+          "started_at": "",
+          "completed_at": "",
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Initialize containers",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Validate PR title prefix",
+              "conclusion": "failure",
+              "number": 3
+            },
+            {
+              "name": "Stop containers",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "number": 7
+            }
+          ],
+          "raw_log": "﻿2026-05-20T09:19:43.2471646Z Current runner version: '2.332.0'\n2026-05-20T09:19:43.2478551Z Runner name: 'linux-amd64-cpu-8-hk-bn7xw-runner-glb6w'\n2026-05-20T09:19:43.2479489Z Runner group name: 'Default'\n2026-05-20T09:19:43.2480407Z Machine name: 'linux-amd64-cpu-8-hk-bn7xw-runner-glb6w'\n2026-05-20T09:19:43.2483093Z ##[group]GITHUB_TOKEN Permissions\n2026-05-20T09:19:43.2485711Z Contents: read\n2026-05-20T09:19:43.2486247Z Metadata: read\n2026-05-20T09:19:43.2486745Z ##[endgroup]\n2026-05-20T09:19:43.2488777Z Secret source: None\n2026-05-20T09:19:43.2489418Z Prepare workflow directory\n2026-05-20T09:19:43.3123475Z Prepare all required actions\n2026-05-20T09:19:43.3184205Z Uses: vllm-project/vllm-ascend/.github/workflows/_pre_commit.yml@refs/pull/9316/merge (bff7df863abca216e34e4c1bbc2570094d194f17)\n2026-05-20T09:19:43.3188819Z ##[group] Inputs\n2026-05-20T09:19:43.3189412Z   vllm: 0d4d334eaa583b9c09aa4eb7538c22db99fd84b3\n2026-05-20T09:19:43.3189959Z ##[endgroup]\n2026-05-20T09:19:43.3190678Z Complete job name: lint / validate-pr-title\n2026-05-20T09:19:43.3894498Z ##[group]Run '/home/runner/k8s/index.js'\n2026-05-20T09:19:43.3903076Z shell: /home/runner/externals/node20/bin/node {0}\n2026-05-20T09:19:43.3904373Z ##[endgroup]\n2026-05-20T09:19:51.0005152Z (node:58) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.\n2026-05-20T09:19:51.0006309Z (Use `node --trace-deprecation ...` to show where the warning was created)\n2026-05-20T09:19:51.3632072Z ##[group]Run # Fail if PR title is empty\n2026-05-20T09:19:51.3632647Z \u001b[36;1m# Fail if PR title is empty\u001b[0m\n2026-05-20T09:19:51.3633006Z \u001b[36;1mif [ -z \"$PR_TITLE\" ]; then\u001b[0m\n2026-05-20T09:19:51.3633416Z \u001b[36;1m  echo \"::error::PR title cannot be empty\"\u001b[0m\n2026-05-20T09:19:51.3634090Z \u001b[36;1m  exit 1\u001b[0m\n2026-05-20T09:19:51.3634396Z \u001b[36;1mfi\u001b[0m\n2026-05-20T09:19:51.3634693Z \u001b[36;1m\u001b[0m\n2026-05-20T09:19:51.3634993Z \u001b[36;1mecho \"Checking PR title: $PR_TITLE\"\u001b[0m\n2026-05-20T09:19:51.3635474Z \u001b[36;1m\u001b[0m\n2026-05-20T09:19:51.3635746Z \u001b[36;1m# Define valid prefixes (case-sensitive)\u001b[0m\n2026-05-20T09:19:51.3636349Z \u001b[36;1m# Check if PR title contains any valid prefix (not necessarily at the start)\u001b[0m\n2026-05-20T09:19:51.3636965Z \u001b[36;1mVALID_PREFIXES='\\[(BugFix|Performance|Test|CI|Feature|Doc|Misc|Community|Refactor)\\]'\u001b[0m\n2026-05-20T09:19:51.3637488Z \u001b[36;1m\u001b[0m\n2026-05-20T09:19:51.3637992Z \u001b[36;1m# Check if PR title contains a valid prefix\u001b[0m\n2026-05-20T09:19:51.3638529Z \u001b[36;1mif ! echo \"$PR_TITLE\" | grep -qE \"$VALID_PREFIXES\"; then\u001b[0m\n2026-05-20T09:19:51.3639284Z \u001b[36;1m  echo \"::error::PR title must contain one of the following prefixes: [BugFix], [Performance], [Test], [CI], [Feature], [Doc], [Misc], [Community], [Refactor]\"\u001b[0m\n2026-05-20T09:19:51.3640119Z \u001b[36;1m  echo \"::error::Example: '[Feature] Add new optimization pass' or 'Add new feature [Feature]'\"\u001b[0m\n2026-05-20T09:19:51.3640640Z \u001b[36;1m  exit 1\u001b[0m\n2026-05-20T09:19:51.3640888Z \u001b[36;1mfi\u001b[0m\n2026-05-20T09:19:51.3641186Z \u001b[36;1m\u001b[0m\n2026-05-20T09:19:51.3641508Z \u001b[36;1mecho \"✓ PR title prefix is valid\"\u001b[0m\n2026-05-20T09:19:51.3644613Z shell: sh -e {0}\n2026-05-20T09:19:51.3645155Z env:\n2026-05-20T09:19:51.3645463Z   PR_TITLE: GQA kvcache supports FP8 quantization.\n2026-05-20T09:19:51.3645860Z ##[endgroup]\n2026-05-20T09:19:51.3910050Z ##[group]Run '/home/runner/k8s/index.js'\n2026-05-20T09:19:51.3911091Z shell: /home/runner/externals/node20/bin/node {0}\n2026-05-20T09:19:51.3911422Z ##[endgroup]\n2026-05-20T09:19:51.8415470Z (node:80) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.\n2026-05-20T09:19:51.8416416Z (Use `node --trace-deprecation ...` to show where the warning was created)\n2026-05-20T09:19:52.1558532Z Checking PR title: GQA kvcache supports FP8 quantization.\n2026-05-20T09:19:52.1585302Z ##[error]PR title must contain one of the following prefixes: [BugFix], [Performance], [Test], [CI], [Feature], [Doc], [Misc], [Community], [Refactor]\n2026-05-20T09:19:52.1594401Z ##[error]Example: '[Feature] Add new optimization pass' or 'Add new feature [Feature]'\n2026-05-20T09:19:52.1700528Z ##[error]Error: failed to run script step: Error: command terminated with non-zero exit code: command terminated with exit code 1\n2026-05-20T09:19:52.1795872Z ##[error]Process completed with exit code 1.\n2026-05-20T09:19:52.1917451Z ##[error]Executing the custom container implementation failed. Please contact your self hosted runner administrator.\n2026-05-20T09:19:52.1976473Z ##[group]Run '/home/runner/k8s/index.js'\n2026-05-20T09:19:52.1977560Z shell: /home/runner/externals/node20/bin/node {0}\n2026-05-20T09:19:52.1977860Z ##[endgroup]\n2026-05-20T09:19:52.8151269Z Cleaning up orphan processes\n"
+        }
+      ]
+    },
+    {
+      "run_id": 26152959011,
+      "workflow_name": "E2E-Light",
+      "conclusion": "failure",
+      "branch": "FP8",
+      "pr_number": 9316,
+      "created_at": "2026-05-20T09:11:11Z",
+      "event": "pull_request",
+      "jobs": [
+        {
+          "job_id": 76924865338,
+          "job_name": "lint / validate-pr-title",
+          "conclusion": "failure",
+          "started_at": "",
+          "completed_at": "",
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Initialize containers",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Validate PR title prefix",
+              "conclusion": "failure",
+              "number": 3
+            },
+            {
+              "name": "Stop containers",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "number": 7
+            }
+          ],
+          "raw_log": "﻿2026-05-20T09:12:18.6451129Z Current runner version: '2.332.0'\n2026-05-20T09:12:18.6457991Z Runner name: 'linux-amd64-cpu-8-hk-bn7xw-runner-snxjw'\n2026-05-20T09:12:18.6458840Z Runner group name: 'Default'\n2026-05-20T09:12:18.6459755Z Machine name: 'linux-amd64-cpu-8-hk-bn7xw-runner-snxjw'\n2026-05-20T09:12:18.6462397Z ##[group]GITHUB_TOKEN Permissions\n2026-05-20T09:12:18.6464999Z Contents: read\n2026-05-20T09:12:18.6465563Z Metadata: read\n2026-05-20T09:12:18.6466004Z ##[endgroup]\n2026-05-20T09:12:18.6468125Z Secret source: None\n2026-05-20T09:12:18.6468754Z Prepare workflow directory\n2026-05-20T09:12:18.7126029Z Prepare all required actions\n2026-05-20T09:12:18.7188043Z Uses: vllm-project/vllm-ascend/.github/workflows/_pre_commit.yml@refs/pull/9316/merge (862fc38ad8159dbd19f385d8309d20cfed1c8e51)\n2026-05-20T09:12:18.7192564Z ##[group] Inputs\n2026-05-20T09:12:18.7193133Z   vllm: 0d4d334eaa583b9c09aa4eb7538c22db99fd84b3\n2026-05-20T09:12:18.7194079Z ##[endgroup]\n2026-05-20T09:12:18.7194729Z Complete job name: lint / validate-pr-title\n2026-05-20T09:12:18.7934912Z ##[group]Run '/home/runner/k8s/index.js'\n2026-05-20T09:12:18.7943915Z shell: /home/runner/externals/node20/bin/node {0}\n2026-05-20T09:12:18.7945128Z ##[endgroup]\n2026-05-20T09:12:34.4320501Z (node:76) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.\n2026-05-20T09:12:34.4321591Z (Use `node --trace-deprecation ...` to show where the warning was created)\n2026-05-20T09:12:34.8039621Z ##[group]Run # Fail if PR title is empty\n2026-05-20T09:12:34.8040210Z \u001b[36;1m# Fail if PR title is empty\u001b[0m\n2026-05-20T09:12:34.8040668Z \u001b[36;1mif [ -z \"$PR_TITLE\" ]; then\u001b[0m\n2026-05-20T09:12:34.8041057Z \u001b[36;1m  echo \"::error::PR title cannot be empty\"\u001b[0m\n2026-05-20T09:12:34.8041405Z \u001b[36;1m  exit 1\u001b[0m\n2026-05-20T09:12:34.8041703Z \u001b[36;1mfi\u001b[0m\n2026-05-20T09:12:34.8041951Z \u001b[36;1m\u001b[0m\n2026-05-20T09:12:34.8042263Z \u001b[36;1mecho \"Checking PR title: $PR_TITLE\"\u001b[0m\n2026-05-20T09:12:34.8042624Z \u001b[36;1m\u001b[0m\n2026-05-20T09:12:34.8042944Z \u001b[36;1m# Define valid prefixes (case-sensitive)\u001b[0m\n2026-05-20T09:12:34.8043418Z \u001b[36;1m# Check if PR title contains any valid prefix (not necessarily at the start)\u001b[0m\n2026-05-20T09:12:34.8044325Z \u001b[36;1mVALID_PREFIXES='\\[(BugFix|Performance|Test|CI|Feature|Doc|Misc|Community|Refactor)\\]'\u001b[0m\n2026-05-20T09:12:34.8044932Z \u001b[36;1m\u001b[0m\n2026-05-20T09:12:34.8045241Z \u001b[36;1m# Check if PR title contains a valid prefix\u001b[0m\n2026-05-20T09:12:34.8045856Z \u001b[36;1mif ! echo \"$PR_TITLE\" | grep -qE \"$VALID_PREFIXES\"; then\u001b[0m\n2026-05-20T09:12:34.8046574Z \u001b[36;1m  echo \"::error::PR title must contain one of the following prefixes: [BugFix], [Performance], [Test], [CI], [Feature], [Doc], [Misc], [Community], [Refactor]\"\u001b[0m\n2026-05-20T09:12:34.8047422Z \u001b[36;1m  echo \"::error::Example: '[Feature] Add new optimization pass' or 'Add new feature [Feature]'\"\u001b[0m\n2026-05-20T09:12:34.8047956Z \u001b[36;1m  exit 1\u001b[0m\n2026-05-20T09:12:34.8048207Z \u001b[36;1mfi\u001b[0m\n2026-05-20T09:12:34.8048474Z \u001b[36;1m\u001b[0m\n2026-05-20T09:12:34.8048776Z \u001b[36;1mecho \"✓ PR title prefix is valid\"\u001b[0m\n2026-05-20T09:12:34.8051789Z shell: sh -e {0}\n2026-05-20T09:12:34.8052119Z env:\n2026-05-20T09:12:34.8052507Z   PR_TITLE: GQA kvcache supports FP8 quantization.\n2026-05-20T09:12:34.8052880Z ##[endgroup]\n2026-05-20T09:12:34.8331512Z ##[group]Run '/home/runner/k8s/index.js'\n2026-05-20T09:12:34.8332508Z shell: /home/runner/externals/node20/bin/node {0}\n2026-05-20T09:12:34.8332820Z ##[endgroup]\n2026-05-20T09:12:35.3304377Z (node:97) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.\n2026-05-20T09:12:35.3305343Z (Use `node --trace-deprecation ...` to show where the warning was created)\n2026-05-20T09:12:35.6903076Z Checking PR title: GQA kvcache supports FP8 quantization.\n2026-05-20T09:12:35.6929136Z ##[error]PR title must contain one of the following prefixes: [BugFix], [Performance], [Test], [CI], [Feature], [Doc], [Misc], [Community], [Refactor]\n2026-05-20T09:12:35.6938958Z ##[error]Example: '[Feature] Add new optimization pass' or 'Add new feature [Feature]'\n2026-05-20T09:12:35.7042044Z ##[error]Error: failed to run script step: Error: command terminated with non-zero exit code: command terminated with exit code 1\n2026-05-20T09:12:35.7111354Z ##[error]Process completed with exit code 1.\n2026-05-20T09:12:35.7231523Z ##[error]Executing the custom container implementation failed. Please contact your self hosted runner administrator.\n2026-05-20T09:12:35.7289656Z ##[group]Run '/home/runner/k8s/index.js'\n2026-05-20T09:12:35.7290723Z shell: /home/runner/externals/node20/bin/node {0}\n2026-05-20T09:12:35.7291040Z ##[endgroup]\n2026-05-20T09:12:36.3116600Z Cleaning up orphan processes\n"
+        }
+      ]
+    },
+    {
+      "run_id": 26086792061,
+      "workflow_name": "E2E-Light",
+      "conclusion": "failure",
+      "branch": "FP8",
+      "pr_number": 9316,
+      "created_at": "2026-05-19T08:52:44Z",
+      "event": "pull_request",
+      "jobs": [
+        {
+          "job_id": 76701821176,
+          "job_name": "lint / validate-pr-title",
+          "conclusion": "failure",
+          "started_at": "",
+          "completed_at": "",
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Initialize containers",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Validate PR title prefix",
+              "conclusion": "failure",
+              "number": 3
+            },
+            {
+              "name": "Stop containers",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "number": 7
+            }
+          ],
+          "raw_log": "﻿2026-05-19T08:53:08.0237132Z Current runner version: '2.332.0'\n2026-05-19T08:53:08.0243768Z Runner name: 'linux-amd64-cpu-8-hk-bn7xw-runner-lgc8p'\n2026-05-19T08:53:08.0244579Z Runner group name: 'Default'\n2026-05-19T08:53:08.0245445Z Machine name: 'linux-amd64-cpu-8-hk-bn7xw-runner-lgc8p'\n2026-05-19T08:53:08.0248256Z ##[group]GITHUB_TOKEN Permissions\n2026-05-19T08:53:08.0250650Z Contents: read\n2026-05-19T08:53:08.0251221Z Metadata: read\n2026-05-19T08:53:08.0251709Z ##[endgroup]\n2026-05-19T08:53:08.0253639Z Secret source: None\n2026-05-19T08:53:08.0254186Z Prepare workflow directory\n2026-05-19T08:53:08.0895236Z Prepare all required actions\n2026-05-19T08:53:08.0955375Z Uses: vllm-project/vllm-ascend/.github/workflows/_pre_commit.yml@refs/pull/9316/merge (88eb362eba0117d7cfd32cd9e85bc532e4de0b04)\n2026-05-19T08:53:08.0960257Z ##[group] Inputs\n2026-05-19T08:53:08.0960808Z   vllm: 0d4d334eaa583b9c09aa4eb7538c22db99fd84b3\n2026-05-19T08:53:08.0961390Z ##[endgroup]\n2026-05-19T08:53:08.0962077Z Complete job name: lint / validate-pr-title\n2026-05-19T08:53:08.1663080Z ##[group]Run '/home/runner/k8s/index.js'\n2026-05-19T08:53:08.1671859Z shell: /home/runner/externals/node20/bin/node {0}\n2026-05-19T08:53:08.1672899Z ##[endgroup]\n2026-05-19T08:53:15.8129460Z (node:58) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.\n2026-05-19T08:53:15.8130667Z (Use `node --trace-deprecation ...` to show where the warning was created)\n2026-05-19T08:53:16.1567584Z ##[group]Run # Fail if PR title is empty\n2026-05-19T08:53:16.1568391Z \u001b[36;1m# Fail if PR title is empty\u001b[0m\n2026-05-19T08:53:16.1568801Z \u001b[36;1mif [ -z \"$PR_TITLE\" ]; then\u001b[0m\n2026-05-19T08:53:16.1569254Z \u001b[36;1m  echo \"::error::PR title cannot be empty\"\u001b[0m\n2026-05-19T08:53:16.1569707Z \u001b[36;1m  exit 1\u001b[0m\n2026-05-19T08:53:16.1569998Z \u001b[36;1mfi\u001b[0m\n2026-05-19T08:53:16.1570276Z \u001b[36;1m\u001b[0m\n2026-05-19T08:53:16.1570685Z \u001b[36;1mecho \"Checking PR title: $PR_TITLE\"\u001b[0m\n2026-05-19T08:53:16.1571042Z \u001b[36;1m\u001b[0m\n2026-05-19T08:53:16.1571371Z \u001b[36;1m# Define valid prefixes (case-sensitive)\u001b[0m\n2026-05-19T08:53:16.1571851Z \u001b[36;1m# Check if PR title contains any valid prefix (not necessarily at the start)\u001b[0m\n2026-05-19T08:53:16.1572514Z \u001b[36;1mVALID_PREFIXES='\\[(BugFix|Performance|Test|CI|Feature|Doc|Misc|Community|Refactor)\\]'\u001b[0m\n2026-05-19T08:53:16.1573049Z \u001b[36;1m\u001b[0m\n2026-05-19T08:53:16.1573353Z \u001b[36;1m# Check if PR title contains a valid prefix\u001b[0m\n2026-05-19T08:53:16.1573902Z \u001b[36;1mif ! echo \"$PR_TITLE\" | grep -qE \"$VALID_PREFIXES\"; then\u001b[0m\n2026-05-19T08:53:16.1574646Z \u001b[36;1m  echo \"::error::PR title must contain one of the following prefixes: [BugFix], [Performance], [Test], [CI], [Feature], [Doc], [Misc], [Community], [Refactor]\"\u001b[0m\n2026-05-19T08:53:16.1575527Z \u001b[36;1m  echo \"::error::Example: '[Feature] Add new optimization pass' or 'Add new feature [Feature]'\"\u001b[0m\n2026-05-19T08:53:16.1576036Z \u001b[36;1m  exit 1\u001b[0m\n2026-05-19T08:53:16.1576377Z \u001b[36;1mfi\u001b[0m\n2026-05-19T08:53:16.1576662Z \u001b[36;1m\u001b[0m\n2026-05-19T08:53:16.1576936Z \u001b[36;1mecho \"✓ PR title prefix is valid\"\u001b[0m\n2026-05-19T08:53:16.1580175Z shell: sh -e {0}\n2026-05-19T08:53:16.1580525Z env:\n2026-05-19T08:53:16.1580860Z   PR_TITLE: GQA kvcache supports FP8 quantization.\n2026-05-19T08:53:16.1581332Z ##[endgroup]\n2026-05-19T08:53:16.1837705Z ##[group]Run '/home/runner/k8s/index.js'\n2026-05-19T08:53:16.1838997Z shell: /home/runner/externals/node20/bin/node {0}\n2026-05-19T08:53:16.1839412Z ##[endgroup]\n2026-05-19T08:53:16.6309044Z (node:80) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.\n2026-05-19T08:53:16.6310533Z (Use `node --trace-deprecation ...` to show where the warning was created)\n2026-05-19T08:53:16.9609534Z Checking PR title: GQA kvcache supports FP8 quantization.\n2026-05-19T08:53:16.9632007Z ##[error]PR title must contain one of the following prefixes: [BugFix], [Performance], [Test], [CI], [Feature], [Doc], [Misc], [Community], [Refactor]\n2026-05-19T08:53:16.9640177Z ##[error]Example: '[Feature] Add new optimization pass' or 'Add new feature [Feature]'\n2026-05-19T08:53:16.9747342Z ##[error]Error: failed to run script step: Error: command terminated with non-zero exit code: command terminated with exit code 1\n2026-05-19T08:53:16.9814367Z ##[error]Process completed with exit code 1.\n2026-05-19T08:53:16.9931531Z ##[error]Executing the custom container implementation failed. Please contact your self hosted runner administrator.\n2026-05-19T08:53:16.9987833Z ##[group]Run '/home/runner/k8s/index.js'\n2026-05-19T08:53:16.9989121Z shell: /home/runner/externals/node20/bin/node {0}\n2026-05-19T08:53:16.9989498Z ##[endgroup]\n2026-05-19T08:53:17.5163557Z Cleaning up orphan processes\n"
+        }
+      ]
+    },
+    {
+      "run_id": 26081078157,
+      "workflow_name": "E2E-Light",
+      "conclusion": "failure",
+      "branch": "FP8",
+      "pr_number": 9316,
+      "created_at": "2026-05-19T06:46:35Z",
+      "event": "pull_request",
+      "jobs": [
+        {
+          "job_id": 76682643759,
+          "job_name": "lint / validate-pr-title",
+          "conclusion": "failure",
+          "started_at": "",
+          "completed_at": "",
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Initialize containers",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Validate PR title prefix",
+              "conclusion": "failure",
+              "number": 3
+            },
+            {
+              "name": "Stop containers",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "number": 7
+            }
+          ],
+          "raw_log": "﻿2026-05-19T06:46:58.4128997Z Current runner version: '2.332.0'\n2026-05-19T06:46:58.4135787Z Runner name: 'linux-amd64-cpu-8-hk-bn7xw-runner-pvzkb'\n2026-05-19T06:46:58.4136599Z Runner group name: 'Default'\n2026-05-19T06:46:58.4137536Z Machine name: 'linux-amd64-cpu-8-hk-bn7xw-runner-pvzkb'\n2026-05-19T06:46:58.4140421Z ##[group]GITHUB_TOKEN Permissions\n2026-05-19T06:46:58.4142944Z Contents: read\n2026-05-19T06:46:58.4143430Z Metadata: read\n2026-05-19T06:46:58.4143940Z ##[endgroup]\n2026-05-19T06:46:58.4145945Z Secret source: None\n2026-05-19T06:46:58.4146584Z Prepare workflow directory\n2026-05-19T06:46:58.4940537Z Prepare all required actions\n2026-05-19T06:46:58.5002306Z Uses: vllm-project/vllm-ascend/.github/workflows/_pre_commit.yml@refs/pull/9316/merge (9ab900e9ae91aec89124b4bd4d094885fdc483b0)\n2026-05-19T06:46:58.5006934Z ##[group] Inputs\n2026-05-19T06:46:58.5007537Z   vllm: 0d4d334eaa583b9c09aa4eb7538c22db99fd84b3\n2026-05-19T06:46:58.5008397Z ##[endgroup]\n2026-05-19T06:46:58.5009079Z Complete job name: lint / validate-pr-title\n2026-05-19T06:46:58.5774863Z ##[group]Run '/home/runner/k8s/index.js'\n2026-05-19T06:46:58.5783655Z shell: /home/runner/externals/node20/bin/node {0}\n2026-05-19T06:46:58.5784852Z ##[endgroup]\n2026-05-19T06:47:06.1638849Z (node:54) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.\n2026-05-19T06:47:06.1639924Z (Use `node --trace-deprecation ...` to show where the warning was created)\n2026-05-19T06:47:06.5546143Z ##[group]Run # Fail if PR title is empty\n2026-05-19T06:47:06.5546717Z \u001b[36;1m# Fail if PR title is empty\u001b[0m\n2026-05-19T06:47:06.5547153Z \u001b[36;1mif [ -z \"$PR_TITLE\" ]; then\u001b[0m\n2026-05-19T06:47:06.5547524Z \u001b[36;1m  echo \"::error::PR title cannot be empty\"\u001b[0m\n2026-05-19T06:47:06.5548188Z \u001b[36;1m  exit 1\u001b[0m\n2026-05-19T06:47:06.5548518Z \u001b[36;1mfi\u001b[0m\n2026-05-19T06:47:06.5548879Z \u001b[36;1m\u001b[0m\n2026-05-19T06:47:06.5549177Z \u001b[36;1mecho \"Checking PR title: $PR_TITLE\"\u001b[0m\n2026-05-19T06:47:06.5549567Z \u001b[36;1m\u001b[0m\n2026-05-19T06:47:06.5549851Z \u001b[36;1m# Define valid prefixes (case-sensitive)\u001b[0m\n2026-05-19T06:47:06.5550369Z \u001b[36;1m# Check if PR title contains any valid prefix (not necessarily at the start)\u001b[0m\n2026-05-19T06:47:06.5551017Z \u001b[36;1mVALID_PREFIXES='\\[(BugFix|Performance|Test|CI|Feature|Doc|Misc|Community|Refactor)\\]'\u001b[0m\n2026-05-19T06:47:06.5551500Z \u001b[36;1m\u001b[0m\n2026-05-19T06:47:06.5551861Z \u001b[36;1m# Check if PR title contains a valid prefix\u001b[0m\n2026-05-19T06:47:06.5552913Z \u001b[36;1mif ! echo \"$PR_TITLE\" | grep -qE \"$VALID_PREFIXES\"; then\u001b[0m\n2026-05-19T06:47:06.5553649Z \u001b[36;1m  echo \"::error::PR title must contain one of the following prefixes: [BugFix], [Performance], [Test], [CI], [Feature], [Doc], [Misc], [Community], [Refactor]\"\u001b[0m\n2026-05-19T06:47:06.5554538Z \u001b[36;1m  echo \"::error::Example: '[Feature] Add new optimization pass' or 'Add new feature [Feature]'\"\u001b[0m\n2026-05-19T06:47:06.5555091Z \u001b[36;1m  exit 1\u001b[0m\n2026-05-19T06:47:06.5555389Z \u001b[36;1mfi\u001b[0m\n2026-05-19T06:47:06.5555618Z \u001b[36;1m\u001b[0m\n2026-05-19T06:47:06.5555951Z \u001b[36;1mecho \"✓ PR title prefix is valid\"\u001b[0m\n2026-05-19T06:47:06.5559202Z shell: sh -e {0}\n2026-05-19T06:47:06.5559570Z env:\n2026-05-19T06:47:06.5559976Z   PR_TITLE: GQA kvcache supports FP8 quantization.\n2026-05-19T06:47:06.5560347Z ##[endgroup]\n2026-05-19T06:47:06.5725066Z ##[group]Run '/home/runner/k8s/index.js'\n2026-05-19T06:47:06.5726262Z shell: /home/runner/externals/node20/bin/node {0}\n2026-05-19T06:47:06.5726659Z ##[endgroup]\n2026-05-19T06:47:07.0291798Z (node:72) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.\n2026-05-19T06:47:07.0293288Z (Use `node --trace-deprecation ...` to show where the warning was created)\n2026-05-19T06:47:07.3471678Z Checking PR title: GQA kvcache supports FP8 quantization.\n2026-05-19T06:47:07.3497066Z ##[error]PR title must contain one of the following prefixes: [BugFix], [Performance], [Test], [CI], [Feature], [Doc], [Misc], [Community], [Refactor]\n2026-05-19T06:47:07.3506096Z ##[error]Example: '[Feature] Add new optimization pass' or 'Add new feature [Feature]'\n2026-05-19T06:47:07.3603060Z ##[error]Error: failed to run script step: Error: command terminated with non-zero exit code: command terminated with exit code 1\n2026-05-19T06:47:07.3670021Z ##[error]Process completed with exit code 1.\n2026-05-19T06:47:07.3894572Z ##[error]Executing the custom container implementation failed. Please contact your self hosted runner administrator.\n2026-05-19T06:47:07.3952575Z ##[group]Run '/home/runner/k8s/index.js'\n2026-05-19T06:47:07.3953674Z shell: /home/runner/externals/node20/bin/node {0}\n2026-05-19T06:47:07.3953981Z ##[endgroup]\n2026-05-19T06:47:07.9516078Z Cleaning up orphan processes\n"
+        }
+      ]
+    }
+  ],
+  "analyses": [
+    {
+      "job_name": "lint / validate-pr-title",
+      "job_id": 76926255238,
+      "conclusion": "failure",
+      "error_snippets": [],
+      "root_cause": "Analysis unavailable: claude CLI exited with code 1",
+      "related_files": [],
+      "fix_suggestions": [],
+      "severity": "unknown",
+      "confidence": 0
+    },
+    {
+      "job_name": "lint / validate-pr-title",
+      "job_id": 76924865338,
+      "conclusion": "failure",
+      "error_snippets": [],
+      "root_cause": "Analysis unavailable: claude CLI exited with code 1",
+      "related_files": [],
+      "fix_suggestions": [],
+      "severity": "unknown",
+      "confidence": 0
+    },
+    {
+      "job_name": "lint / validate-pr-title",
+      "job_id": 76701821176,
+      "conclusion": "failure",
+      "error_snippets": [],
+      "root_cause": "Analysis unavailable: claude CLI exited with code 1",
+      "related_files": [],
+      "fix_suggestions": [],
+      "severity": "unknown",
+      "confidence": 0
+    },
+    {
+      "job_name": "lint / validate-pr-title",
+      "job_id": 76682643759,
+      "conclusion": "failure",
+      "error_snippets": [],
+      "root_cause": "Analysis unavailable: claude CLI exited with code 1",
+      "related_files": [],
+      "fix_suggestions": [],
+      "severity": "unknown",
+      "confidence": 0
+    }
+  ]
+}

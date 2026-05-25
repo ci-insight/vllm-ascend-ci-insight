@@ -1,0 +1,68 @@
+{
+  "pr_number": 9239,
+  "pr_title": "fix(eplb): make log2phy mapping tp-aware",
+  "pr_author": "freyfwt",
+  "pr_url": "https://github.com/vllm-project/vllm-ascend/pull/9239",
+  "analyzed_at": "2026-05-25T03:59:41.603401+00:00",
+  "runs": [
+    {
+      "run_id": 26018557859,
+      "workflow_name": "E2E-Light",
+      "conclusion": "failure",
+      "branch": "eplb-tp-aware-log2phy",
+      "pr_number": 9239,
+      "created_at": "2026-05-18T07:01:25Z",
+      "event": "pull_request",
+      "jobs": [
+        {
+          "job_id": 76474169136,
+          "job_name": "lint / validate-pr-title",
+          "conclusion": "failure",
+          "started_at": "",
+          "completed_at": "",
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Initialize containers",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Validate PR title prefix",
+              "conclusion": "failure",
+              "number": 3
+            },
+            {
+              "name": "Stop containers",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "number": 7
+            }
+          ],
+          "raw_log": "﻿2026-05-18T07:02:21.3598953Z Current runner version: '2.332.0'\n2026-05-18T07:02:21.3605806Z Runner name: 'linux-amd64-cpu-8-hk-bn7xw-runner-bnpdk'\n2026-05-18T07:02:21.3606655Z Runner group name: 'Default'\n2026-05-18T07:02:21.3607522Z Machine name: 'linux-amd64-cpu-8-hk-bn7xw-runner-bnpdk'\n2026-05-18T07:02:21.3610506Z ##[group]GITHUB_TOKEN Permissions\n2026-05-18T07:02:21.3612955Z Contents: read\n2026-05-18T07:02:21.3613490Z Metadata: read\n2026-05-18T07:02:21.3613970Z ##[endgroup]\n2026-05-18T07:02:21.3616021Z Secret source: None\n2026-05-18T07:02:21.3616744Z Prepare workflow directory\n2026-05-18T07:02:21.4273304Z Prepare all required actions\n2026-05-18T07:02:21.4335950Z Uses: vllm-project/vllm-ascend/.github/workflows/_pre_commit.yml@refs/pull/9239/merge (a08cd4b6d43353cdcbe2b33c241435a99e3558b9)\n2026-05-18T07:02:21.4340925Z ##[group] Inputs\n2026-05-18T07:02:21.4341497Z   vllm: 0d4d334eaa583b9c09aa4eb7538c22db99fd84b3\n2026-05-18T07:02:21.4342225Z ##[endgroup]\n2026-05-18T07:02:21.4342879Z Complete job name: lint / validate-pr-title\n2026-05-18T07:02:21.5115164Z ##[group]Run '/home/runner/k8s/index.js'\n2026-05-18T07:02:21.5124243Z shell: /home/runner/externals/node20/bin/node {0}\n2026-05-18T07:02:21.5125385Z ##[endgroup]\n2026-05-18T07:02:29.2334273Z (node:62) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.\n2026-05-18T07:02:29.2335373Z (Use `node --trace-deprecation ...` to show where the warning was created)\n2026-05-18T07:02:29.5593832Z ##[group]Run # Fail if PR title is empty\n2026-05-18T07:02:29.5594388Z \u001b[36;1m# Fail if PR title is empty\u001b[0m\n2026-05-18T07:02:29.5594726Z \u001b[36;1mif [ -z \"$PR_TITLE\" ]; then\u001b[0m\n2026-05-18T07:02:29.5595174Z \u001b[36;1m  echo \"::error::PR title cannot be empty\"\u001b[0m\n2026-05-18T07:02:29.5595524Z \u001b[36;1m  exit 1\u001b[0m\n2026-05-18T07:02:29.5595800Z \u001b[36;1mfi\u001b[0m\n2026-05-18T07:02:29.5596105Z \u001b[36;1m\u001b[0m\n2026-05-18T07:02:29.5596386Z \u001b[36;1mecho \"Checking PR title: $PR_TITLE\"\u001b[0m\n2026-05-18T07:02:29.5596749Z \u001b[36;1m\u001b[0m\n2026-05-18T07:02:29.5597055Z \u001b[36;1m# Define valid prefixes (case-sensitive)\u001b[0m\n2026-05-18T07:02:29.5597644Z \u001b[36;1m# Check if PR title contains any valid prefix (not necessarily at the start)\u001b[0m\n2026-05-18T07:02:29.5598456Z \u001b[36;1mVALID_PREFIXES='\\[(BugFix|Performance|Test|CI|Feature|Doc|Misc|Community|Refactor)\\]'\u001b[0m\n2026-05-18T07:02:29.5598989Z \u001b[36;1m\u001b[0m\n2026-05-18T07:02:29.5599325Z \u001b[36;1m# Check if PR title contains a valid prefix\u001b[0m\n2026-05-18T07:02:29.5599845Z \u001b[36;1mif ! echo \"$PR_TITLE\" | grep -qE \"$VALID_PREFIXES\"; then\u001b[0m\n2026-05-18T07:02:29.5600614Z \u001b[36;1m  echo \"::error::PR title must contain one of the following prefixes: [BugFix], [Performance], [Test], [CI], [Feature], [Doc], [Misc], [Community], [Refactor]\"\u001b[0m\n2026-05-18T07:02:29.5601434Z \u001b[36;1m  echo \"::error::Example: '[Feature] Add new optimization pass' or 'Add new feature [Feature]'\"\u001b[0m\n2026-05-18T07:02:29.5602358Z \u001b[36;1m  exit 1\u001b[0m\n2026-05-18T07:02:29.5602671Z \u001b[36;1mfi\u001b[0m\n2026-05-18T07:02:29.5603041Z \u001b[36;1m\u001b[0m\n2026-05-18T07:02:29.5603375Z \u001b[36;1mecho \"✓ PR title prefix is valid\"\u001b[0m\n2026-05-18T07:02:29.5606256Z shell: sh -e {0}\n2026-05-18T07:02:29.5606606Z env:\n2026-05-18T07:02:29.5606890Z   PR_TITLE: fix(eplb): make log2phy mapping tp-aware\n2026-05-18T07:02:29.5607345Z ##[endgroup]\n2026-05-18T07:02:29.5772780Z ##[group]Run '/home/runner/k8s/index.js'\n2026-05-18T07:02:29.5774094Z shell: /home/runner/externals/node20/bin/node {0}\n2026-05-18T07:02:29.5774517Z ##[endgroup]\n2026-05-18T07:02:30.0385064Z (node:81) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.\n2026-05-18T07:02:30.0385939Z (Use `node --trace-deprecation ...` to show where the warning was created)\n2026-05-18T07:02:30.3412069Z Checking PR title: fix(eplb): make log2phy mapping tp-aware\n2026-05-18T07:02:30.3438313Z ##[error]PR title must contain one of the following prefixes: [BugFix], [Performance], [Test], [CI], [Feature], [Doc], [Misc], [Community], [Refactor]\n2026-05-18T07:02:30.3446694Z ##[error]Example: '[Feature] Add new optimization pass' or 'Add new feature [Feature]'\n2026-05-18T07:02:30.3554270Z ##[error]Error: failed to run script step: Error: command terminated with non-zero exit code: command terminated with exit code 1\n2026-05-18T07:02:30.3629490Z ##[error]Process completed with exit code 1.\n2026-05-18T07:02:30.3764198Z ##[error]Executing the custom container implementation failed. Please contact your self hosted runner administrator.\n2026-05-18T07:02:30.3820890Z ##[group]Run '/home/runner/k8s/index.js'\n2026-05-18T07:02:30.3821914Z shell: /home/runner/externals/node20/bin/node {0}\n2026-05-18T07:02:30.3822217Z ##[endgroup]\n2026-05-18T07:02:30.9489520Z Cleaning up orphan processes\n"
+        }
+      ]
+    }
+  ],
+  "analyses": [
+    {
+      "job_name": "lint / validate-pr-title",
+      "job_id": 76474169136,
+      "conclusion": "failure",
+      "error_snippets": [],
+      "root_cause": "Analysis unavailable: claude CLI exited with code 1",
+      "related_files": [],
+      "fix_suggestions": [],
+      "severity": "unknown",
+      "confidence": 0
+    }
+  ]
+}

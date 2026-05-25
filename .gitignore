@@ -1,0 +1,25 @@
+# Reports output (local only)
+reports/
+
+# docs/reports/ is deployed to GitHub Pages — allow it
+!docs/reports/
+docs/reports/.analysis_cache.json
+
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+dist/
+.venv/
+venv/
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Analysis cache
+reports/.analysis_cache.json

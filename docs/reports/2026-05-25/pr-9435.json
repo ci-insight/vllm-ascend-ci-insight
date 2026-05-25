@@ -1,0 +1,78 @@
+{
+  "pr_number": 9435,
+  "pr_title": "[BugFix] recompute kernel fixed-length case bugfix",
+  "pr_author": "OsirisDuan",
+  "pr_url": "https://github.com/vllm-project/vllm-ascend/pull/9435",
+  "analyzed_at": "2026-05-25T03:56:11.707813+00:00",
+  "runs": [
+    {
+      "run_id": 26231058953,
+      "workflow_name": "E2E-Light",
+      "conclusion": "failure",
+      "branch": "260521/recompute_no_varlen_bugfix",
+      "pr_number": 9435,
+      "created_at": "2026-05-21T14:05:31Z",
+      "event": "pull_request",
+      "jobs": [
+        {
+          "job_id": 77191267097,
+          "job_name": "lint / validate-pr-title",
+          "conclusion": "failure",
+          "started_at": "",
+          "completed_at": "",
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Initialize containers",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Validate PR title prefix",
+              "conclusion": "failure",
+              "number": 3
+            },
+            {
+              "name": "Stop containers",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "number": 7
+            }
+          ],
+          "raw_log": "﻿2026-05-21T14:06:10.4565387Z Current runner version: '2.334.0'\n2026-05-21T14:06:10.4571874Z Runner name: 'linux-amd64-cpu-8-hk-frp8k-runner-6c4l5'\n2026-05-21T14:06:10.4572712Z Runner group name: 'Default'\n2026-05-21T14:06:10.4573774Z Machine name: 'linux-amd64-cpu-8-hk-frp8k-runner-6c4l5'\n2026-05-21T14:06:10.4576564Z ##[group]GITHUB_TOKEN Permissions\n2026-05-21T14:06:10.4579013Z Contents: read\n2026-05-21T14:06:10.4579539Z Metadata: read\n2026-05-21T14:06:10.4580004Z ##[endgroup]\n2026-05-21T14:06:10.4582038Z Secret source: None\n2026-05-21T14:06:10.4582601Z Prepare workflow directory\n2026-05-21T14:06:10.5269476Z Prepare all required actions\n2026-05-21T14:06:10.5330490Z Uses: vllm-project/vllm-ascend/.github/workflows/_pre_commit.yml@refs/pull/9435/merge (a5cce9d56ee2304b1befaa0577c7aa90523bef65)\n2026-05-21T14:06:10.5335223Z ##[group] Inputs\n2026-05-21T14:06:10.5335833Z   vllm: 0d4d334eaa583b9c09aa4eb7538c22db99fd84b3\n2026-05-21T14:06:10.5336464Z ##[endgroup]\n2026-05-21T14:06:10.5337071Z Complete job name: lint / validate-pr-title\n2026-05-21T14:06:10.6059252Z ##[group]Run '/home/runner/k8s/index.js'\n2026-05-21T14:06:10.6070156Z shell: /home/runner/externals/node20/bin/node {0}\n2026-05-21T14:06:10.6071655Z ##[endgroup]\n2026-05-21T14:06:18.2448155Z (node:58) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.\n2026-05-21T14:06:18.2449283Z (Use `node --trace-deprecation ...` to show where the warning was created)\n2026-05-21T14:06:18.6122674Z ##[group]Run # Fail if PR title is empty\n2026-05-21T14:06:18.6123311Z \u001b[36;1m# Fail if PR title is empty\u001b[0m\n2026-05-21T14:06:18.6123951Z \u001b[36;1mif [ -z \"$PR_TITLE\" ]; then\u001b[0m\n2026-05-21T14:06:18.6124334Z \u001b[36;1m  echo \"::error::PR title cannot be empty\"\u001b[0m\n2026-05-21T14:06:18.6124759Z \u001b[36;1m  exit 1\u001b[0m\n2026-05-21T14:06:18.6125025Z \u001b[36;1mfi\u001b[0m\n2026-05-21T14:06:18.6125308Z \u001b[36;1m\u001b[0m\n2026-05-21T14:06:18.6125650Z \u001b[36;1mecho \"Checking PR title: $PR_TITLE\"\u001b[0m\n2026-05-21T14:06:18.6126006Z \u001b[36;1m\u001b[0m\n2026-05-21T14:06:18.6126404Z \u001b[36;1m# Define valid prefixes (case-sensitive)\u001b[0m\n2026-05-21T14:06:18.6126894Z \u001b[36;1m# Check if PR title contains any valid prefix (not necessarily at the start)\u001b[0m\n2026-05-21T14:06:18.6127551Z \u001b[36;1mVALID_PREFIXES='\\[(BugFix|Performance|Test|CI|Feature|Doc|Misc|Community|Refactor)\\]'\u001b[0m\n2026-05-21T14:06:18.6128090Z \u001b[36;1m\u001b[0m\n2026-05-21T14:06:18.6128438Z \u001b[36;1m# Check if PR title contains a valid prefix\u001b[0m\n2026-05-21T14:06:18.6129059Z \u001b[36;1mif ! echo \"$PR_TITLE\" | grep -qE \"$VALID_PREFIXES\"; then\u001b[0m\n2026-05-21T14:06:18.6129819Z \u001b[36;1m  echo \"::error::PR title must contain one of the following prefixes: [BugFix], [Performance], [Test], [CI], [Feature], [Doc], [Misc], [Community], [Refactor]\"\u001b[0m\n2026-05-21T14:06:18.6130722Z \u001b[36;1m  echo \"::error::Example: '[Feature] Add new optimization pass' or 'Add new feature [Feature]'\"\u001b[0m\n2026-05-21T14:06:18.6131221Z \u001b[36;1m  exit 1\u001b[0m\n2026-05-21T14:06:18.6131510Z \u001b[36;1mfi\u001b[0m\n2026-05-21T14:06:18.6131778Z \u001b[36;1m\u001b[0m\n2026-05-21T14:06:18.6132184Z \u001b[36;1mecho \"✓ PR title prefix is valid\"\u001b[0m\n2026-05-21T14:06:18.6135517Z shell: sh -e {0}\n2026-05-21T14:06:18.6135934Z env:\n2026-05-21T14:06:18.6136333Z   PR_TITLE: fix(kernel): recompute kernel fixed-length case bugfix\n2026-05-21T14:06:18.6136741Z ##[endgroup]\n2026-05-21T14:06:18.6427136Z ##[group]Run '/home/runner/k8s/index.js'\n2026-05-21T14:06:18.6428169Z shell: /home/runner/externals/node20/bin/node {0}\n2026-05-21T14:06:18.6428500Z ##[endgroup]\n2026-05-21T14:06:19.1159824Z (node:81) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.\n2026-05-21T14:06:19.3078115Z (Use `node --trace-deprecation ...` to show where the warning was created)\n2026-05-21T14:06:19.4451424Z Checking PR title: fix(kernel): recompute kernel fixed-length case bugfix\n2026-05-21T14:06:19.4477728Z ##[error]PR title must contain one of the following prefixes: [BugFix], [Performance], [Test], [CI], [Feature], [Doc], [Misc], [Community], [Refactor]\n2026-05-21T14:06:19.4486656Z ##[error]Example: '[Feature] Add new optimization pass' or 'Add new feature [Feature]'\n2026-05-21T14:06:19.4594337Z ##[error]Error: failed to run script step: Error: command terminated with non-zero exit code: command terminated with exit code 1\n2026-05-21T14:06:19.4681356Z ##[error]Process completed with exit code 1.\n2026-05-21T14:06:19.4800158Z ##[error]Executing the custom container implementation failed. Please contact your self hosted runner administrator.\n2026-05-21T14:06:19.4858636Z ##[group]Run '/home/runner/k8s/index.js'\n2026-05-21T14:06:19.4859813Z shell: /home/runner/externals/node20/bin/node {0}\n2026-05-21T14:06:19.4860131Z ##[endgroup]\n2026-05-21T14:06:19.9923207Z Cleaning up orphan processes\n"
+        }
+      ]
+    }
+  ],
+  "analyses": [
+    {
+      "job_name": "lint / validate-pr-title",
+      "job_id": 77191267097,
+      "conclusion": "failure",
+      "error_snippets": [
+        "Checking PR title: fix(kernel): recompute kernel fixed-length case bugfix",
+        "PR title must contain one of the following prefixes: [BugFix], [Performance], [Test], [CI], [Feature], [Doc], [Misc], [Community], [Refactor]",
+        "Example: '[Feature] Add new optimization pass' or 'Add new feature [Feature]'",
+        "command terminated with non-zero exit code: command terminated with exit code 1"
+      ],
+      "root_cause": "PR title 'fix(kernel): recompute kernel fixed-length case bugfix' uses conventional commit format (fix(scope): message) but the vllm-ascend CI validation requires bracket-style prefixes like [BugFix]. The grep pattern VALID_PREFIXES='\\[(BugFix|Performance|Test|CI|Feature|Doc|Misc|Community|Refactor)\\]' did not match the title.",
+      "related_files": [
+        ".github/workflows/_pre_commit.yml"
+      ],
+      "fix_suggestions": [
+        "Rename PR title to include a bracket prefix, e.g. '[BugFix] recompute kernel fixed-length case bugfix'",
+        "Alternatively, update the VALID_PREFIXES regex in _pre_commit.yml to also accept conventional commit prefixes like 'fix:', 'feat:', 'perf:', 'test:', 'ci:', 'docs:', 'refactor:'"
+      ],
+      "severity": "medium",
+      "confidence": 97
+    }
+  ]
+}
