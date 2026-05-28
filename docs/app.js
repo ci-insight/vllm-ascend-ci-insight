@@ -141,11 +141,12 @@ async function loadAnalysesData() {
               job_id: job.job_id,
               conclusion: job.conclusion,
               workflow_name: run.workflow_name,
+              run_id: run.run_id,
               branch: run.branch,
               started_at: job.started_at,
               completed_at: job.completed_at,
-              duration: (completed - started) / 1000, // seconds
-              queue_time: (started - created) / 1000, // seconds
+              duration: (completed - started) / 1000,
+              queue_time: (started - created) / 1000,
               pr_number: r.pr_number,
             });
           }
@@ -283,23 +284,71 @@ function renderCIStats() {
   if (!allJobs.length) return;
   destroyCICharts();
 
-  // Compute metrics
+  // ── Job-level metrics ──
   const durations = allJobs.map(j => j.duration).filter(d => d > 0);
   const queueTimes = allJobs.map(j => j.queue_time).filter(q => q >= 0);
   const avgDur = durations.reduce((s, d) => s + d, 0) / durations.length;
-  const total = allJobs.length;
+  const totalJobs = allJobs.length;
   const success = allJobs.filter(j => j.conclusion === "success").length;
-  const failed = allJobs.filter(j => j.conclusion === "failure").length;
 
-  // Metric cards
+  // ── Workflow-run-level metrics ──
+  const wfKey = j => `${j.workflow_name}::${j.run_id}`;
+  const wfGroups = {};
+  allJobs.forEach(j => { (wfGroups[wfKey(j)] ||= []).push(j); });
+
+  const wfRuns = Object.values(wfGroups).map(jobs => {
+    const starts = jobs.map(j => new Date(j.started_at));
+    const ends = jobs.map(j => new Date(j.completed_at));
+    const firstStart = new Date(Math.min(...starts));
+    const lastEnd = new Date(Math.max(...ends));
+    const wallClock = (lastEnd - firstStart) / 1000;
+    const sumDur = jobs.reduce((s, j) => s + j.duration, 0);
+    // Compute max concurrency: count overlapping jobs
+    const events = [];
+    jobs.forEach(j => {
+      events.push({ t: new Date(j.started_at), d: 1 });
+      events.push({ t: new Date(j.completed_at), d: -1 });
+    });
+    events.sort((a, b) => a.t - b.t);
+    let cur = 0, maxConc = 0;
+    events.forEach(e => { cur += e.d; maxConc = Math.max(maxConc, cur); });
+    return {
+      workflow_name: jobs[0].workflow_name,
+      run_id: jobs[0].run_id,
+      wallClock,
+      sumDur,
+      jobCount: jobs.length,
+      maxConcurrency: maxConc,
+      parallelEfficiency: sumDur / wallClock, // >1 means parallel
+      success: jobs.filter(j => j.conclusion === "success").length,
+      total: jobs.length,
+    };
+  });
+
+  const wcDurations = wfRuns.map(w => w.wallClock);
+  const wfTotal = wfRuns.length;
+  const wfAvgWC = wcDurations.reduce((s, d) => s + d, 0) / wfTotal;
+  const wfAvgJobs = wfRuns.reduce((s, w) => s + w.jobCount, 0) / wfTotal;
+  const wfAvgEfficiency = wfRuns.reduce((s, w) => s + w.parallelEfficiency, 0) / wfTotal;
+
+  // ── Metric cards: Job row + Workflow row ──
   document.getElementById("ciMetrics").innerHTML = `
-    <div class="metric-card"><div class="metric-value">${total}</div><div class="metric-label">${t("ciTotalRuns")}</div></div>
+    <div style="grid-column:1/-1;font-size:12px;color:var(--text-dim);margin-bottom:-8px">Job 维度</div>
+    <div class="metric-card"><div class="metric-value">${totalJobs}</div><div class="metric-label">${t("ciTotalJobs")}</div></div>
     <div class="metric-card"><div class="metric-value">${fmtDuration(avgDur)}</div><div class="metric-label">${t("ciAvgDuration")}</div></div>
-    <div class="metric-card"><div class="metric-value">${fmtDuration(percentile(durations, 50))}</div><div class="metric-label">${t("ciMedianDuration")}</div></div>
-    <div class="metric-card"><div class="metric-value">${fmtDuration(percentile(durations, 90))}</div><div class="metric-label">${t("ciP90Duration")}</div></div>
-    <div class="metric-card"><div class="metric-value">${fmtDuration(percentile(durations, 20))}</div><div class="metric-label">${t("ciP20Duration")}</div></div>
-    <div class="metric-card"><div class="metric-value">${fmtDuration(percentile(queueTimes, 50))}</div><div class="metric-label">${t("ciQueueTime")} (P50)</div></div>
-    <div class="metric-card"><div class="metric-value">${total ? Math.round(success / total * 100) : 0}%</div><div class="metric-label">${t("ciSuccessRate")}</div></div>
+    <div class="metric-card"><div class="metric-value">${fmtDuration(percentile(durations, 50))}</div><div class="metric-label">${t("ciJobP50")}</div></div>
+    <div class="metric-card"><div class="metric-value">${fmtDuration(percentile(durations, 90))}</div><div class="metric-label">${t("ciJobP90")}</div></div>
+    <div class="metric-card"><div class="metric-value">${fmtDuration(percentile(durations, 20))}</div><div class="metric-label">${t("ciJobP20")}</div></div>
+    <div class="metric-card"><div class="metric-value">${fmtDuration(percentile(queueTimes, 50))}</div><div class="metric-label">${t("ciQueueTime")}</div></div>
+    <div class="metric-card"><div class="metric-value">${totalJobs ? Math.round(success / totalJobs * 100) : 0}%</div><div class="metric-label">${t("ciSuccessRate")}</div></div>
+    <div style="grid-column:1/-1;font-size:12px;color:var(--text-dim);margin-bottom:-8px;margin-top:8px">Workflow 维度 <span style="color:var(--text-dim);font-weight:400">(wall-clock)</span></div>
+    <div class="metric-card"><div class="metric-value">${wfTotal}</div><div class="metric-label">${t("ciWfTotal")}</div></div>
+    <div class="metric-card"><div class="metric-value">${fmtDuration(wfAvgWC)}</div><div class="metric-label">${t("ciWfAvgWC")}</div></div>
+    <div class="metric-card"><div class="metric-value">${fmtDuration(percentile(wcDurations, 50))}</div><div class="metric-label">${t("ciWfP50")}</div></div>
+    <div class="metric-card"><div class="metric-value">${fmtDuration(percentile(wcDurations, 90))}</div><div class="metric-label">${t("ciWfP90")}</div></div>
+    <div class="metric-card"><div class="metric-value">${wfAvgJobs.toFixed(0)}</div><div class="metric-label">${t("ciWfAvgJobs")}</div></div>
+    <div class="metric-card"><div class="metric-value">${wfAvgEfficiency.toFixed(1)}x</div><div class="metric-label">${t("ciWfEfficiency")}</div></div>
+    <div class="metric-card"><div class="metric-value">${Math.round(wfRuns.reduce((s,w)=>s+w.success/w.total,0)/wfTotal*100)}%</div><div class="metric-label">${t("ciWfSuccess")}</div></div>
   `;
 
   // Duration distribution - boxplot-like bar with P20/P50/P90 markers

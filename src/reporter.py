@@ -184,7 +184,7 @@ def generate_report(report: FailureReport) -> tuple[Path, Path]:
     print(f"  -> {md_path}")
 
     # Also write JSON to docs/reports/ for GitHub Pages
-    docs_report_dir = DOCS_DIR / date_str
+    docs_report_dir = Path("docs/reports") / date_str
     docs_report_dir.mkdir(parents=True, exist_ok=True)
     docs_json = docs_report_dir / f"pr-{report.pr_number}.json"
     docs_json.write_text(json_content, encoding="utf-8")
