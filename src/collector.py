@@ -169,8 +169,8 @@ def _build_ci_job(job: dict, fetch_log: bool = True) -> CIJob:
         job_id=job["id"],
         job_name=job.get("name", ""),
         conclusion=job.get("conclusion", "") or "unknown",
-        started_at=job.get("startedAt", ""),
-        completed_at=job.get("completedAt", ""),
+        started_at=job.get("started_at", ""),
+        completed_at=job.get("completed_at", ""),
         steps=steps,
         raw_log=log,
     )
@@ -242,21 +242,24 @@ def find_failed_prs(days: int = 7, limit: int = 30, pr_filter: Optional[int] = N
         ci_runs: list[CIRun] = []
         for run in recent_runs:
             jobs_raw = get_run_jobs(run["databaseId"])
-            failed_jobs = [j for j in jobs_raw if j.get("conclusion") in ("failure", "cancelled", "timed_out")]
-
-            if not failed_jobs:
+            if not jobs_raw:
                 continue
 
-            print(f"    Run {run['databaseId']} ({run.get('name', '')}) -> {len(failed_jobs)} failed job(s)")
+            failed_jobs = [j for j in jobs_raw if j.get("conclusion") in ("failure", "cancelled", "timed_out")]
+            failed_ids = {j["id"] for j in failed_jobs}
 
+            print(f"    Run {run['databaseId']} ({run.get('name', '')}) -> {len(failed_jobs)} failed / {len(jobs_raw)} total job(s)")
+
+            # Store ALL jobs (for CI timing stats), fetch logs only for failed ones
             jobs: list[CIJob] = []
-            for fj in failed_jobs:
-                print(f"      Job: {fj.get('name', fj['id'])} ({fj['id']})")
-                job = _build_ci_job(fj, fetch_log=True)
+            for j in jobs_raw:
+                is_failed = j["id"] in failed_ids
+                if is_failed:
+                    print(f"      Failed: {j.get('name', j['id'])} ({j['id']})")
+                job = _build_ci_job(j, fetch_log=is_failed)
                 jobs.append(job)
 
-            if jobs:
-                ci_runs.append(_build_ci_run(run, jobs, pr_num))
+            ci_runs.append(_build_ci_run(run, jobs, pr_num))
 
         if ci_runs:
             author_data = pr_info.get("author", {}) or {}

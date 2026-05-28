@@ -9,9 +9,23 @@
 </head>
 <body>
 <header>
-  <h1 id="pageTitle">vllm-ascend CI Insight</h1>
-  <div class="header-controls">
-    <div class="filters">
+  <div class="header-top">
+    <h1 id="pageTitle">vllm-ascend CI Insight</h1>
+    <div class="header-actions">
+      <button id="refreshBtn" onclick="loadReports()">Refresh</button>
+      <button id="langToggle" onclick="toggleLang()">中文</button>
+    </div>
+  </div>
+  <nav class="tabs">
+    <button class="tab active" data-tab="analysis" onclick="switchTab('analysis')">问题分析</button>
+    <button class="tab" data-tab="ci-stats" onclick="switchTab('ci-stats')">CI执行分析</button>
+  </nav>
+</header>
+
+<main>
+  <!-- Tab: Problem Analysis -->
+  <section id="tab-analysis" class="tab-content active">
+    <div class="filters-bar">
       <input type="text" id="searchInput" placeholder="Search PR title, number..." />
       <select id="severityFilter">
         <option value="">All Severities</option>
@@ -32,37 +46,39 @@
         <option value="other">Other</option>
       </select>
     </div>
-    <button id="refreshBtn" onclick="loadReports()">Refresh</button>
-    <button id="langToggle" onclick="toggleLang()">中文</button>
-  </div>
-</header>
-
-<main>
-  <!-- Metric Cards -->
-  <section class="metrics" id="metrics"></section>
-
-  <!-- Charts -->
-  <section class="charts">
-    <div class="chart-box">
-      <h3 id="chartSeverityTitle">Severity Breakdown</h3>
-      <canvas id="chartSeverity"></canvas>
-    </div>
-    <div class="chart-box">
-      <h3 id="chartWorkflowTitle">Top Failing Workflows</h3>
-      <canvas id="chartWorkflow"></canvas>
-    </div>
-    <div class="chart-box full">
-      <h3 id="chartCategoryTitle">Category Breakdown</h3>
-      <canvas id="chartCategory"></canvas>
-    </div>
+    <section class="metrics" id="metrics"></section>
+    <section class="charts">
+      <div class="chart-box"><h3 id="chartSeverityTitle">Severity Breakdown</h3><canvas id="chartSeverity"></canvas></div>
+      <div class="chart-box"><h3 id="chartWorkflowTitle">Top Failing Workflows</h3><canvas id="chartWorkflow"></canvas></div>
+      <div class="chart-box full"><h3 id="chartCategoryTitle">Category Breakdown</h3><canvas id="chartCategory"></canvas></div>
+    </section>
+    <section class="report-section">
+      <h3 id="reportSectionTitle">Recent Reports</h3>
+      <div id="reportList"><div class="loading">Loading...</div></div>
+    </section>
   </section>
 
-  <!-- Report List -->
-  <section class="report-section">
-    <h3 id="reportSectionTitle">Recent Reports</h3>
-    <div id="reportList">
-      <div class="loading">Loading...</div>
-    </div>
+  <!-- Tab: CI Execution Analysis -->
+  <section id="tab-ci-stats" class="tab-content">
+    <section class="metrics" id="ciMetrics"></section>
+    <section class="charts">
+      <div class="chart-box">
+        <h3 id="chartDurationTitle">Job Duration Distribution (P50/P90/P20)</h3>
+        <canvas id="chartDuration"></canvas>
+      </div>
+      <div class="chart-box">
+        <h3 id="chartQueueTitle">Queue Wait Time</h3>
+        <canvas id="chartQueue"></canvas>
+      </div>
+      <div class="chart-box">
+        <h3 id="chartSuccessTitle">Success Rate by Workflow</h3>
+        <canvas id="chartSuccess"></canvas>
+      </div>
+      <div class="chart-box">
+        <h3 id="chartSlowestTitle">Slowest Jobs (Top 10)</h3>
+        <canvas id="chartSlowest"></canvas>
+      </div>
+    </section>
   </section>
 </main>
 

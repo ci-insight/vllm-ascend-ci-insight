@@ -1,0 +1,286 @@
+{
+  "pr_number": 9671,
+  "pr_title": "[Ascend950][Feature]Support MXFP8 FlashcommV3 on 950",
+  "pr_author": "Eric-dot",
+  "pr_url": "https://github.com/vllm-project/vllm-ascend/pull/9671",
+  "analyzed_at": "2026-05-28T09:45:44.531584+00:00",
+  "runs": [
+    {
+      "run_id": 26565074738,
+      "workflow_name": "E2E-Light",
+      "conclusion": "failure",
+      "branch": "fc3_support_A5",
+      "pr_number": 9671,
+      "created_at": "2026-05-28T08:58:00Z",
+      "event": "pull_request",
+      "jobs": [
+        {
+          "job_id": 78257520937,
+          "job_name": "changes",
+          "conclusion": "success",
+          "started_at": "2026-05-28T09:04:08Z",
+          "completed_at": "2026-05-28T09:05:05Z",
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Initialize containers",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Run actions/checkout@v6",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "Run dorny/paths-filter@v4",
+              "conclusion": "success",
+              "number": 4
+            },
+            {
+              "name": "Determine smart UT test scope",
+              "conclusion": "success",
+              "number": 5
+            },
+            {
+              "name": "Post scope summary",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Post Run actions/checkout@v6",
+              "conclusion": "success",
+              "number": 11
+            },
+            {
+              "name": "Stop containers",
+              "conclusion": "success",
+              "number": 12
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "number": 13
+            }
+          ],
+          "raw_log": ""
+        },
+        {
+          "job_id": 78257521158,
+          "job_name": "lint / validate-pr-title",
+          "conclusion": "success",
+          "started_at": "2026-05-28T08:58:23Z",
+          "completed_at": "2026-05-28T08:58:40Z",
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Initialize containers",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Validate PR title prefix",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "Stop containers",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "number": 7
+            }
+          ],
+          "raw_log": ""
+        },
+        {
+          "job_id": 78257624075,
+          "job_name": "lint / pre-commit",
+          "conclusion": "failure",
+          "started_at": "2026-05-28T08:59:04Z",
+          "completed_at": "2026-05-28T09:01:19Z",
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Initialize containers",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Checkout vllm-project/vllm-ascend repo",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "cp problem matchers",
+              "conclusion": "success",
+              "number": 4
+            },
+            {
+              "name": "Run echo \"::add-matcher::$RUNNER_TEMP/actionlint.json\"",
+              "conclusion": "success",
+              "number": 5
+            },
+            {
+              "name": "Run echo \"::add-matcher::$RUNNER_TEMP/markdownlint.json\"",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Run echo \"::add-matcher::$RUNNER_TEMP/mypy.json\"",
+              "conclusion": "success",
+              "number": 7
+            },
+            {
+              "name": "Checkout vllm-project/vllm repo",
+              "conclusion": "success",
+              "number": 8
+            },
+            {
+              "name": "Run dorny/paths-filter@v4",
+              "conclusion": "success",
+              "number": 9
+            },
+            {
+              "name": "Install vllm-ascend dev (conditional)",
+              "conclusion": "skipped",
+              "number": 10
+            },
+            {
+              "name": "Run pre-commit",
+              "conclusion": "success",
+              "number": 11
+            },
+            {
+              "name": "Run mypy",
+              "conclusion": "failure",
+              "number": 12
+            },
+            {
+              "name": "Post Checkout vllm-project/vllm repo",
+              "conclusion": "success",
+              "number": 22
+            },
+            {
+              "name": "Post Checkout vllm-project/vllm-ascend repo",
+              "conclusion": "success",
+              "number": 23
+            },
+            {
+              "name": "Stop containers",
+              "conclusion": "success",
+              "number": 24
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "number": 25
+            }
+          ],
+          "raw_log": "﻿2026-05-28T08:59:06.2373787Z Current runner version: '2.334.0'\n2026-05-28T08:59:06.2379811Z Runner name: 'linux-amd64-cpu-8-hk-frp8k-runner-qk42w'\n2026-05-28T08:59:06.2380797Z Runner group name: 'Default'\n2026-05-28T08:59:06.2381749Z Machine name: 'linux-amd64-cpu-8-hk-frp8k-runner-qk42w'\n2026-05-28T08:59:06.2384745Z ##[group]GITHUB_TOKEN Permissions\n2026-05-28T08:59:06.2387081Z Contents: read\n2026-05-28T08:59:06.2387646Z Metadata: read\n2026-05-28T08:59:06.2388223Z ##[endgroup]\n2026-05-28T08:59:06.2390232Z Secret source: None\n2026-05-28T08:59:06.2391141Z Prepare workflow directory\n2026-05-28T08:59:06.3098385Z Prepare all required actions\n2026-05-28T08:59:06.3137253Z Getting action download info\n2026-05-28T08:59:07.4061256Z Download action repository 'actions/checkout@v6' (SHA:de0fac2e4500dabe0009e67214ff5f5447ce83dd)\n2026-05-28T08:59:11.2083902Z Download action repository 'dorny/paths-filter@v4' (SHA:fbd0ab8f3e69293af611ebaee6363fc25e6d187d)\n2026-05-28T08:59:12.7987049Z Uses: vllm-project/vllm-ascend/.github/workflows/_pre_commit.yml@refs/pull/9671/merge (0af854ca71c7360b48dba29353fcfc5611ba57e9)\n2026-05-28T08:59:12.7991244Z ##[group] Inputs\n2026-05-28T08:59:12.7991659Z   vllm: 1ac10f159a09897baada01b14b6a0dd6442aefd6\n2026-05-28T08:59:12.7991942Z ##[endgroup]\n2026-05-28T08:59:12.7992149Z Complete job name: lint / pre-commit\n2026-05-28T08:59:12.8718718Z ##[group]Run '/home/runner/k8s/index.js'\n2026-05-28T08:59:12.8721647Z shell: /home/runner/externals/node20/bin/node {0}\n2026-05-28T08:59:12.8722257Z ##[endgroup]\n2026-05-28T08:59:28.4943588Z (node:155) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.\n2026-05-28T08:59:28.4944565Z (Use `node --trace-deprecation ...` to show where the warning was created)\n2026-05-28T08:59:29.5312375Z ##[group]Run actions/checkout@v6\n2026-05-28T08:59:29.5312717Z with:\n2026-05-28T08:59:29.5313218Z   repository: vllm-project/vllm-ascend\n2026-05-28T08:59:29.5316064Z   token: ***\n2026-05-28T08:59:29.5316280Z   ssh-strict: true\n2026-05-28T08:59:29.5316484Z   ssh-user: git\n2026-05-28T08:59:29.5316690Z   persist-credentials: true\n2026-05-28T08:59:29.5316908Z   clean: true\n2026-05-28T08:59:29.5317110Z   sparse-checkout-cone-mode: true\n2026-05-28T08:59:29.5317359Z   fetch-depth: 1\n2026-05-28T08:59:29.5317559Z   fetch-tags: false\n2026-05-28T08:59:29.5317766Z   show-progress: true\n2026-05-28T08:59:29.5317966Z   lfs: false\n2026-05-28T08:59:29.5318149Z   submodules: false\n2026-05-28T08:59:29.5318357Z   set-safe-directory: true\n2026-05-28T08:59:29.5318621Z ##[endgroup]\n2026-05-28T08:59:29.5410929Z ##[group]Run '/home/runner/k8s/index.js'\n2026-05-28T08:59:29.5411963Z shell: /home/runner/externals/node20/bin/node {0}\n2026-05-28T08:59:29.5412279Z ##[endgroup]\n2026-05-28T08:59:30.0158100Z (node:308) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.\n2026-05-28T08:59:30.0159028Z (Use `node --trace-deprecation ...` to show where the warning was created)\n2026-05-28T08:59:30.5190975Z Syncing repository: vllm-project/vllm-ascend\n2026-05-28T08:59:30.5193989Z ##[group]Getting Git version info\n2026-05-28T08:59:30.5194645Z Working directory is '/__w/vllm-ascend/vllm-ascend'\n2026-05-28T08:59:30.5195514Z [command]/usr/bin/git version\n2026-05-28T08:59:30.5195932Z git version 2.34.1\n2026-05-28T08:59:30.5199010Z ##[endgroup]\n2026-05-28T08:59:30.5205674Z Temporarily overriding HOME='/__w/_temp/618c4c92-879d-43e0-bbd0-7ac822c72429' before making global git config changes\n2026-05-28T08:59:30.5206756Z Adding repository directory to the temporary git global config as a safe directory\n2026-05-28T08:59:30.5207641Z [command]/usr/bin/git config --global --add safe.directory /__w/vllm-ascend/vllm-ascend\n2026-05-28T08:59:30.5208662Z Deleting the contents of '/__w/vllm-ascend/vllm-ascend'\n2026-05-28T08:59:30.5209293Z ##[group]Initializing the repository\n2026-05-28T08:59:30.5209621Z [command]/usr/bin/git init /__w/vllm-ascend/vllm-ascend\n2026-05-28T08:59:30.5231470Z hint: Using 'master' as the name for the initial branch. This default branch name\n2026-05-28T08:59:30.5232043Z hint: is subject to change. To configure the initial branch name to use in all\n2026-05-28T08:59:30.5232713Z hint: of your new repositories, which will suppress this warning, call:\n2026-05-28T08:59:30.5233510Z hint: \n2026-05-28T08:59:30.5233935Z hint: \tgit config --global init.defaultBranch <name>\n2026-05-28T08:59:30.5234429Z hint: \n2026-05-28T08:59:30.5234894Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and\n2026-05-28T08:59:30.5235697Z hint: 'development'. The just-created branch can be renamed via this command:\n2026-05-28T08:59:30.5236352Z hint: \n2026-05-28T08:59:30.5236709Z hint: \tgit branch -m <name>\n2026-05-28T08:59:30.5237354Z Initialized empty Git repository in /__w/vllm-ascend/vllm-ascend/.git/\n2026-05-28T08:59:30.5247810Z [command]/usr/bin/git remote add origin https://github.com/vllm-project/vllm-ascend\n2026-05-28T08:59:30.5274831Z ##[endgroup]\n2026-05-28T08:59:30.5275431Z ##[group]Disabling automatic garbage collection\n2026-05-28T08:59:30.5277503Z [command]/usr/bin/git config --local gc.auto 0\n2026-05-28T08:59:30.5316831Z ##[endgroup]\n2026-05-28T08:59:30.5317249Z ##[group]Setting up auth\n2026-05-28T08:59:30.5317627Z Removing SSH command configuration\n2026-05-28T08:59:30.5318337Z [command]/usr/bin/git config --local --name-only --get-regexp core\\.sshCommand\n2026-05-28T08:59:30.5330694Z [command]/usr/bin/git submodule foreach --recursive sh -c \"git config --local --name-only --get-regexp 'core\\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\"\n2026-05-28T08:59:30.5499264Z Removing HTTP extra header\n2026-05-28T08:59:30.5503606Z [command]/usr/bin/git config --local --name-only --get-regexp http\\.https\\:\\/\\/github\\.com\\/\\.extraheader\n2026-05-28T08:59:30.5524422Z [command]/usr/bin/git submodule foreach --recursive sh -c \"git config --local --name-only --get-regexp 'http\\.https\\:\\/\\/github\\.com\\/\\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\"\n2026-05-28T08:59:30.5684652Z Removing includeIf entries pointing to credentials config files\n2026-05-28T08:59:30.5687844Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\\.gitdir:\n2026-05-28T08:59:30.5711026Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url\n2026-05-28T08:59:30.5874231Z [command]/usr/bin/git config --file /__w/_temp/git-credentials-20119f13-0d7e-415e-8cd5-50b59ede4cc3.config http.https://github.com/.extraheader AUTHORIZATION: basic ***\n2026-05-28T08:59:30.5899377Z [command]/usr/bin/git config --local includeIf.gitdir:/__w/vllm-ascend/vllm-ascend/.git.path /__w/_temp/git-credentials-20119f13-0d7e-415e-8cd5-50b59ede4cc3.config\n2026-05-28T08:59:30.5919007Z [command]/usr/bin/git config --local includeIf.gitdir:/__w/vllm-ascend/vllm-ascend/.git/worktrees/*.path /__w/_temp/git-credentials-20119f13-0d7e-415e-8cd5-50b59ede4cc3.config\n2026-05-28T08:59:30.5940485Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-20119f13-0d7e-415e-8cd5-50b59ede4cc3.config\n2026-05-28T08:59:30.6000301Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-20119f13-0d7e-415e-8cd5-50b59ede4cc3.config\n2026-05-28T08:59:30.6087783Z ##[endgroup]\n2026-05-28T08:59:30.6088223Z ##[group]Fetching the repository\n2026-05-28T08:59:30.6089091Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +0af854ca71c7360b48dba29353fcfc5611ba57e9:refs/remotes/pull/9671/merge\n2026-05-28T08:59:33.5810694Z From https://github.com/vllm-project/vllm-ascend\n2026-05-28T08:59:33.5822158Z  * [new ref]         0af854ca71c7360b48dba29353fcfc5611ba57e9 -> pull/9671/merge\n2026-05-28T08:59:33.5824485Z ##[endgroup]\n2026-05-28T08:59:33.5824841Z ##[group]Determining the checkout info\n2026-05-28T08:59:33.5825548Z ##[endgroup]\n2026-05-28T08:59:33.5829624Z [command]/usr/bin/git sparse-checkout disable\n2026-05-28T08:59:33.5863521Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig\n2026-05-28T08:59:33.5883251Z ##[group]Checking out the ref\n2026-05-28T08:59:33.5886097Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/9671/merge\n2026-05-28T08:59:33.7710809Z Note: switching to 'refs/remotes/pull/9671/merge'.\n2026-05-28T08:59:33.7711131Z \n2026-05-28T08:59:33.7711371Z You are in 'detached HEAD' state. You can look around, make experimental\n2026-05-28T08:59:33.7711958Z changes and commit them, and you can discard any commits you make in this\n2026-05-28T08:59:33.7712410Z state without impacting any branches by switching back to a branch.\n2026-05-28T08:59:33.7712709Z \n2026-05-28T08:59:33.7713031Z If you want to create a new branch to retain commits you create, you may\n2026-05-28T08:59:33.7713549Z do so (now or later) by using -c with the switch command. Example:\n2026-05-28T08:59:33.7713811Z \n2026-05-28T08:59:33.7713917Z   git switch -c <new-branch-name>\n2026-05-28T08:59:33.7714091Z \n2026-05-28T08:59:33.7714185Z Or undo this operation with:\n2026-05-28T08:59:33.7714344Z \n2026-05-28T08:59:33.7714431Z   git switch -\n2026-05-28T08:59:33.7714572Z \n2026-05-28T08:59:33.7714779Z Turn off this advice by setting config variable advice.detachedHead to false\n2026-05-28T08:59:33.7715058Z \n2026-05-28T08:59:33.7715384Z HEAD is now at 0af854c Merge 4b2d4733f37a68c35cf65ef64f8ac89bbf1538f2 into be8e67d3e1d674aa5d862a97d766e2b76e32aaee\n2026-05-28T08:59:33.7719231Z ##[endgroup]\n2026-05-28T08:59:33.7750417Z [command]/usr/bin/git log -1 --format=%H\n2026-05-28T08:59:33.7769302Z 0af854ca71c7360b48dba29353fcfc5611ba57e9\n2026-05-28T08:59:35.1516874Z ##[group]Run cp .github/workflows/matchers/actionlint.json \"$RUNNER_TEMP/actionlint.json\"\n2026-05-28T08:59:35.1517538Z \u001b[36;1mcp .github/workflows/matchers/actionlint.json \"$RUNNER_TEMP/actionlint.json\"\u001b[0m\n2026-05-28T08:59:35.1518107Z \u001b[36;1mcp .github/workflows/matchers/markdownlint.json \"$RUNNER_TEMP/markdownlint.json\"\u001b[0m\n2026-05-28T08:59:35.1518643Z \u001b[36;1mcp .github/workflows/matchers/mypy.json \"$RUNNER_TEMP/mypy.json\"\u001b[0m\n2026-05-28T08:59:35.1521654Z shell: sh -e {0}\n2026-05-28T08:59:35.1521879Z ##[endgroup]\n2026-05-28T08:59:35.1656174Z ##[group]Run '/home/runner/k8s/index.js'\n2026-05-28T08:59:35.1657038Z shell: /home/runner/externals/node20/bin/node {0}\n2026-05-28T08:59:35.1657319Z ##[endgroup]\n2026-05-28T08:59:35.6478453Z (node:345) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.\n2026-05-28T08:59:35.6479421Z (Use `node --trace-deprecation ...` to show where the warning was created)\n2026-05-28T08:59:37.3762643Z ##[group]Run echo \"::add-matcher::$RUNNER_TEMP/actionlint.json\"\n2026-05-28T08:59:37.3763356Z \u001b[36;1mecho \"::add-matcher::$RUNNER_TEMP/actionlint.json\"\u001b[0m\n2026-05-28T08:59:37.3763770Z shell: sh -e {0}\n2026-05-28T08:59:37.3764067Z ##[endgroup]\n2026-05-28T08:59:37.3868017Z ##[group]Run '/home/runner/k8s/index.js'\n2026-05-28T08:59:37.3868913Z shell: /home/runner/externals/node20/bin/node {0}\n2026-05-28T08:59:37.3869191Z ##[endgroup]\n2026-05-28T08:59:37.8813996Z (node:406) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.\n2026-05-28T08:59:37.8814897Z (Use `node --trace-deprecation ...` to show where the warning was created)\n2026-05-28T08:59:38.5176480Z ##[group]Run echo \"::add-matcher::$RUNNER_TEMP/markdownlint.json\"\n2026-05-28T08:59:38.5176972Z \u001b[36;1mecho \"::add-matcher::$RUNNER_TEMP/markdownlint.json\"\u001b[0m\n2026-05-28T08:59:38.5177398Z shell: sh -e {0}\n2026-05-28T08:59:38.5177601Z ##[endgroup]\n2026-05-28T08:59:38.5292002Z ##[group]Run '/home/runner/k8s/index.js'\n2026-05-28T08:59:38.5293321Z shell: /home/runner/externals/node20/bin/node {0}\n2026-05-28T08:59:38.5293704Z ##[endgroup]\n2026-05-28T08:59:38.9964866Z (node:467) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.\n2026-05-28T08:59:38.9966619Z (Use `node --trace-deprecation ...` to show where the warning was created)\n2026-05-28T08:59:39.6644598Z ##[group]Run echo \"::add-matcher::$RUNNER_TEMP/mypy.json\"\n2026-05-28T08:59:39.6645224Z \u001b[36;1mecho \"::add-matcher::$RUNNER_TEMP/mypy.json\"\u001b[0m\n2026-05-28T08:59:39.6645746Z shell: sh -e {0}\n2026-05-28T08:59:39.6646082Z ##[endgroup]\n2026-05-28T08:59:39.6748247Z ##[group]Run '/home/runner/k8s/index.js'\n2026-05-28T08:59:39.6750187Z shell: /home/runner/externals/node20/bin/node {0}\n2026-05-28T08:59:39.6750647Z ##[endgroup]\n2026-05-28T08:59:40.1486770Z (node:539) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.\n2026-05-28T08:59:40.1487788Z (Use `node --trace-deprecation ...` to show where the warning was created)\n2026-05-28T08:59:40.8326789Z ##[group]Run actions/checkout@v6\n2026-05-28T08:59:40.8327075Z with:\n2026-05-28T08:59:40.8327281Z   repository: vllm-project/vllm\n2026-05-28T08:59:40.8327540Z   path: ./vllm-empty\n2026-05-28T08:59:40.8327784Z   ref: 1ac10f159a09897baada01b14b6a0dd6442aefd6\n2026-05-28T08:59:40.8330818Z   token: ***\n2026-05-28T08:59:40.8331013Z   ssh-strict: true\n2026-05-28T08:59:40.8331206Z   ssh-user: git\n2026-05-28T08:59:40.8331409Z   persist-credentials: true\n2026-05-28T08:59:40.8331632Z   clean: true\n2026-05-28T08:59:40.8331840Z   sparse-checkout-cone-mode: true\n2026-05-28T08:59:40.8332088Z   fetch-depth: 1\n2026-05-28T08:59:40.8332277Z   fetch-tags: false\n2026-05-28T08:59:40.8332478Z   show-progress: true\n2026-05-28T08:59:40.8332671Z   lfs: false\n2026-05-28T08:59:40.8333033Z   submodules: false\n2026-05-28T08:59:40.8333319Z   set-safe-directory: true\n2026-05-28T08:59:40.8333542Z ##[endgroup]\n2026-05-28T08:59:40.8360633Z ##[group]Run '/home/runner/k8s/index.js'\n2026-05-28T08:59:40.8361572Z shell: /home/runner/externals/node20/bin/node {0}\n2026-05-28T08:59:40.8361858Z ##[endgroup]\n2026-05-28T08:59:41.3153088Z (node:624) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.\n2026-05-28T08:59:41.3154759Z (Use `node --trace-deprecation ...` to show where the warning was created)\n2026-05-28T08:59:41.8120266Z Syncing repository: vllm-project/vllm\n2026-05-28T08:59:41.8122406Z ##[group]Getting Git version info\n2026-05-28T08:59:41.8123815Z Working directory is '/__w/vllm-ascend/vllm-ascend/vllm-empty'\n2026-05-28T08:59:41.8125376Z [command]/usr/bin/git version\n2026-05-28T08:59:41.8142587Z git version 2.34.1\n2026-05-28T08:59:41.8164106Z ##[endgroup]\n2026-05-28T08:59:41.8176742Z Temporarily overriding HOME='/__w/_temp/efad0543-aae5-426b-85d0-4e5b3121c696' before making global git config changes\n2026-05-28T08:59:41.8179343Z Adding repository directory to the temporary git global config as a safe directory\n2026-05-28T08:59:41.8180724Z [command]/usr/bin/git config --global --add safe.directory /__w/vllm-ascend/vllm-ascend/vllm-empty\n2026-05-28T08:59:41.8206020Z ##[group]Initializing the repository\n2026-05-28T08:59:41.8209627Z [command]/usr/bin/git init /__w/vllm-ascend/vllm-ascend/vllm-empty\n2026-05-28T08:59:41.8233170Z hint: Using 'master' as the name for the initial branch. This default branch name\n2026-05-28T08:59:41.8234396Z hint: is subject to change. To configure the initial branch name to use in all\n2026-05-28T08:59:41.8235340Z hint: of your new repositories, which will suppress this warning, call:\n2026-05-28T08:59:41.8236006Z hint: \n2026-05-28T08:59:41.8236923Z hint: \tgit config --global init.defaultBranch <name>\n2026-05-28T08:59:41.8237762Z hint: \n2026-05-28T08:59:41.8238771Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and\n2026-05-28T08:59:41.8239879Z hint: 'development'. The just-created branch can be renamed via this command:\n2026-05-28T08:59:41.8240976Z hint: \n2026-05-28T08:59:41.8241549Z hint: \tgit branch -m <name>\n2026-05-28T08:59:41.8242584Z Initialized empty Git repository in /__w/vllm-ascend/vllm-ascend/vllm-empty/.git/\n2026-05-28T08:59:41.8247388Z [command]/usr/bin/git remote add origin https://github.com/vllm-project/vllm\n2026-05-28T08:59:41.8273846Z ##[endgroup]\n2026-05-28T08:59:41.8274739Z ##[group]Disabling automatic garbage collection\n2026-05-28T08:59:41.8275874Z [command]/usr/bin/git config --local gc.auto 0\n2026-05-28T08:59:41.8300513Z ##[endgroup]\n2026-05-28T08:59:41.8301602Z ##[group]Setting up auth\n2026-05-28T08:59:41.8302245Z Removing SSH command configuration\n2026-05-28T08:59:41.8304574Z [command]/usr/bin/git config --local --name-only --get-regexp core\\.sshCommand\n2026-05-28T08:59:41.8327916Z [command]/usr/bin/git submodule foreach --recursive sh -c \"git config --local --name-only --get-regexp 'core\\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\"\n2026-05-28T08:59:41.8518689Z Removing HTTP extra header\n2026-05-28T08:59:41.8520173Z [command]/usr/bin/git config --local --name-only --get-regexp http\\.https\\:\\/\\/github\\.com\\/\\.extraheader\n2026-05-28T08:59:41.8540409Z [command]/usr/bin/git submodule foreach --recursive sh -c \"git config --local --name-only --get-regexp 'http\\.https\\:\\/\\/github\\.com\\/\\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\"\n2026-05-28T08:59:41.8709894Z Removing includeIf entries pointing to credentials config files\n2026-05-28T08:59:41.8714387Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\\.gitdir:\n2026-05-28T08:59:41.8735509Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url\n2026-05-28T08:59:41.8901625Z [command]/usr/bin/git config --file /__w/_temp/git-credentials-b35ef55d-141b-41ae-8587-06e4404ec9cc.config http.https://github.com/.extraheader AUTHORIZATION: basic ***\n2026-05-28T08:59:41.8930096Z [command]/usr/bin/git config --local includeIf.gitdir:/__w/vllm-ascend/vllm-ascend/vllm-empty/.git.path /__w/_temp/git-credentials-b35ef55d-141b-41ae-8587-06e4404ec9cc.config\n2026-05-28T08:59:41.8950796Z [command]/usr/bin/git config --local includeIf.gitdir:/__w/vllm-ascend/vllm-ascend/vllm-empty/.git/worktrees/*.path /__w/_temp/git-credentials-b35ef55d-141b-41ae-8587-06e4404ec9cc.config\n2026-05-28T08:59:41.8978021Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/vllm-empty/.git.path /github/runner_temp/git-credentials-b35ef55d-141b-41ae-8587-06e4404ec9cc.config\n2026-05-28T08:59:41.9017988Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/vllm-empty/.git/worktrees/*.path /github/runner_temp/git-credentials-b35ef55d-141b-41ae-8587-06e4404ec9cc.config\n2026-05-28T08:59:41.9058111Z ##[endgroup]\n2026-05-28T08:59:41.9059541Z ##[group]Fetching the repository\n2026-05-28T08:59:41.9067359Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin 1ac10f159a09897baada01b14b6a0dd6442aefd6\n2026-05-28T08:59:46.5467149Z From https://github.com/vllm-project/vllm\n2026-05-28T08:59:46.5468096Z  * branch            1ac10f159a09897baada01b14b6a0dd6442aefd6 -> FETCH_HEAD\n2026-05-28T08:59:46.5484071Z [command]/usr/bin/git rev-parse --verify --quiet 1ac10f159a09897baada01b14b6a0dd6442aefd6^{object}\n2026-05-28T08:59:46.5503906Z 1ac10f159a09897baada01b14b6a0dd6442aefd6\n2026-05-28T08:59:46.5506582Z ##[endgroup]\n2026-05-28T08:59:46.5507844Z ##[group]Determining the checkout info\n2026-05-28T08:59:46.5509021Z ##[endgroup]\n2026-05-28T08:59:46.5510972Z [command]/usr/bin/git sparse-checkout disable\n2026-05-28T08:59:46.5541435Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig\n2026-05-28T08:59:46.5563106Z ##[group]Checking out the ref\n2026-05-28T08:59:46.5565964Z [command]/usr/bin/git checkout --progress --force 1ac10f159a09897baada01b14b6a0dd6442aefd6\n2026-05-28T08:59:46.9383279Z Note: switching to '1ac10f159a09897baada01b14b6a0dd6442aefd6'.\n2026-05-28T08:59:46.9384318Z \n2026-05-28T08:59:46.9384865Z You are in 'detached HEAD' state. You can look around, make experimental\n2026-05-28T08:59:46.9386005Z changes and commit them, and you can discard any commits you make in this\n2026-05-28T08:59:46.9387110Z state without impacting any branches by switching back to a branch.\n2026-05-28T08:59:46.9387703Z \n2026-05-28T08:59:46.9388353Z If you want to create a new branch to retain commits you create, you may\n2026-05-28T08:59:46.9389353Z do so (now or later) by using -c with the switch command. Example:\n2026-05-28T08:59:46.9389718Z \n2026-05-28T08:59:46.9390100Z   git switch -c <new-branch-name>\n2026-05-28T08:59:46.9390376Z \n2026-05-28T08:59:46.9390747Z Or undo this operation with:\n2026-05-28T08:59:46.9391012Z \n2026-05-28T08:59:46.9391347Z   git switch -\n2026-05-28T08:59:46.9391719Z \n2026-05-28T08:59:46.9392130Z Turn off this advice by setting config variable advice.detachedHead to false\n2026-05-28T08:59:46.9392613Z \n2026-05-28T08:59:46.9393568Z HEAD is now at 1ac10f1 Revert \"[torch.compile] Add patch for fullgraph compilation\" (#42686) (#42913)\n2026-05-28T08:59:46.9403856Z ##[endgroup]\n2026-05-28T08:59:46.9435923Z [command]/usr/bin/git log -1 --format=%H\n2026-05-28T08:59:46.9456556Z 1ac10f159a09897baada01b14b6a0dd6442aefd6\n2026-05-28T08:59:48.4112763Z ##[group]Run dorny/paths-filter@v4\n2026-05-28T08:59:48.4113766Z with:\n2026-05-28T08:59:48.4114703Z   filters: lint_tracker:\n  - 'requirements.txt'\n  - 'requirements-dev.txt'\n  - 'requirements-lint.txt'\n\n2026-05-28T08:59:48.4118495Z   token: ***\n2026-05-28T08:59:48.4119214Z   list-files: none\n2026-05-28T08:59:48.4119992Z   initial-fetch-depth: 100\n2026-05-28T08:59:48.4120920Z   predicate-quantifier: some\n2026-05-28T08:59:48.4121860Z ##[endgroup]\n2026-05-28T08:59:48.4166177Z ##[group]Run '/home/runner/k8s/index.js'\n2026-05-28T08:59:48.4168229Z shell: /home/runner/externals/node20/bin/node {0}\n2026-05-28T08:59:48.4169056Z ##[endgroup]\n2026-05-28T08:59:48.8851828Z (node:762) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.\n2026-05-28T08:59:48.8852964Z (Use `node --trace-deprecation ...` to show where the warning was created)\n2026-05-28T08:59:49.3643901Z ##[group]Fetching list of changed files for PR#9671 from Github API\n2026-05-28T08:59:49.3648001Z Invoking listFiles(pull_number: 9671, per_page: 100)\n2026-05-28T08:59:50.0534853Z Received 1 items\n2026-05-28T08:59:50.0535389Z [modified] vllm_ascend/quantization/methods/w8a8_mxfp8.py\n2026-05-28T08:59:50.0536092Z ##[endgroup]\n2026-05-28T08:59:50.0536342Z Detected 1 changed files\n2026-05-28T08:59:50.0536583Z Results:\n2026-05-28T08:59:50.0536931Z ##[group]Filter lint_tracker = false\n2026-05-28T08:59:50.0537227Z Matching files: none\n2026-05-28T08:59:50.0540571Z ##[endgroup]\n2026-05-28T08:59:50.0540895Z Changes output set to []\n2026-05-28T08:59:51.5360185Z ##[group]Run git config --global --add safe.directory /__w/vllm-ascend/vllm-ascend\n2026-05-28T08:59:51.5360881Z \u001b[36;1mgit config --global --add safe.directory /__w/vllm-ascend/vllm-ascend\u001b[0m\n2026-05-28T08:59:51.5361424Z \u001b[36;1mpre-commit run --all-files --hook-stage manual --show-diff-on-failure\u001b[0m\n2026-05-28T08:59:51.5362017Z shell: sh -e {0}\n2026-05-28T08:59:51.5362267Z env:\n2026-05-28T08:59:51.5362514Z   PRE_COMMIT_COLOR: always\n2026-05-28T08:59:51.5362799Z   FORCE_COLOR: 1\n2026-05-28T08:59:51.5363300Z   TERM: xterm-256color\n2026-05-28T08:59:51.5363613Z   SHELLCHECK_OPTS: --exclude=SC2046,SC2006,SC2086\n2026-05-28T08:59:51.5363987Z ##[endgroup]\n2026-05-28T08:59:51.5487116Z ##[group]Run '/home/runner/k8s/index.js'\n2026-05-28T08:59:51.5488151Z shell: /home/runner/externals/node20/bin/node {0}\n2026-05-28T08:59:51.5488498Z ##[endgroup]\n2026-05-28T08:59:52.0157758Z (node:915) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.\n2026-05-28T08:59:52.0158789Z (Use `node --trace-deprecation ...` to show where the warning was created)\n2026-05-28T08:59:53.5198170Z ruff check................................................................\u001b[42mPassed\u001b[m\n2026-05-28T08:59:53.7198913Z ruff format...............................................................\u001b[42mPassed\u001b[m\n2026-05-28T08:59:57.0836873Z codespell.................................................................\u001b[42mPassed\u001b[m\n2026-05-28T09:00:02.9427342Z typos.....................................................................\u001b[42mPassed\u001b[m\n2026-05-28T09:00:03.1561231Z clang-format..............................................................\u001b[42mPassed\u001b[m\n2026-05-28T09:00:07.8197176Z markdownlint..............................................................\u001b[42mPassed\u001b[m\n2026-05-28T09:00:08.2277209Z Lint GitHub Actions workflow files........................................\u001b[42mPassed\u001b[m\n2026-05-28T09:00:19.6277691Z Lint shell scripts........................................................\u001b[42mPassed\u001b[m\n2026-05-28T09:00:19.7717923Z Lint PNG exports from excalidraw..........................................\u001b[42mPassed\u001b[m\n2026-05-28T09:00:19.8925106Z Check for spaces in all filenames.........................................\u001b[42mPassed\u001b[m\n2026-05-28T09:00:20.0982509Z Enforce __init__.py in Python packages....................................\u001b[42mPassed\u001b[m\n2026-05-28T09:00:20.5932501Z Forbid init_logger(__name__) in vllm_ascend modules.......................\u001b[42mPassed\u001b[m\n2026-05-28T09:00:21.6617137Z Check for forbidden imports...............................................\u001b[42mPassed\u001b[m\n2026-05-28T09:00:22.3971876Z Check for boolean ops in with-statements..................................\u001b[42mPassed\u001b[m\n2026-05-28T09:00:22.7162763Z Check docs/yaml sync blocks...............................................\u001b[42mPassed\u001b[m\n2026-05-28T09:00:22.8368384Z Suggestion................................................................\u001b[42mPassed\u001b[m\n2026-05-28T09:00:22.8369334Z \u001b[2m- hook id: suggestion\u001b[m\n2026-05-28T09:00:22.8370069Z \u001b[2m- duration: 0s\u001b[m\n2026-05-28T09:00:22.8370332Z \n2026-05-28T09:00:22.8370790Z To bypass pre-commit hooks, add --no-verify to git commit.\n2026-05-28T09:00:22.8371116Z \n2026-05-28T09:00:23.1879875Z ##[group]Run PYTHONPATH=\"$PYTHONPATH:$(pwd)/vllm-empty\"\n2026-05-28T09:00:23.1880687Z \u001b[36;1mPYTHONPATH=\"$PYTHONPATH:$(pwd)/vllm-empty\"\u001b[0m\n2026-05-28T09:00:23.1881319Z \u001b[36;1mexport PYTHONPATH\u001b[0m\n2026-05-28T09:00:23.1881975Z \u001b[36;1mgit config --global --add safe.directory /__w/vllm-ascend/vllm-ascend\u001b[0m\n2026-05-28T09:00:23.1882679Z \u001b[36;1m# Run mypy for Python 3.10, 3.11, 3.12 manually\u001b[0m\n2026-05-28T09:00:23.1883605Z \u001b[36;1m# Note: We are now separating mypy from pre-commit hooks for performance reasons.\u001b[0m\n2026-05-28T09:00:23.1884331Z \u001b[36;1mfor python_version in \"3.10\" \"3.11\" \"3.12\"; do\u001b[0m\n2026-05-28T09:00:23.1884922Z \u001b[36;1m  echo \"============================\"\u001b[0m\n2026-05-28T09:00:23.1885588Z \u001b[36;1m  tools/mypy.sh 1 \"$python_version\"\u001b[0m\n2026-05-28T09:00:23.1886141Z \u001b[36;1m  echo \"============================\"\u001b[0m\n2026-05-28T09:00:23.1886691Z \u001b[36;1mdone\u001b[0m\n2026-05-28T09:00:23.1887344Z shell: sh -e {0}\n2026-05-28T09:00:23.1887845Z ##[endgroup]\n2026-05-28T09:00:23.2022054Z ##[group]Run '/home/runner/k8s/index.js'\n2026-05-28T09:00:23.2023303Z shell: /home/runner/externals/node20/bin/node {0}\n2026-05-28T09:00:23.2023599Z ##[endgroup]\n2026-05-28T09:00:23.6614302Z (node:1044) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.\n2026-05-28T09:00:23.6615270Z (Use `node --trace-deprecation ...` to show where the warning was created)\n2026-05-28T09:00:24.0776568Z ============================\n2026-05-28T09:00:24.0787268Z \u001b[0;32mRunning mypy for vllm_ascend on python version: 3.10\u001b[0m\n2026-05-28T09:00:34.9190044Z ##[error]vllm_ascend/quantization/methods/w8a8_mxfp8.py:295: error: Item \"None\" of \"Any | None\" has no attribute \"size\"  [union-attr]\n2026-05-28T09:00:34.9199202Z ##[error]vllm_ascend/quantization/methods/w8a8_mxfp8.py:295: error: Item \"None\" of \"Any | None\" has no attribute \"device\"  [union-attr]\n2026-05-28T09:00:34.9201697Z ##[error]vllm_ascend/quantization/methods/w8a8_mxfp8.py:296: error: Item \"None\" of \"Any | None\" has no attribute \"size\"  [union-attr]\n2026-05-28T09:00:34.9203478Z ##[error]vllm_ascend/quantization/methods/w8a8_mxfp8.py:296: error: Item \"None\" of \"Any | None\" has no attribute \"dtype\"  [union-attr]\n2026-05-28T09:00:34.9204837Z ##[error]vllm_ascend/quantization/methods/w8a8_mxfp8.py:299: error: Item \"None\" of \"Any | None\" has no attribute \"to\"  [union-attr]\n2026-05-28T09:00:36.3475295Z Found 5 errors in 1 file (checked 372 source files)\n2026-05-28T09:00:36.3852277Z ##[error]Error: failed to run script step: Error: command terminated with non-zero exit code: command terminated with exit code 1\n2026-05-28T09:00:36.3914988Z ##[error]Process completed with exit code 1.\n2026-05-28T09:00:36.4027399Z ##[error]Executing the custom container implementation failed. Please contact your self hosted runner administrator.\n2026-05-28T09:00:36.4541768Z Post job cleanup.\n2026-05-28T09:00:36.4586413Z ##[group]Run '/home/runner/k8s/index.js'\n2026-05-28T09:00:36.4587929Z shell: /home/runner/externals/node20/bin/node {0}\n2026-05-28T09:00:36.4588485Z ##[endgroup]\n2026-05-28T09:00:36.9252059Z (node:1123) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.\n2026-05-28T09:00:36.9253218Z (Use `node --trace-deprecation ...` to show where the warning was created)\n2026-05-28T09:00:37.4384504Z [command]/usr/bin/git version\n2026-05-28T09:00:37.4414226Z git version 2.34.1\n2026-05-28T09:00:37.4442313Z Copying '/root/.gitconfig' to '/__w/_temp/720f0fbd-e538-4ecd-aaa2-3de424347739/.gitconfig'\n2026-05-28T09:00:37.4450756Z Temporarily overriding HOME='/__w/_temp/720f0fbd-e538-4ecd-aaa2-3de424347739' before making global git config changes\n2026-05-28T09:00:37.4451746Z Adding repository directory to the temporary git global config as a safe directory\n2026-05-28T09:00:37.4454223Z [command]/usr/bin/git config --global --add safe.directory /__w/vllm-ascend/vllm-ascend/vllm-empty\n2026-05-28T09:00:37.4476950Z Removing SSH command configuration\n2026-05-28T09:00:37.4481556Z [command]/usr/bin/git config --local --name-only --get-regexp core\\.sshCommand\n2026-05-28T09:00:37.4506297Z [command]/usr/bin/git submodule foreach --recursive sh -c \"git config --local --name-only --get-regexp 'core\\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\"\n2026-05-28T09:00:37.4685350Z Removing HTTP extra header\n2026-05-28T09:00:37.4688658Z [command]/usr/bin/git config --local --name-only --get-regexp http\\.https\\:\\/\\/github\\.com\\/\\.extraheader\n2026-05-28T09:00:37.4710705Z [command]/usr/bin/git submodule foreach --recursive sh -c \"git config --local --name-only --get-regexp 'http\\.https\\:\\/\\/github\\.com\\/\\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\"\n2026-05-28T09:00:37.4877401Z Removing includeIf entries pointing to credentials config files\n2026-05-28T09:00:37.4881132Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\\.gitdir:\n2026-05-28T09:00:37.4895882Z includeif.gitdir:/__w/vllm-ascend/vllm-ascend/vllm-empty/.git.path\n2026-05-28T09:00:37.4896594Z includeif.gitdir:/__w/vllm-ascend/vllm-ascend/vllm-empty/.git/worktrees/*.path\n2026-05-28T09:00:37.4897190Z includeif.gitdir:/github/workspace/vllm-empty/.git.path\n2026-05-28T09:00:37.4897710Z includeif.gitdir:/github/workspace/vllm-empty/.git/worktrees/*.path\n2026-05-28T09:00:37.4901464Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/__w/vllm-ascend/vllm-ascend/vllm-empty/.git.path\n2026-05-28T09:00:37.4915250Z /__w/_temp/git-credentials-b35ef55d-141b-41ae-8587-06e4404ec9cc.config\n2026-05-28T09:00:37.4921773Z [command]/usr/bin/git config --local --unset includeif.gitdir:/__w/vllm-ascend/vllm-ascend/vllm-empty/.git.path /__w/_temp/git-credentials-b35ef55d-141b-41ae-8587-06e4404ec9cc.config\n2026-05-28T09:00:37.4943844Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/__w/vllm-ascend/vllm-ascend/vllm-empty/.git/worktrees/*.path\n2026-05-28T09:00:37.4958426Z /__w/_temp/git-credentials-b35ef55d-141b-41ae-8587-06e4404ec9cc.config\n2026-05-28T09:00:37.4964425Z [command]/usr/bin/git config --local --unset includeif.gitdir:/__w/vllm-ascend/vllm-ascend/vllm-empty/.git/worktrees/*.path /__w/_temp/git-credentials-b35ef55d-141b-41ae-8587-06e4404ec9cc.config\n2026-05-28T09:00:37.4986058Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/vllm-empty/.git.path\n2026-05-28T09:00:37.5000052Z /github/runner_temp/git-credentials-b35ef55d-141b-41ae-8587-06e4404ec9cc.config\n2026-05-28T09:00:37.5005461Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/vllm-empty/.git.path /github/runner_temp/git-credentials-b35ef55d-141b-41ae-8587-06e4404ec9cc.config\n2026-05-28T09:00:37.5027777Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/vllm-empty/.git/worktrees/*.path\n2026-05-28T09:00:37.5041299Z /github/runner_temp/git-credentials-b35ef55d-141b-41ae-8587-06e4404ec9cc.config\n2026-05-28T09:00:37.5047421Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/vllm-empty/.git/worktrees/*.path /github/runner_temp/git-credentials-b35ef55d-141b-41ae-8587-06e4404ec9cc.config\n2026-05-28T09:00:37.5069269Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url\n2026-05-28T09:00:37.5236188Z Removing credentials config '/__w/_temp/git-credentials-b35ef55d-141b-41ae-8587-06e4404ec9cc.config'\n2026-05-28T09:00:55.1726651Z Post job cleanup.\n2026-05-28T09:00:55.1762260Z ##[group]Run '/home/runner/k8s/index.js'\n2026-05-28T09:00:55.1764501Z shell: /home/runner/externals/node20/bin/node {0}\n2026-05-28T09:00:55.1765123Z ##[endgroup]\n2026-05-28T09:00:55.6336908Z (node:2163) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.\n2026-05-28T09:00:55.6337954Z (Use `node --trace-deprecation ...` to show where the warning was created)\n2026-05-28T09:00:56.2114842Z [command]/usr/bin/git version\n2026-05-28T09:00:56.2145297Z git version 2.34.1\n2026-05-28T09:00:56.2172292Z Copying '/root/.gitconfig' to '/__w/_temp/516c63c4-1fa0-4fca-8e3b-660acbd1aa5a/.gitconfig'\n2026-05-28T09:00:56.2212707Z Temporarily overriding HOME='/__w/_temp/516c63c4-1fa0-4fca-8e3b-660acbd1aa5a' before making global git config changes\n2026-05-28T09:00:56.2213862Z Adding repository directory to the temporary git global config as a safe directory\n2026-05-28T09:00:56.2216069Z [command]/usr/bin/git config --global --add safe.directory /__w/vllm-ascend/vllm-ascend\n2026-05-28T09:00:56.2237352Z Removing SSH command configuration\n2026-05-28T09:00:56.2241904Z [command]/usr/bin/git config --local --name-only --get-regexp core\\.sshCommand\n2026-05-28T09:00:56.2267069Z [command]/usr/bin/git submodule foreach --recursive sh -c \"git config --local --name-only --get-regexp 'core\\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\"\n2026-05-28T09:00:56.2441640Z Removing HTTP extra header\n2026-05-28T09:00:56.2444718Z [command]/usr/bin/git config --local --name-only --get-regexp http\\.https\\:\\/\\/github\\.com\\/\\.extraheader\n2026-05-28T09:00:56.2466481Z [command]/usr/bin/git submodule foreach --recursive sh -c \"git config --local --name-only --get-regexp 'http\\.https\\:\\/\\/github\\.com\\/\\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\"\n2026-05-28T09:00:56.2632143Z Removing includeIf entries pointing to credentials config files\n2026-05-28T09:00:56.2635589Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\\.gitdir:\n2026-05-28T09:00:56.2650724Z includeif.gitdir:/__w/vllm-ascend/vllm-ascend/.git.path\n2026-05-28T09:00:56.2651361Z includeif.gitdir:/__w/vllm-ascend/vllm-ascend/.git/worktrees/*.path\n2026-05-28T09:00:56.2652302Z includeif.gitdir:/github/workspace/.git.path\n2026-05-28T09:00:56.2652735Z includeif.gitdir:/github/workspace/.git/worktrees/*.path\n2026-05-28T09:00:56.2656896Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/__w/vllm-ascend/vllm-ascend/.git.path\n2026-05-28T09:00:56.2670210Z /__w/_temp/git-credentials-20119f13-0d7e-415e-8cd5-50b59ede4cc3.config\n2026-05-28T09:00:56.2676536Z [command]/usr/bin/git config --local --unset includeif.gitdir:/__w/vllm-ascend/vllm-ascend/.git.path /__w/_temp/git-credentials-20119f13-0d7e-415e-8cd5-50b59ede4cc3.config\n2026-05-28T09:00:56.2698804Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/__w/vllm-ascend/vllm-ascend/.git/worktrees/*.path\n2026-05-28T09:00:56.2713216Z /__w/_temp/git-credentials-20119f13-0d7e-415e-8cd5-50b59ede4cc3.config\n2026-05-28T09:00:56.2719154Z [command]/usr/bin/git config --local --unset includeif.gitdir:/__w/vllm-ascend/vllm-ascend/.git/worktrees/*.path /__w/_temp/git-credentials-20119f13-0d7e-415e-8cd5-50b59ede4cc3.config\n2026-05-28T09:00:56.2739688Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path\n2026-05-28T09:00:56.2753717Z /github/runner_temp/git-credentials-20119f13-0d7e-415e-8cd5-50b59ede4cc3.config\n2026-05-28T09:00:56.2758767Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-20119f13-0d7e-415e-8cd5-50b59ede4cc3.config\n2026-05-28T09:00:56.2779941Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path\n2026-05-28T09:00:56.2794395Z /github/runner_temp/git-credentials-20119f13-0d7e-415e-8cd5-50b59ede4cc3.config\n2026-05-28T09:00:56.2798943Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-20119f13-0d7e-415e-8cd5-50b59ede4cc3.config\n2026-05-28T09:00:56.2821244Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url\n2026-05-28T09:00:56.2980549Z Removing credentials config '/__w/_temp/git-credentials-20119f13-0d7e-415e-8cd5-50b59ede4cc3.config'\n2026-05-28T09:01:13.9640318Z ##[group]Run '/home/runner/k8s/index.js'\n2026-05-28T09:01:13.9641383Z shell: /home/runner/externals/node20/bin/node {0}\n2026-05-28T09:01:13.9641692Z ##[endgroup]\n2026-05-28T09:01:14.4757060Z Cleaning up orphan processes\n"
+        },
+        {
+          "job_id": 78258637475,
+          "job_name": "smart test",
+          "conclusion": "skipped",
+          "started_at": "2026-05-28T09:05:06Z",
+          "completed_at": "2026-05-28T09:05:05Z",
+          "steps": [],
+          "raw_log": ""
+        },
+        {
+          "job_id": 78258638076,
+          "job_name": "e2e-light",
+          "conclusion": "skipped",
+          "started_at": "2026-05-28T09:05:06Z",
+          "completed_at": "2026-05-28T09:05:05Z",
+          "steps": [],
+          "raw_log": ""
+        }
+      ]
+    }
+  ],
+  "analyses": [
+    {
+      "job_name": "changes",
+      "job_id": 78257520937,
+      "conclusion": "success",
+      "error_snippets": [],
+      "root_cause": "No log available for analysis",
+      "related_files": [],
+      "fix_suggestions": [],
+      "severity": "unknown",
+      "confidence": 0
+    },
+    {
+      "job_name": "lint / validate-pr-title",
+      "job_id": 78257521158,
+      "conclusion": "success",
+      "error_snippets": [],
+      "root_cause": "No log available for analysis",
+      "related_files": [],
+      "fix_suggestions": [],
+      "severity": "unknown",
+      "confidence": 0
+    },
+    {
+      "job_name": "lint / pre-commit",
+      "job_id": 78257624075,
+      "conclusion": "failure",
+      "error_snippets": [
+        "vllm_ascend/quantization/methods/w8a8_mxfp8.py:295: error: Item \"None\" of \"Any | None\" has no attribute \"size\"  [union-attr]",
+        "vllm_ascend/quantization/methods/w8a8_mxfp8.py:295: error: Item \"None\" of \"Any | None\" has no attribute \"device\"  [union-attr]",
+        "vllm_ascend/quantization/methods/w8a8_mxfp8.py:296: error: Item \"None\" of \"Any | None\" has no attribute \"dtype\"  [union-attr]",
+        "vllm_ascend/quantization/methods/w8a8_mxfp8.py:299: error: Item \"None\" of \"Any | None\" has no attribute \"to\"  [union-attr]",
+        "Found 5 errors in 1 file (checked 372 source files)"
+      ],
+      "root_cause": "The PR modifies w8a8_mxfp8.py and at lines 295-299 accesses attributes (.size, .device, .dtype, .to) on a variable that mypy infers as `Any | None`, without a None guard. This causes 5 mypy union-attr errors during the type-checking step run for Python 3.10.",
+      "related_files": [
+        "vllm_ascend/quantization/methods/w8a8_mxfp8.py"
+      ],
+      "fix_suggestions": [
+        "Add a None check (e.g., `if variable is not None:`) before accessing .size/.device/.dtype/.to on the potentially-None value at lines 295-299 of w8a8_mxfp8.py",
+        "Alternatively, assert the value is not None if the code path guarantees it, or provide a default value if None is a valid state"
+      ],
+      "severity": "high",
+      "confidence": 95
+    },
+    {
+      "job_name": "smart test",
+      "job_id": 78258637475,
+      "conclusion": "skipped",
+      "error_snippets": [],
+      "root_cause": "No log available for analysis",
+      "related_files": [],
+      "fix_suggestions": [],
+      "severity": "unknown",
+      "confidence": 0
+    },
+    {
+      "job_name": "e2e-light",
+      "job_id": 78258638076,
+      "conclusion": "skipped",
+      "error_snippets": [],
+      "root_cause": "No log available for analysis",
+      "related_files": [],
+      "fix_suggestions": [],
+      "severity": "unknown",
+      "confidence": 0
+    }
+  ]
+}

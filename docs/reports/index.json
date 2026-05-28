@@ -1,6 +1,51 @@
 {
-  "generated_at": "2026-05-25T05:07:40.154782+00:00",
+  "generated_at": "2026-05-28T10:08:49.014081+00:00",
   "reports": [
+    {
+      "pr_number": 9648,
+      "pr_title": "[Feature] Support Device to Remote Host connector",
+      "json_path": "reports/2026-05-28/pr-9648.json",
+      "md_path": "reports/2026-05-28/pr-9648.md",
+      "analyzed_at": "2026-05-28T09:48:40.365605+00:00",
+      "failed_job_count": 5,
+      "top_severity": "medium"
+    },
+    {
+      "pr_number": 9650,
+      "pr_title": "[Misc] main2main 0527",
+      "json_path": "reports/2026-05-28/pr-9650.json",
+      "md_path": "reports/2026-05-28/pr-9650.md",
+      "analyzed_at": "2026-05-28T09:48:34.511681+00:00",
+      "failed_job_count": 57,
+      "top_severity": "critical"
+    },
+    {
+      "pr_number": 9651,
+      "pr_title": "[CI] For WorkFlows Rerun Purpose",
+      "json_path": "reports/2026-05-28/pr-9651.json",
+      "md_path": "reports/2026-05-28/pr-9651.md",
+      "analyzed_at": "2026-05-28T09:47:32.333887+00:00",
+      "failed_job_count": 127,
+      "top_severity": "critical"
+    },
+    {
+      "pr_number": 9660,
+      "pr_title": "[Doc][WIP] Restructure Qwen3 model tutorials to align with deployment template and add best practice configs",
+      "json_path": "reports/2026-05-28/pr-9660.json",
+      "md_path": "reports/2026-05-28/pr-9660.md",
+      "analyzed_at": "2026-05-28T09:45:54.457635+00:00",
+      "failed_job_count": 10,
+      "top_severity": "medium"
+    },
+    {
+      "pr_number": 9671,
+      "pr_title": "[Ascend950][Feature]Support MXFP8 FlashcommV3 on 950",
+      "json_path": "reports/2026-05-28/pr-9671.json",
+      "md_path": "reports/2026-05-28/pr-9671.md",
+      "analyzed_at": "2026-05-28T09:45:44.531584+00:00",
+      "failed_job_count": 5,
+      "top_severity": "high"
+    },
     {
       "pr_number": 9201,
       "pr_title": "[Refactor] migrate compilation backend from torchair to npugraph_ex",

@@ -32,33 +32,69 @@ body {
 header {
   background: var(--surface);
   border-bottom: 1px solid var(--border);
-  padding: 14px 24px;
   position: sticky;
   top: 0;
   z-index: 10;
 }
 
-header h1 {
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 10px;
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px 0;
 }
 
-.header-controls {
+.header-top h1 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.header-actions {
   display: flex;
-  gap: 10px;
-  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* ── Tab Navigation ── */
+.tabs {
+  display: flex;
+  gap: 0;
+  padding: 8px 24px 0;
+  border-bottom: none;
+}
+
+.tab {
+  background: none;
+  color: var(--text-dim);
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 0;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.tab:hover { color: var(--text); opacity: 1; }
+
+.tab.active {
+  color: var(--link);
+  border-bottom-color: var(--link);
+}
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* ── Filters Bar ── */
+.filters-bar {
+  display: flex;
+  gap: 8px;
+  padding: 0 0 16px;
   flex-wrap: wrap;
 }
 
-.header-controls .filters {
-  display: flex;
-  gap: 8px;
-  flex: 1;
-}
-
-.header-controls input,
-.header-controls select {
+.filters-bar input,
+.filters-bar select {
   background: var(--bg);
   border: 1px solid var(--border);
   color: var(--text);
@@ -67,7 +103,7 @@ header h1 {
   font-size: 13px;
 }
 
-.header-controls input { min-width: 200px; }
+.filters-bar input { min-width: 200px; }
 
 button {
   background: var(--accent);

@@ -1,11 +1,13 @@
 const INDEX_URL = "reports/index.json";
 let allReports = [];
-let allAnalyses = []; // Full analysis data for charts
+let allAnalyses = [];
+let allJobs = []; // ALL jobs (including success) for CI stats
 let charts = {};
+let ciCharts = {};
+let activeTab = "analysis";
 
 // ── Category Classification ──
 
-// ORDER MATTERS: more specific rules match first
 const CATEGORY_RULES = [
   ["lint", /(\bruff\b|pre-commit|\bmypy\b|\bflake8\b|\bE\d{3}\b|\bF\d{3}\b|\bW\d{3}\b|PR\s+title|formatting|unused\s+import|line\s+too\s+long|undefined\s+name|imported\s+but\s+unused)/i],
   ["build", /(\bcmake\b|pip\s+install|uv\s+pip|setup\.py|requirements|wheel\s|build\s+(?:fail|error|broken)|UV_INDEX|package\s.*\bnot\s+found|could\s+not\s+find.*version)/i],
@@ -18,9 +20,7 @@ const CATEGORY_RULES = [
 
 function classifyJob(analysis, jobName) {
   const text = [analysis.root_cause || "", (analysis.error_snippets || []).join(" "), jobName].join(" ");
-  for (const [cat, re] of CATEGORY_RULES) {
-    if (re.test(text)) return cat;
-  }
+  for (const [cat, re] of CATEGORY_RULES) { if (re.test(text)) return cat; }
   return "other";
 }
 
@@ -29,23 +29,61 @@ function classifyJob(analysis, jobName) {
 function applyI18n() {
   document.title = t("title");
   document.getElementById("pageTitle").textContent = t("title");
-  document.getElementById("searchInput").placeholder = t("searchPlaceholder");
   document.getElementById("refreshBtn").textContent = t("refresh");
   document.getElementById("langToggle").textContent = t("lang");
-  document.getElementById("chartSeverityTitle").textContent = t("severityBreakdown");
-  document.getElementById("chartWorkflowTitle").textContent = t("topWorkflows");
-  document.getElementById("chartCategoryTitle").textContent = t("categoryBreakdown");
-  document.getElementById("reportSectionTitle").textContent = t("recentReports");
 
+  // Tabs
+  document.querySelectorAll(".tab").forEach(el => {
+    if (el.dataset.tab === "analysis") el.textContent = t("tabAnalysis");
+    if (el.dataset.tab === "ci-stats") el.textContent = t("tabCIStats");
+  });
+
+  // Analysis tab elements
   const sevSel = document.getElementById("severityFilter");
-  sevSel.options[0].text = t("allSeverities");
-  for (let i = 1; i < sevSel.options.length; i++) {
-    sevSel.options[i].text = tSeverity(sevSel.options[i].value);
+  if (sevSel) {
+    sevSel.options[0].text = t("allSeverities");
+    for (let i = 1; i < sevSel.options.length; i++) sevSel.options[i].text = tSeverity(sevSel.options[i].value);
   }
   const catSel = document.getElementById("categoryFilter");
-  catSel.options[0].text = t("allCategories");
-  for (let i = 1; i < catSel.options.length; i++) {
-    catSel.options[i].text = tCategory(catSel.options[i].value);
+  if (catSel) {
+    catSel.options[0].text = t("allCategories");
+    for (let i = 1; i < catSel.options.length; i++) catSel.options[i].text = tCategory(catSel.options[i].value);
+  }
+  document.getElementById("searchInput").placeholder = t("searchPlaceholder");
+
+  // Chart titles
+  const elSeverity = document.getElementById("chartSeverityTitle");
+  const elWorkflow = document.getElementById("chartWorkflowTitle");
+  const elCategory = document.getElementById("chartCategoryTitle");
+  const elSection = document.getElementById("reportSectionTitle");
+  if (elSeverity) elSeverity.textContent = t("severityBreakdown");
+  if (elWorkflow) elWorkflow.textContent = t("topWorkflows");
+  if (elCategory) elCategory.textContent = t("categoryBreakdown");
+  if (elSection) elSection.textContent = t("recentReports");
+
+  // CI tab chart titles
+  const elDur = document.getElementById("chartDurationTitle");
+  const elQueue = document.getElementById("chartQueueTitle");
+  const elSuccess = document.getElementById("chartSuccessTitle");
+  const elSlow = document.getElementById("chartSlowestTitle");
+  if (elDur) elDur.textContent = t("ciDurationDist");
+  if (elQueue) elQueue.textContent = t("ciQueueWait");
+  if (elSuccess) elSuccess.textContent = t("ciSuccessByWF");
+  if (elSlow) elSlow.textContent = t("ciSlowestJobs");
+}
+
+// ── Tab Switching ──
+
+function switchTab(name) {
+  activeTab = name;
+  document.querySelectorAll(".tab").forEach(el => el.classList.toggle("active", el.dataset.tab === name));
+  document.querySelectorAll(".tab-content").forEach(el => el.classList.toggle("active", el.id === `tab-${name}`));
+
+  if (name === "analysis") {
+    renderMetrics();
+    if (allAnalyses.length) renderCharts();
+  } else if (name === "ci-stats") {
+    if (allJobs.length) renderCIStats();
   }
 }
 
@@ -62,7 +100,6 @@ async function loadReports() {
     allReports = data.reports || [];
     renderMetrics();
     renderReports();
-    // Async load full report data for charts
     loadAnalysesData();
   } catch (err) {
     document.getElementById("reportList").innerHTML =
@@ -72,29 +109,56 @@ async function loadReports() {
 
 async function loadAnalysesData() {
   allAnalyses = [];
+  allJobs = [];
   for (const r of allReports) {
     try {
       const resp = await fetch(r.json_path);
       if (!resp.ok) continue;
       const data = await resp.json();
+
+      // Analysis (failed job intelligence)
       for (const a of data.analyses || []) {
         if (a.confidence > 0) {
           a._pr_number = r.pr_number;
           a._pr_title = r.pr_title;
           a._analyzed_at = r.analyzed_at;
           a._category = classifyJob(a, a.job_name);
-          // Extract workflow name from job_name
           const parts = a.job_name.split(" / ");
           a._workflow = parts[0] || "unknown";
           allAnalyses.push(a);
         }
       }
-    } catch (e) { /* skip failed loads */ }
+
+      // All jobs from runs (for CI execution stats)
+      for (const run of data.runs || []) {
+        for (const job of run.jobs || []) {
+          if (job.started_at && job.completed_at) {
+            const started = new Date(job.started_at);
+            const completed = new Date(job.completed_at);
+            const created = new Date(run.created_at || job.started_at);
+            allJobs.push({
+              job_name: job.job_name,
+              job_id: job.job_id,
+              conclusion: job.conclusion,
+              workflow_name: run.workflow_name,
+              branch: run.branch,
+              started_at: job.started_at,
+              completed_at: job.completed_at,
+              duration: (completed - started) / 1000, // seconds
+              queue_time: (started - created) / 1000, // seconds
+              pr_number: r.pr_number,
+            });
+          }
+        }
+      }
+    } catch (e) { /* skip */ }
   }
-  renderCharts();
+
+  if (allAnalyses.length) renderCharts();
+  if (allJobs.length && activeTab === "ci-stats") renderCIStats();
 }
 
-// ── Metrics ──
+// ── Metrics (Analysis Tab) ──
 
 function renderMetrics() {
   const totalPRs = allReports.length;
@@ -106,8 +170,6 @@ function renderMetrics() {
     else if (r.top_severity === "medium") med++;
     else low++;
   });
-
-  // Estimate avg confidence from available index data (will be refined after full load)
   const avgConf = totalJobs > 0 ? Math.round((crit * 90 + high * 80 + med * 70 + low * 60) / Math.max(1, crit + high + med + low)) : 0;
 
   document.getElementById("metrics").innerHTML = `
@@ -121,26 +183,21 @@ function renderMetrics() {
   `;
 }
 
-// ── Charts ──
+// ── Charts (Analysis Tab) ──
 
-function destroyCharts() {
-  Object.values(charts).forEach(c => c.destroy());
-  charts = {};
-}
+function destroyCharts() { Object.values(charts).forEach(c => c.destroy()); charts = {}; }
 
 function renderCharts() {
   destroyCharts();
   if (!allAnalyses.length) return;
-
   renderSeverityChart();
   renderWorkflowChart();
   renderCategoryChart();
 }
 
 function renderSeverityChart() {
-  const counts = { critical: 0, high: 0, medium: 0, low: 0, unknown: 0 };
+  const counts = { critical: 0, high: 0, medium: 0, low: 0 };
   allAnalyses.forEach(a => { counts[a.severity] = (counts[a.severity] || 0) + 1; });
-
   const labels = [tSeverity("critical"), tSeverity("high"), tSeverity("medium"), tSeverity("low")];
   const data = [counts.critical, counts.high, counts.medium, counts.low];
   const colors = ["#dc2626", "#ea580c", "#ca8a04", "#16a34a"];
@@ -148,21 +205,11 @@ function renderSeverityChart() {
 
   charts.severity = new Chart(document.getElementById("chartSeverity"), {
     type: "doughnut",
-    data: {
-      labels,
-      datasets: [{ data, backgroundColor: colors, borderColor: "#161b22", borderWidth: 2 }],
-    },
+    data: { labels, datasets: [{ data, backgroundColor: colors, borderColor: "#161b22", borderWidth: 2 }] },
     options: {
-      responsive: true,
-      maintainAspectRatio: true,
-      onClick: (e, elements) => {
-        if (elements.length) {
-          showDrillDown("severity", sevKeys[elements[0].index], tSeverity(sevKeys[elements[0].index]));
-        }
-      },
-      plugins: {
-        legend: { position: "bottom", labels: { color: "#8b949e", padding: 16, font: { size: 12 } } },
-      },
+      responsive: true, maintainAspectRatio: true,
+      onClick: (e, els) => { if (els.length) showDrillDown("severity", sevKeys[els[0].index], tSeverity(sevKeys[els[0].index])); },
+      plugins: { legend: { position: "bottom", labels: { color: "#8b949e", padding: 16, font: { size: 12 } } } },
     },
   });
 }
@@ -170,25 +217,15 @@ function renderSeverityChart() {
 function renderWorkflowChart() {
   const wfCounts = {};
   allAnalyses.forEach(a => { wfCounts[a._workflow] = (wfCounts[a._workflow] || 0) + 1; });
-
   const sorted = Object.entries(wfCounts).sort((a, b) => b[1] - a[1]).slice(0, 8);
   const wfKeys = sorted.map(([k]) => k);
 
   charts.workflow = new Chart(document.getElementById("chartWorkflow"), {
     type: "bar",
-    data: {
-      labels: wfKeys,
-      datasets: [{ data: sorted.map(([, v]) => v), backgroundColor: "#1f6feb", borderRadius: 4 }],
-    },
+    data: { labels: wfKeys, datasets: [{ data: sorted.map(([, v]) => v), backgroundColor: "#1f6feb", borderRadius: 4 }] },
     options: {
-      indexAxis: "y",
-      responsive: true,
-      maintainAspectRatio: true,
-      onClick: (e, elements) => {
-        if (elements.length) {
-          showDrillDown("workflow", wfKeys[elements[0].index], wfKeys[elements[0].index]);
-        }
-      },
+      indexAxis: "y", responsive: true, maintainAspectRatio: true,
+      onClick: (e, els) => { if (els.length) showDrillDown("workflow", wfKeys[els[0].index], wfKeys[els[0].index]); },
       plugins: { legend: { display: false } },
       scales: {
         x: { grid: { color: "#21262d" }, ticks: { color: "#8b949e", font: { size: 11 } } },
@@ -201,36 +238,170 @@ function renderWorkflowChart() {
 function renderCategoryChart() {
   const catCounts = {};
   allAnalyses.forEach(a => { catCounts[a._category] = (catCounts[a._category] || 0) + 1; });
-
   const order = ["code", "build", "infra", "test", "lint", "compat", "perf", "other"];
   const catKeys = order.filter(k => catCounts[k]);
   const labels = catKeys.map(k => tCategory(k));
   const data = catKeys.map(k => catCounts[k]);
-  const colors = {
-    code: "#8957e5", build: "#3fb950", infra: "#d29922", test: "#58a6ff",
-    compat: "#f778ba", perf: "#f85149", lint: "#ca8a04", other: "#8b949e",
-  };
+  const colors = { code: "#8957e5", build: "#3fb950", infra: "#d29922", test: "#58a6ff", compat: "#f778ba", perf: "#f85149", lint: "#ca8a04", other: "#8b949e" };
   const bgColors = catKeys.map(k => colors[k] || "#8b949e");
 
   charts.category = new Chart(document.getElementById("chartCategory"), {
     type: "bar",
-    data: {
-      labels,
-      datasets: [{ data, backgroundColor: bgColors, borderRadius: 4 }],
-    },
+    data: { labels, datasets: [{ data, backgroundColor: bgColors, borderRadius: 4 }] },
     options: {
-      responsive: true,
-      maintainAspectRatio: true,
-      onClick: (e, elements) => {
-        if (elements.length) {
-          const idx = elements[0].index;
-          showDrillDown("category", catKeys[idx], tCategory(catKeys[idx]));
-        }
-      },
+      responsive: true, maintainAspectRatio: true,
+      onClick: (e, els) => { if (els.length) showDrillDown("category", catKeys[els[0].index], tCategory(catKeys[els[0].index])); },
       plugins: { legend: { display: false } },
       scales: {
         x: { grid: { display: false }, ticks: { color: "#c9d1d9", font: { size: 11 } } },
         y: { grid: { color: "#21262d" }, ticks: { color: "#8b949e", font: { size: 11 }, stepSize: 1 } },
+      },
+    },
+  });
+}
+
+// ── CI Execution Analysis ──
+
+function destroyCICharts() { Object.values(ciCharts).forEach(c => c.destroy()); ciCharts = {}; }
+
+function percentile(arr, p) {
+  if (!arr.length) return 0;
+  const sorted = [...arr].sort((a, b) => a - b);
+  const idx = (p / 100) * (sorted.length - 1);
+  const lo = Math.floor(idx), hi = Math.ceil(idx);
+  if (lo === hi) return sorted[lo];
+  return sorted[lo] + (idx - lo) * (sorted[hi] - sorted[lo]);
+}
+
+function fmtDuration(seconds) {
+  if (seconds < 60) return `${Math.round(seconds)}${t("ciSeconds")}`;
+  if (seconds < 3600) return `${Math.round(seconds / 60)}${t("ciMinutes")}`;
+  return `${(seconds / 3600).toFixed(1)}h`;
+}
+
+function renderCIStats() {
+  if (!allJobs.length) return;
+  destroyCICharts();
+
+  // Compute metrics
+  const durations = allJobs.map(j => j.duration).filter(d => d > 0);
+  const queueTimes = allJobs.map(j => j.queue_time).filter(q => q >= 0);
+  const avgDur = durations.reduce((s, d) => s + d, 0) / durations.length;
+  const total = allJobs.length;
+  const success = allJobs.filter(j => j.conclusion === "success").length;
+  const failed = allJobs.filter(j => j.conclusion === "failure").length;
+
+  // Metric cards
+  document.getElementById("ciMetrics").innerHTML = `
+    <div class="metric-card"><div class="metric-value">${total}</div><div class="metric-label">${t("ciTotalRuns")}</div></div>
+    <div class="metric-card"><div class="metric-value">${fmtDuration(avgDur)}</div><div class="metric-label">${t("ciAvgDuration")}</div></div>
+    <div class="metric-card"><div class="metric-value">${fmtDuration(percentile(durations, 50))}</div><div class="metric-label">${t("ciMedianDuration")}</div></div>
+    <div class="metric-card"><div class="metric-value">${fmtDuration(percentile(durations, 90))}</div><div class="metric-label">${t("ciP90Duration")}</div></div>
+    <div class="metric-card"><div class="metric-value">${fmtDuration(percentile(durations, 20))}</div><div class="metric-label">${t("ciP20Duration")}</div></div>
+    <div class="metric-card"><div class="metric-value">${fmtDuration(percentile(queueTimes, 50))}</div><div class="metric-label">${t("ciQueueTime")} (P50)</div></div>
+    <div class="metric-card"><div class="metric-value">${total ? Math.round(success / total * 100) : 0}%</div><div class="metric-label">${t("ciSuccessRate")}</div></div>
+  `;
+
+  // Duration distribution - boxplot-like bar with P20/P50/P90 markers
+  const p20 = percentile(durations, 20), p50 = percentile(durations, 50), p90 = percentile(durations, 90);
+  const maxDur = Math.max(...durations, 1);
+
+  // Histogram buckets
+  const buckets = 20;
+  const bucketSize = maxDur / buckets;
+  const hist = new Array(buckets).fill(0);
+  durations.forEach(d => {
+    const b = Math.min(Math.floor(d / bucketSize), buckets - 1);
+    hist[b]++;
+  });
+  const histLabels = Array.from({ length: buckets }, (_, i) => fmtDuration(i * bucketSize));
+
+  ciCharts.duration = new Chart(document.getElementById("chartDuration"), {
+    type: "bar",
+    data: {
+      labels: histLabels,
+      datasets: [{ data: hist, backgroundColor: "#1f6feb", borderRadius: 2, barPercentage: 1, categoryPercentage: 1 }],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: true,
+      plugins: {
+        legend: { display: false },
+        annotation: false,
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: "#8b949e", font: { size: 9 }, maxTicksLimit: 10 } },
+        y: { grid: { color: "#21262d" }, ticks: { color: "#8b949e", font: { size: 11 } } },
+      },
+    },
+  });
+
+  // Queue time by workflow
+  const wfQueue = {};
+  allJobs.forEach(j => {
+    if (!wfQueue[j.workflow_name]) wfQueue[j.workflow_name] = [];
+    wfQueue[j.workflow_name].push(j.queue_time);
+  });
+  const wfSorted = Object.entries(wfQueue).map(([k, v]) => [k, v.reduce((s, d) => s + d, 0) / v.length]).sort((a, b) => b[1] - a[1]).slice(0, 8);
+
+  ciCharts.queue = new Chart(document.getElementById("chartQueue"), {
+    type: "bar",
+    data: {
+      labels: wfSorted.map(([k]) => k),
+      datasets: [{ data: wfSorted.map(([, v]) => v), backgroundColor: "#d29922", borderRadius: 4 }],
+    },
+    options: {
+      indexAxis: "y", responsive: true, maintainAspectRatio: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color: "#21262d" }, ticks: { color: "#8b949e", font: { size: 11 }, callback: v => fmtDuration(v) } },
+        y: { grid: { display: false }, ticks: { color: "#c9d1d9", font: { size: 11 } } },
+      },
+    },
+  });
+
+  // Success rate by workflow (with actual success/fail counts)
+  const wfResults = {};
+  allJobs.forEach(j => {
+    if (!wfResults[j.workflow_name]) wfResults[j.workflow_name] = { success: 0, failure: 0, skipped: 0 };
+    const c = j.conclusion || "skipped";
+    wfResults[j.workflow_name][c] = (wfResults[j.workflow_name][c] || 0) + 1;
+  });
+  const wfRates = Object.entries(wfResults).map(([k, v]) => ({ name: k, rate: (v.success || 0) / ((v.success || 0) + (v.failure || 0) + (v.skipped || 0)) * 100, ...v })).sort((a, b) => a.rate - b.rate).reverse().slice(0, 10);
+
+  ciCharts.success = new Chart(document.getElementById("chartSuccess"), {
+    type: "bar",
+    data: {
+      labels: wfRates.map(w => w.name),
+      datasets: [
+        { label: t("ciSuccess"), data: wfRates.map(w => w.success), backgroundColor: "#16a34a" },
+        { label: t("ciFailed"), data: wfRates.map(w => w.failure), backgroundColor: "#dc2626" },
+        { label: t("ciSkipped"), data: wfRates.map(w => w.skipped), backgroundColor: "#8b949e" },
+      ],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: true,
+      plugins: { legend: { position: "bottom", labels: { color: "#8b949e", font: { size: 11 } } } },
+      scales: {
+        x: { stacked: true, grid: { display: false }, ticks: { color: "#c9d1d9", font: { size: 10 }, maxRotation: 45 } },
+        y: { stacked: true, grid: { color: "#21262d" }, ticks: { color: "#8b949e", font: { size: 11 } } },
+      },
+    },
+  });
+
+  // Slowest jobs
+  const slowest = allJobs.sort((a, b) => b.duration - a.duration).slice(0, 10);
+  ciCharts.slowest = new Chart(document.getElementById("chartSlowest"), {
+    type: "bar",
+    data: {
+      labels: slowest.map(j => j.job_name.length > 40 ? j.job_name.slice(0, 40) + "..." : j.job_name),
+      datasets: [{ data: slowest.map(j => j.duration), backgroundColor: slowest.map(j => j.conclusion === "failure" ? "#dc2626" : j.conclusion === "success" ? "#16a34a" : "#8b949e"), borderRadius: 4 }],
+    },
+    options: {
+      indexAxis: "y", responsive: true, maintainAspectRatio: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color: "#21262d" }, ticks: { color: "#8b949e", font: { size: 11 }, callback: v => fmtDuration(v) } },
+        y: { grid: { display: false }, ticks: { color: "#c9d1d9", font: { size: 10 } } },
       },
     },
   });
@@ -248,20 +419,15 @@ function renderReports() {
     const text = `${r.pr_number} ${r.pr_title}`.toLowerCase();
     if (search && !text.includes(search)) return false;
     if (severity && r.top_severity !== severity) return false;
-    // Category filter needs analysis data - skip if not loaded yet
     return true;
   });
 
-  // Apply category filter if analyses are loaded
   if (category && allAnalyses.length) {
     const catPRs = new Set(allAnalyses.filter(a => a._category === category).map(a => a._pr_number));
     filtered = filtered.filter(r => catPRs.has(r.pr_number));
   }
 
-  if (!filtered.length) {
-    el.innerHTML = `<div class="empty">${t("noReports")}</div>`;
-    return;
-  }
+  if (!filtered.length) { el.innerHTML = `<div class="empty">${t("noReports")}</div>`; return; }
 
   el.innerHTML = filtered.map(r => {
     const date = new Date(r.analyzed_at).toLocaleDateString(currentLang === "zh" ? "zh-CN" : "en-US", { month: "short", day: "numeric" });
@@ -285,18 +451,15 @@ function renderReports() {
 async function openDetail(prNumber) {
   const report = allReports.find(r => r.pr_number === prNumber);
   if (!report) return;
-
   const modal = document.getElementById("detailModal");
   document.getElementById("detailContent").innerHTML = `<div class="loading">${t("loading")}</div>`;
   modal.classList.add("open");
-
   try {
     const resp = await fetch(report.json_path);
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     renderDetail(await resp.json());
   } catch (err) {
-    document.getElementById("detailContent").innerHTML =
-      `<div class="loading" style="color:var(--critical)">${t("detailFailed")}: ${err.message}</div>`;
+    document.getElementById("detailContent").innerHTML = `<div class="loading" style="color:var(--critical)">${t("detailFailed")}: ${err.message}</div>`;
   }
 }
 
@@ -309,7 +472,6 @@ function renderDetail(data) {
   html += `<div class="meta-line">${t("author")}: ${escapeHtml(data.pr_author)}</div>`;
   html += `<div class="meta-line">URL: <a href="${escapeHtml(data.pr_url)}" target="_blank">${escapeHtml(data.pr_url)}</a></div>`;
   html += `<div class="meta-line">${t("analyzed")}: ${new Date(data.analyzed_at).toLocaleString(dateLocale)}</div>`;
-
   html += `<h3>${t("affectedRuns")}</h3>`;
   if (!runs.length) {
     html += `<div class="meta-line">${t("noRuns")}</div>`;
@@ -318,21 +480,14 @@ function renderDetail(data) {
       html += `<div class="meta-line"><strong>${escapeHtml(run.workflow_name)}</strong> (${run.run_id}) — ${run.conclusion} @ ${escapeHtml(run.branch)}</div>`;
     });
   }
-
   html += `<h3>${t("analysis")} (${analyses.length} ${t("failedJobs")})</h3>`;
   if (!analyses.length) {
     html += `<div class="empty">${t("noAnalysis")}</div>`;
   } else {
     analyses.forEach(a => {
       const cat = classifyJob(a, a.job_name);
-      html += `<h4>
-        <span class="badge badge-${a.severity}">${tSeverity(a.severity)}</span>
-        <span class="badge badge-${cat}">${tCategory(cat)}</span>
-        ${escapeHtml(a.job_name)}
-        <small style="color:var(--text-dim)">(${t("confidence")}: ${a.confidence}%)</small>
-      </h4>`;
+      html += `<h4><span class="badge badge-${a.severity}">${tSeverity(a.severity)}</span> <span class="badge badge-${cat}">${tCategory(cat)}</span> ${escapeHtml(a.job_name)} <small style="color:var(--text-dim)">(${t("confidence")}: ${a.confidence}%)</small></h4>`;
       html += `<div class="root-cause">${escapeHtml(a.root_cause || t("noRootCause"))}</div>`;
-
       if (a.error_snippets && a.error_snippets.length) {
         html += `<div><strong>${t("errorSnippets")}</strong></div>`;
         a.error_snippets.forEach(s => { html += `<div class="snippet">${escapeHtml(s)}</div>`; });
@@ -349,30 +504,20 @@ function renderDetail(data) {
       }
     });
   }
-
   document.getElementById("detailContent").innerHTML = html;
 }
 
-function closeDetail() {
-  document.getElementById("detailModal").classList.remove("open");
-}
+function closeDetail() { document.getElementById("detailModal").classList.remove("open"); }
 
-// ── Category Detail Drill-Down ──
+// ── Drill Down ──
 
 function showDrillDown(filterType, filterValue, displayName) {
-  // filterType: "severity", "category", "workflow", or "all"
   let matches;
-  if (filterType === "severity") {
-    matches = allAnalyses.filter(a => a.severity === filterValue);
-  } else if (filterType === "workflow") {
-    matches = allAnalyses.filter(a => a._workflow === filterValue);
-  } else if (filterType === "all") {
-    matches = allAnalyses;
-  } else {
-    matches = allAnalyses.filter(a => a._category === filterValue);
-  }
+  if (filterType === "severity") matches = allAnalyses.filter(a => a.severity === filterValue);
+  else if (filterType === "workflow") matches = allAnalyses.filter(a => a._workflow === filterValue);
+  else if (filterType === "all") matches = allAnalyses;
+  else matches = allAnalyses.filter(a => a._category === filterValue);
 
-  // Group by PR
   const grouped = {};
   matches.forEach(a => {
     if (!grouped[a._pr_number]) grouped[a._pr_number] = [];
@@ -384,12 +529,10 @@ function showDrillDown(filterType, filterValue, displayName) {
 
   for (const [prNum, items] of Object.entries(grouped)) {
     const pr = allReports.find(r => r.pr_number === parseInt(prNum));
-    const prTitle = pr ? pr.pr_title : "";
     html += `<div style="margin:16px 0 8px">
       <a href="javascript:void(0)" onclick="closeDetail();openDetail(${prNum})" style="color:var(--link);font-weight:600;font-size:15px">#${prNum}</a>
-      <span style="color:var(--text-dim);font-size:13px;margin-left:8px">${escapeHtml(prTitle)}</span>
+      <span style="color:var(--text-dim);font-size:13px;margin-left:8px">${escapeHtml(pr ? pr.pr_title : "")}</span>
     </div>`;
-
     items.forEach(a => {
       const date = new Date(a._analyzed_at).toLocaleDateString(dateLocale, { month: "short", day: "numeric" });
       html += `<div style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px 14px;margin:6px 0">
@@ -404,7 +547,6 @@ function showDrillDown(filterType, filterValue, displayName) {
       </div>`;
     });
   }
-
   document.getElementById("detailContent").innerHTML = html;
   document.getElementById("detailModal").classList.add("open");
 }
