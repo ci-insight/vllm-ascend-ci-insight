@@ -303,7 +303,7 @@ function renderCIStats() {
   const wfGroups = {};
   allJobs.forEach(j => { (wfGroups[wfKey(j)] ||= []).push(j); });
 
-  const wfRuns = Object.values(wfGroups).map(jobs => {
+  _wfRuns = Object.values(wfGroups).map(jobs => {
     const starts = jobs.map(j => new Date(j.started_at));
     const ends = jobs.map(j => new Date(j.completed_at));
     const firstStart = new Date(Math.min(...starts));
@@ -332,11 +332,11 @@ function renderCIStats() {
     };
   });
 
-  const wcDurations = wfRuns.map(w => w.wallClock);
-  const wfTotal = wfRuns.length;
+  const wcDurations = _wfRuns.map(w => w.wallClock);
+  const wfTotal = _wfRuns.length;
   const wfAvgWC = wcDurations.reduce((s, d) => s + d, 0) / wfTotal;
-  const wfAvgJobs = wfRuns.reduce((s, w) => s + w.jobCount, 0) / wfTotal;
-  const wfAvgEfficiency = wfRuns.reduce((s, w) => s + w.parallelEfficiency, 0) / wfTotal;
+  const wfAvgJobs = _wfRuns.reduce((s, w) => s + w.jobCount, 0) / wfTotal;
+  const wfAvgEfficiency = _wfRuns.reduce((s, w) => s + w.parallelEfficiency, 0) / wfTotal;
 
   // ── Metric cards: Job row + Workflow row ──
   document.getElementById("ciMetrics").innerHTML = `
@@ -346,7 +346,7 @@ function renderCIStats() {
     <div class="metric-card"><div class="metric-value">${fmtDuration(percentile(durations, 50))}</div><div class="metric-label">${t("ciJobP50")}</div></div>
     <div class="metric-card"><div class="metric-value">${fmtDuration(percentile(durations, 90))}</div><div class="metric-label">${t("ciJobP90")}</div></div>
     <div class="metric-card"><div class="metric-value">${fmtDuration(percentile(durations, 20))}</div><div class="metric-label">${t("ciJobP20")}</div></div>
-    <div class="metric-card"><div class="metric-value">${fmtDuration(percentile(queueTimes, 50))}</div><div class="metric-label">${t("ciQueueTime")}</div></div>
+    <div class="metric-card clickable" onclick="showQueueDetail()"><div class="metric-value">${fmtDuration(percentile(queueTimes, 50))}</div><div class="metric-label">${t("ciQueueTime")}</div></div>
     <div class="metric-card"><div class="metric-value">${totalJobs ? Math.round(success / totalJobs * 100) : 0}%</div><div class="metric-label">${t("ciSuccessRate")}</div></div>
     <div style="grid-column:1/-1;font-size:12px;color:var(--text-dim);margin-bottom:-8px;margin-top:8px">Workflow 维度 <span style="color:var(--text-dim);font-weight:400">(wall-clock)</span></div>
     <div class="metric-card"><div class="metric-value">${wfTotal}</div><div class="metric-label">${t("ciWfTotal")}</div></div>
@@ -355,7 +355,7 @@ function renderCIStats() {
     <div class="metric-card"><div class="metric-value">${fmtDuration(percentile(wcDurations, 90))}</div><div class="metric-label">${t("ciWfP90")}</div></div>
     <div class="metric-card"><div class="metric-value">${wfAvgJobs.toFixed(0)}</div><div class="metric-label">${t("ciWfAvgJobs")}</div></div>
     <div class="metric-card"><div class="metric-value">${wfAvgEfficiency.toFixed(1)}x</div><div class="metric-label">${t("ciWfEfficiency")}</div></div>
-    <div class="metric-card"><div class="metric-value">${Math.round(wfRuns.reduce((s,w)=>s+w.success/w.total,0)/wfTotal*100)}%</div><div class="metric-label">${t("ciWfSuccess")}</div></div>
+    <div class="metric-card"><div class="metric-value">${Math.round(_wfRuns.reduce((s,w)=>s+w.success/w.total,0)/wfTotal*100)}%</div><div class="metric-label">${t("ciWfSuccess")}</div></div>
   `;
 
   // Duration distribution - boxplot-like bar with P20/P50/P90 markers
@@ -466,7 +466,7 @@ function renderCIStats() {
   const tbody = document.getElementById("ciTableBody");
   if (!tbody) return;
 
-  const rows = wfRuns.sort((a, b) => b.wallClock - a.wallClock);
+  const rows = _wfRuns.sort((a, b) => b.wallClock - a.wallClock);
   tbody.innerHTML = rows.map((w, i) => {
     const statusBadge = w.success === w.total
       ? `<span class="badge badge-low">PASS</span>`
@@ -594,6 +594,61 @@ function renderDetail(data) {
 function closeDetail() { document.getElementById("detailModal").classList.remove("open"); }
 
 // ── Drill Down ──
+
+let _wfRuns = []; // cached for queue detail drill-down
+
+// ... (set in renderCIStats)
+
+function showQueueDetail() {
+  if (!_wfRuns.length) return;
+
+  // Queue stats by workflow run
+  const wfQueueStats = _wfRuns.map(w => {
+    const jobs = allJobs.filter(j => j.run_id === w.run_id && j.workflow_name === w.workflow_name);
+    const qTimes = jobs.map(j => j.queue_time).filter(q => q >= 0);
+    return {
+      workflow_name: w.workflow_name,
+      run_id: w.run_id,
+      totalJobs: jobs.length,
+      queuedJobs: qTimes.length,
+      avgQueue: qTimes.length ? qTimes.reduce((s, v) => s + v, 0) / qTimes.length : 0,
+      maxQueue: qTimes.length ? Math.max(...qTimes) : 0,
+      p90Queue: percentile(qTimes, 90),
+    };
+  }).sort((a, b) => b.avgQueue - a.avgQueue);
+
+  const totalQueuedWFs = wfQueueStats.filter(w => w.queuedJobs > 0).length;
+  const totalQueuedJobs = wfQueueStats.reduce((s, w) => s + w.queuedJobs, 0);
+  const overallAvgQ = totalQueuedJobs ? wfQueueStats.reduce((s, w) => s + w.avgQueue * w.queuedJobs, 0) / totalQueuedJobs : 0;
+
+  let html = `<h2>${t("ciQueueTime")} <span style="color:var(--text-dim);font-size:14px">(${totalQueuedWFs} Workflows, ${totalQueuedJobs} Jobs)</span></h2>`;
+  html += `<div style="display:flex;gap:16px;margin:16px 0;flex-wrap:wrap">
+    <div class="metric-card"><div class="metric-value">${totalQueuedWFs}</div><div class="metric-label">Queued Workflows</div></div>
+    <div class="metric-card"><div class="metric-value">${totalQueuedJobs}</div><div class="metric-label">Queued Jobs</div></div>
+    <div class="metric-card"><div class="metric-value">${fmtDuration(overallAvgQ)}</div><div class="metric-label">Avg Queue Time</div></div>
+  </div>`;
+
+  // Table of top queued runs
+  html += `<div class="table-wrap"><table class="data-table">
+    <thead><tr><th>#</th><th>Workflow</th><th>Jobs</th><th>Avg Queue</th><th>Max Queue</th><th>P90 Queue</th></tr></thead>
+    <tbody>`;
+
+  wfQueueStats.filter(w => w.queuedJobs > 0).slice(0, 20).forEach((w, i) => {
+    const runUrl = `https://github.com/vllm-project/vllm-ascend/actions/runs/${w.run_id}`;
+    html += `<tr>
+      <td>${i + 1}</td>
+      <td><a href="${runUrl}" target="_blank" rel="noopener" style="color:var(--link)">${escapeHtml(w.workflow_name.length > 40 ? w.workflow_name.slice(0,40)+"..." : w.workflow_name)}</a></td>
+      <td>${w.queuedJobs}/${w.totalJobs}</td>
+      <td>${fmtDuration(w.avgQueue)}</td>
+      <td>${fmtDuration(w.maxQueue)}</td>
+      <td>${fmtDuration(w.p90Queue)}</td>
+    </tr>`;
+  });
+
+  html += `</tbody></table></div>`;
+  document.getElementById("detailContent").innerHTML = html;
+  document.getElementById("detailModal").classList.add("open");
+}
 
 function showDrillDown(filterType, filterValue, displayName) {
   let matches;
