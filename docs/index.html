@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>vllm-ascend CI Insight</title>
 <link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
 <header>
@@ -19,17 +20,53 @@
         <option value="medium">Medium</option>
         <option value="low">Low</option>
       </select>
+      <select id="categoryFilter">
+        <option value="">All Categories</option>
+        <option value="code">Code Bug</option>
+        <option value="build">Build/CI Script</option>
+        <option value="infra">Infrastructure</option>
+        <option value="test">Test Case</option>
+        <option value="lint">Lint/Format</option>
+        <option value="compat">Compatibility</option>
+        <option value="perf">Performance</option>
+        <option value="other">Other</option>
+      </select>
     </div>
-    <div class="stats" id="stats"></div>
     <button id="refreshBtn" onclick="loadReports()">Refresh</button>
-    <button id="langToggle" onclick="toggleLang()">English</button>
+    <button id="langToggle" onclick="toggleLang()">中文</button>
   </div>
 </header>
 
-<main id="reportList">
-  <div class="loading">Loading reports...</div>
+<main>
+  <!-- Metric Cards -->
+  <section class="metrics" id="metrics"></section>
+
+  <!-- Charts -->
+  <section class="charts">
+    <div class="chart-box">
+      <h3 id="chartSeverityTitle">Severity Breakdown</h3>
+      <canvas id="chartSeverity"></canvas>
+    </div>
+    <div class="chart-box">
+      <h3 id="chartWorkflowTitle">Top Failing Workflows</h3>
+      <canvas id="chartWorkflow"></canvas>
+    </div>
+    <div class="chart-box full">
+      <h3 id="chartCategoryTitle">Category Breakdown</h3>
+      <canvas id="chartCategory"></canvas>
+    </div>
+  </section>
+
+  <!-- Report List -->
+  <section class="report-section">
+    <h3 id="reportSectionTitle">Recent Reports</h3>
+    <div id="reportList">
+      <div class="loading">Loading...</div>
+    </div>
+  </section>
 </main>
 
+<!-- Detail Modal -->
 <div id="detailModal" class="modal" onclick="if(event.target===this)closeDetail()">
   <div class="modal-content">
     <button class="modal-close" onclick="closeDetail()">&times;</button>
