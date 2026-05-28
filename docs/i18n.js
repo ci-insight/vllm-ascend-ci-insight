@@ -62,7 +62,7 @@ const I18N = {
     categoryDetailTitle: "Category Details",
   },
   zh: {
-    title: "vllm-ascend CI 智能诊断",
+    title: "vllm-ascend CI Insight",
     searchPlaceholder: "搜索 PR 标题、编号...",
     allSeverities: "全部严重度",
     allCategories: "全部分类",
