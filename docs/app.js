@@ -477,9 +477,10 @@ function renderCIStats() {
       ? `<span style="display:inline-block;width:60px;height:6px;border-radius:3px;background:var(--border);vertical-align:middle;overflow:hidden"><span style="display:block;height:100%;width:${w.maxConcurrency/w.total*100}%;background:var(--accent);border-radius:3px"></span></span>`
       : "";
     const effColor = w.parallelEfficiency > 2 ? "var(--low)" : w.parallelEfficiency > 1.2 ? "var(--medium)" : "var(--high)";
+    const runUrl = `https://github.com/vllm-project/vllm-ascend/actions/runs/${w.run_id}`;
     return `<tr>
       <td>${i + 1}</td>
-      <td title="${escapeHtml(w.workflow_name)}">${escapeHtml(w.workflow_name.length > 28 ? w.workflow_name.slice(0,28)+"..." : w.workflow_name)}</td>
+      <td title="${escapeHtml(w.workflow_name)}"><a href="${runUrl}" target="_blank" rel="noopener" style="color:var(--link);text-decoration:none" onclick="event.stopPropagation()">${escapeHtml(w.workflow_name.length > 28 ? w.workflow_name.slice(0,28)+"..." : w.workflow_name)}</a></td>
       <td>${statusBadge}</td>
       <td>${w.jobCount}</td>
       <td>${fmtDuration(w.wallClock)}</td>
