@@ -105,6 +105,16 @@ main {
   text-align: center;
 }
 
+.metric-card.clickable {
+  cursor: pointer;
+  transition: border-color 0.15s, transform 0.1s;
+}
+
+.metric-card.clickable:hover {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
 .metric-card .metric-value {
   font-size: 28px;
   font-weight: 700;

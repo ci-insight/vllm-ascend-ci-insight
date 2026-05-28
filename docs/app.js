@@ -111,12 +111,12 @@ function renderMetrics() {
   const avgConf = totalJobs > 0 ? Math.round((crit * 90 + high * 80 + med * 70 + low * 60) / Math.max(1, crit + high + med + low)) : 0;
 
   document.getElementById("metrics").innerHTML = `
-    <div class="metric-card"><div class="metric-value">${totalPRs}</div><div class="metric-label">${t("totalPRs")}</div></div>
-    <div class="metric-card"><div class="metric-value">${totalJobs}</div><div class="metric-label">${t("totalJobs")}</div></div>
-    <div class="metric-card critical"><div class="metric-value">${crit}</div><div class="metric-label">${tSeverity("critical")}</div></div>
-    <div class="metric-card high"><div class="metric-value">${high}</div><div class="metric-label">${tSeverity("high")}</div></div>
-    <div class="metric-card medium"><div class="metric-value">${med}</div><div class="metric-label">${tSeverity("medium")}</div></div>
-    <div class="metric-card low"><div class="metric-value">${low}</div><div class="metric-label">${tSeverity("low")}</div></div>
+    <div class="metric-card clickable" onclick="showDrillDown('all','all','${t("totalPRs")}')"><div class="metric-value">${totalPRs}</div><div class="metric-label">${t("totalPRs")}</div></div>
+    <div class="metric-card clickable" onclick="showDrillDown('all','all','${t("totalJobs")}')"><div class="metric-value">${totalJobs}</div><div class="metric-label">${t("totalJobs")}</div></div>
+    <div class="metric-card critical clickable" onclick="showDrillDown('severity','critical','${tSeverity("critical")}')"><div class="metric-value">${crit}</div><div class="metric-label">${tSeverity("critical")}</div></div>
+    <div class="metric-card high clickable" onclick="showDrillDown('severity','high','${tSeverity("high")}')"><div class="metric-value">${high}</div><div class="metric-label">${tSeverity("high")}</div></div>
+    <div class="metric-card medium clickable" onclick="showDrillDown('severity','medium','${tSeverity("medium")}')"><div class="metric-value">${med}</div><div class="metric-label">${tSeverity("medium")}</div></div>
+    <div class="metric-card low clickable" onclick="showDrillDown('severity','low','${tSeverity("low")}')"><div class="metric-value">${low}</div><div class="metric-label">${tSeverity("low")}</div></div>
     <div class="metric-card"><div class="metric-value">${avgConf}%</div><div class="metric-label">${t("avgConf")}</div></div>
   `;
 }
@@ -157,7 +157,7 @@ function renderSeverityChart() {
       maintainAspectRatio: true,
       onClick: (e, elements) => {
         if (elements.length) {
-          showCategoryDetail("severity", sevKeys[elements[0].index], tSeverity(sevKeys[elements[0].index]));
+          showDrillDown("severity", sevKeys[elements[0].index], tSeverity(sevKeys[elements[0].index]));
         }
       },
       plugins: {
@@ -172,17 +172,23 @@ function renderWorkflowChart() {
   allAnalyses.forEach(a => { wfCounts[a._workflow] = (wfCounts[a._workflow] || 0) + 1; });
 
   const sorted = Object.entries(wfCounts).sort((a, b) => b[1] - a[1]).slice(0, 8);
+  const wfKeys = sorted.map(([k]) => k);
 
   charts.workflow = new Chart(document.getElementById("chartWorkflow"), {
     type: "bar",
     data: {
-      labels: sorted.map(([k]) => k),
+      labels: wfKeys,
       datasets: [{ data: sorted.map(([, v]) => v), backgroundColor: "#1f6feb", borderRadius: 4 }],
     },
     options: {
       indexAxis: "y",
       responsive: true,
       maintainAspectRatio: true,
+      onClick: (e, elements) => {
+        if (elements.length) {
+          showDrillDown("workflow", wfKeys[elements[0].index], wfKeys[elements[0].index]);
+        }
+      },
       plugins: { legend: { display: false } },
       scales: {
         x: { grid: { color: "#21262d" }, ticks: { color: "#8b949e", font: { size: 11 } } },
@@ -218,7 +224,7 @@ function renderCategoryChart() {
       onClick: (e, elements) => {
         if (elements.length) {
           const idx = elements[0].index;
-          showCategoryDetail("category", catKeys[idx], tCategory(catKeys[idx]));
+          showDrillDown("category", catKeys[idx], tCategory(catKeys[idx]));
         }
       },
       plugins: { legend: { display: false } },
@@ -353,12 +359,15 @@ function closeDetail() {
 
 // ── Category Detail Drill-Down ──
 
-function showCategoryDetail(filterType, filterValue, displayName) {
-  // filterType: "severity" or "category"
-  // filterValue: "critical", "lint", etc.
+function showDrillDown(filterType, filterValue, displayName) {
+  // filterType: "severity", "category", "workflow", or "all"
   let matches;
   if (filterType === "severity") {
     matches = allAnalyses.filter(a => a.severity === filterValue);
+  } else if (filterType === "workflow") {
+    matches = allAnalyses.filter(a => a._workflow === filterValue);
+  } else if (filterType === "all") {
+    matches = allAnalyses;
   } else {
     matches = allAnalyses.filter(a => a._category === filterValue);
   }
