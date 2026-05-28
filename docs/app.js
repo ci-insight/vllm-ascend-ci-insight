@@ -144,6 +144,7 @@ function renderSeverityChart() {
   const labels = [tSeverity("critical"), tSeverity("high"), tSeverity("medium"), tSeverity("low")];
   const data = [counts.critical, counts.high, counts.medium, counts.low];
   const colors = ["#dc2626", "#ea580c", "#ca8a04", "#16a34a"];
+  const sevKeys = ["critical", "high", "medium", "low"];
 
   charts.severity = new Chart(document.getElementById("chartSeverity"), {
     type: "doughnut",
@@ -154,6 +155,11 @@ function renderSeverityChart() {
     options: {
       responsive: true,
       maintainAspectRatio: true,
+      onClick: (e, elements) => {
+        if (elements.length) {
+          showCategoryDetail("severity", sevKeys[elements[0].index], tSeverity(sevKeys[elements[0].index]));
+        }
+      },
       plugins: {
         legend: { position: "bottom", labels: { color: "#8b949e", padding: 16, font: { size: 12 } } },
       },
@@ -191,13 +197,14 @@ function renderCategoryChart() {
   allAnalyses.forEach(a => { catCounts[a._category] = (catCounts[a._category] || 0) + 1; });
 
   const order = ["code", "build", "infra", "test", "lint", "compat", "perf", "other"];
-  const labels = order.filter(k => catCounts[k]).map(k => tCategory(k));
-  const data = order.filter(k => catCounts[k]).map(k => catCounts[k]);
+  const catKeys = order.filter(k => catCounts[k]);
+  const labels = catKeys.map(k => tCategory(k));
+  const data = catKeys.map(k => catCounts[k]);
   const colors = {
     code: "#8957e5", build: "#3fb950", infra: "#d29922", test: "#58a6ff",
     compat: "#f778ba", perf: "#f85149", lint: "#ca8a04", other: "#8b949e",
   };
-  const bgColors = order.filter(k => catCounts[k]).map(k => colors[k] || "#8b949e");
+  const bgColors = catKeys.map(k => colors[k] || "#8b949e");
 
   charts.category = new Chart(document.getElementById("chartCategory"), {
     type: "bar",
@@ -208,6 +215,12 @@ function renderCategoryChart() {
     options: {
       responsive: true,
       maintainAspectRatio: true,
+      onClick: (e, elements) => {
+        if (elements.length) {
+          const idx = elements[0].index;
+          showCategoryDetail("category", catKeys[idx], tCategory(catKeys[idx]));
+        }
+      },
       plugins: { legend: { display: false } },
       scales: {
         x: { grid: { display: false }, ticks: { color: "#c9d1d9", font: { size: 11 } } },
@@ -336,6 +349,55 @@ function renderDetail(data) {
 
 function closeDetail() {
   document.getElementById("detailModal").classList.remove("open");
+}
+
+// ── Category Detail Drill-Down ──
+
+function showCategoryDetail(filterType, filterValue, displayName) {
+  // filterType: "severity" or "category"
+  // filterValue: "critical", "lint", etc.
+  let matches;
+  if (filterType === "severity") {
+    matches = allAnalyses.filter(a => a.severity === filterValue);
+  } else {
+    matches = allAnalyses.filter(a => a._category === filterValue);
+  }
+
+  // Group by PR
+  const grouped = {};
+  matches.forEach(a => {
+    if (!grouped[a._pr_number]) grouped[a._pr_number] = [];
+    grouped[a._pr_number].push(a);
+  });
+
+  const dateLocale = currentLang === "zh" ? "zh-CN" : "en-US";
+  let html = `<h2>${displayName} <span style="color:var(--text-dim);font-size:14px">(${matches.length} ${t("jobs")})</span></h2>`;
+
+  for (const [prNum, items] of Object.entries(grouped)) {
+    const pr = allReports.find(r => r.pr_number === parseInt(prNum));
+    const prTitle = pr ? pr.pr_title : "";
+    html += `<div style="margin:16px 0 8px">
+      <a href="javascript:void(0)" onclick="closeDetail();openDetail(${prNum})" style="color:var(--link);font-weight:600;font-size:15px">#${prNum}</a>
+      <span style="color:var(--text-dim);font-size:13px;margin-left:8px">${escapeHtml(prTitle)}</span>
+    </div>`;
+
+    items.forEach(a => {
+      const date = new Date(a._analyzed_at).toLocaleDateString(dateLocale, { month: "short", day: "numeric" });
+      html += `<div style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px 14px;margin:6px 0">
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">
+          <span class="badge badge-${a.severity}">${tSeverity(a.severity)}</span>
+          <span class="badge badge-${a._category}">${tCategory(a._category)}</span>
+          <span style="font-size:13px;color:var(--text-dim)">${escapeHtml(a.job_name)}</span>
+          <span style="font-size:12px;color:var(--text-dim);margin-left:auto">${date} · ${a.confidence}%</span>
+        </div>
+        <div class="root-cause" style="font-size:13px;margin:0">${escapeHtml(a.root_cause || t("noRootCause"))}</div>
+        ${a.fix_suggestions && a.fix_suggestions.length ? `<div style="margin-top:6px;font-size:12px;color:var(--text-dim)">${t("fixSuggestions")} ${escapeHtml(a.fix_suggestions[0])}</div>` : ""}
+      </div>`;
+    });
+  }
+
+  document.getElementById("detailContent").innerHTML = html;
+  document.getElementById("detailModal").classList.add("open");
 }
 
 function escapeHtml(text) {

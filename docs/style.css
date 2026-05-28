@@ -150,7 +150,7 @@ main {
   color: var(--text-dim);
 }
 
-.chart-box canvas { max-height: 240px; }
+.chart-box canvas { max-height: 240px; cursor: pointer; }
 
 /* ── Report List ── */
 .report-section { margin-top: 8px; }

@@ -58,6 +58,8 @@ const I18N = {
     chartLoading: "Loading charts...",
     classified: "classified",
     unclassified: "unclassified",
+    clickToDrill: "Click to drill down",
+    categoryDetailTitle: "Category Details",
   },
   zh: {
     title: "vllm-ascend CI 智能诊断",
