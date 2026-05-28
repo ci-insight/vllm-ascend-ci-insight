@@ -72,6 +72,11 @@ function applyI18n() {
   if (elSlow) elSlow.textContent = t("ciSlowestJobs");
   const elCiTable = document.getElementById("ciTableTitle");
   if (elCiTable) elCiTable.textContent = t("ciTableTitle");
+  // CI table headers
+  ["ciThWorkflow","ciThStatus","ciThJobs","ciThWallClock","ciThAvgJob","ciThConcurrency","ciThEfficiency"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = t(id);
+  });
 }
 
 // ── Tab Switching ──

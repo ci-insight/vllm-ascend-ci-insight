@@ -93,6 +93,13 @@ const I18N = {
     ciWfEfficiency: "Parallelism",
     ciWfSuccess: "WF Success",
     ciTableTitle: "Workflow Runs Detail",
+    ciThWorkflow: "Workflow",
+    ciThStatus: "Status",
+    ciThJobs: "Jobs",
+    ciThWallClock: "Wall-Clock",
+    ciThAvgJob: "Avg Job",
+    ciThConcurrency: "Concurrency",
+    ciThEfficiency: "Efficiency",
   },
   zh: {
     title: "vllm-ascend CI Insight",
@@ -187,6 +194,13 @@ const I18N = {
     ciWfEfficiency: "并行度",
     ciWfSuccess: "WF 成功率",
     ciTableTitle: "Workflow 运行明细",
+    ciThWorkflow: "工作流",
+    ciThStatus: "状态",
+    ciThJobs: "Job数",
+    ciThWallClock: "总耗时",
+    ciThAvgJob: "平均Job",
+    ciThConcurrency: "最大并行",
+    ciThEfficiency: "并行效率",
   },
 };
 
