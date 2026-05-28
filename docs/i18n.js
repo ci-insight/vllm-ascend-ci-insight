@@ -92,6 +92,7 @@ const I18N = {
     ciWfAvgJobs: "Avg Jobs/WF",
     ciWfEfficiency: "Parallelism",
     ciWfSuccess: "WF Success",
+    ciTableTitle: "Workflow Runs Detail",
   },
   zh: {
     title: "vllm-ascend CI Insight",
@@ -185,6 +186,7 @@ const I18N = {
     ciWfAvgJobs: "平均 Job/WF",
     ciWfEfficiency: "并行度",
     ciWfSuccess: "WF 成功率",
+    ciTableTitle: "Workflow 运行明细",
   },
 };
 

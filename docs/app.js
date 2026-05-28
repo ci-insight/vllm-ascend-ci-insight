@@ -70,6 +70,8 @@ function applyI18n() {
   if (elQueue) elQueue.textContent = t("ciQueueWait");
   if (elSuccess) elSuccess.textContent = t("ciSuccessByWF");
   if (elSlow) elSlow.textContent = t("ciSlowestJobs");
+  const elCiTable = document.getElementById("ciTableTitle");
+  if (elCiTable) elCiTable.textContent = t("ciTableTitle");
 }
 
 // ── Tab Switching ──
@@ -454,6 +456,33 @@ function renderCIStats() {
       },
     },
   });
+
+  // ── Workflow Runs Detail Table ──
+  const tbody = document.getElementById("ciTableBody");
+  if (!tbody) return;
+
+  const rows = wfRuns.sort((a, b) => b.wallClock - a.wallClock);
+  tbody.innerHTML = rows.map((w, i) => {
+    const statusBadge = w.success === w.total
+      ? `<span class="badge badge-low">PASS</span>`
+      : w.success === 0
+        ? `<span class="badge badge-critical">FAIL</span>`
+        : `<span class="badge badge-high">${w.success}/${w.total}</span>`;
+    const concBar = w.total > 0
+      ? `<span style="display:inline-block;width:60px;height:6px;border-radius:3px;background:var(--border);vertical-align:middle;overflow:hidden"><span style="display:block;height:100%;width:${w.maxConcurrency/w.total*100}%;background:var(--accent);border-radius:3px"></span></span>`
+      : "";
+    const effColor = w.parallelEfficiency > 2 ? "var(--low)" : w.parallelEfficiency > 1.2 ? "var(--medium)" : "var(--high)";
+    return `<tr>
+      <td>${i + 1}</td>
+      <td title="${escapeHtml(w.workflow_name)}">${escapeHtml(w.workflow_name.length > 28 ? w.workflow_name.slice(0,28)+"..." : w.workflow_name)}</td>
+      <td>${statusBadge}</td>
+      <td>${w.jobCount}</td>
+      <td>${fmtDuration(w.wallClock)}</td>
+      <td>${fmtDuration(w.sumDur / w.jobCount)}</td>
+      <td>${w.maxConcurrency} ${concBar}</td>
+      <td style="color:${effColor}">${w.parallelEfficiency.toFixed(1)}x</td>
+    </tr>`;
+  }).join("");
 }
 
 // ── Report List ──
