@@ -23,3 +23,7 @@ Thumbs.db
 
 # Analysis cache
 reports/.analysis_cache.json
+reports/.alert_cooldown.json
+
+# SQLite local data (keep out of git)
+data/

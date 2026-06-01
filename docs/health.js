@@ -1,19 +1,22 @@
 // Health Overview Tab
 const HEALTH_URL = "reports/health.json";
 const ALERTS_URL = "reports/alerts.json";
-const INTERFERENCE_URL = "reports/interference.json";
+const SNAPSHOTS_URL = "reports/daily-snapshots.json";
 let healthData = null;
 let alertsData = null;
+let snapshotsData = null;
 let healthCharts = {};
 
 async function loadHealthTab() {
   try {
-    const [hResp, aResp] = await Promise.all([
+    const [hResp, aResp, sResp] = await Promise.all([
       fetch(HEALTH_URL),
       fetch(ALERTS_URL),
+      fetch(SNAPSHOTS_URL),
     ]);
     if (hResp.ok) healthData = await hResp.json();
     if (aResp.ok) alertsData = await aResp.json();
+    if (sResp.ok) snapshotsData = await sResp.json();
     renderHealthUI();
   } catch (e) {
     document.getElementById("healthContent").innerHTML =
@@ -108,17 +111,31 @@ function renderHealthCharts(pipelines, worst) {
   const colors = { pr_e2e: "#58a6ff", nightly: "#3fb950", weekly: "#ca8a04", other: "#8b949e" };
   const labels = { pr_e2e: "PR CI", nightly: "Nightly", weekly: "Weekly", other: "Other" };
 
-  // Success rate trend
+  // Use snapshot data for long-term trends, fallback to health.json daily_trend
+  let trendSource = {};
+  if (snapshotsData && snapshotsData.pipeline_types) {
+    trendSource = snapshotsData.pipeline_types; // long-term from SQLite aggregator
+  } else {
+    // Fallback: convert health.json daily_trend to snapshot format
+    Object.entries(pipelines).forEach(([pt, p]) => {
+      if (p.daily_trend && p.daily_trend.length) {
+        trendSource[pt] = p.daily_trend;
+      }
+    });
+  }
+
+  // Merge all dates across pipeline types
   const allDates = new Set();
-  Object.values(pipelines).forEach(p => (p.daily_trend || []).forEach(d => allDates.add(d.date)));
+  Object.values(trendSource).forEach(entries => entries.forEach(d => allDates.add(d.date)));
   const dates = [...allDates].sort();
 
-  const srDatasets = Object.entries(pipelines)
-    .filter(([, p]) => p.daily_trend && p.daily_trend.length)
-    .map(([pt, p]) => ({
+  // Success rate trend
+  const srDatasets = Object.entries(trendSource)
+    .filter(([, entries]) => entries && entries.length)
+    .map(([pt, entries]) => ({
       label: labels[pt] || pt,
       data: dates.map(d => {
-        const found = p.daily_trend.find(t => t.date === d);
+        const found = entries.find(t => t.date === d);
         return found ? found.success_rate : null;
       }),
       borderColor: colors[pt] || "#8b949e",
@@ -141,11 +158,11 @@ function renderHealthCharts(pipelines, worst) {
   });
 
   // Failure count trend
-  const failDatasets = Object.entries(pipelines)
-    .filter(([, p]) => p.daily_trend && p.daily_trend.length)
-    .map(([pt, p]) => ({
+  const failDatasets = Object.entries(trendSource)
+    .filter(([, entries]) => entries && entries.length)
+    .map(([pt, entries]) => ({
       label: labels[pt] || pt,
-      data: dates.map(d => { const found = p.daily_trend.find(t => t.date === d); return found ? found.failure : null; }),
+      data: dates.map(d => { const found = entries.find(t => t.date === d); return found ? (found.failure || 0) : null; }),
       borderColor: colors[pt] || "#8b949e",
       backgroundColor: "transparent",
       tension: 0.3,
@@ -166,11 +183,11 @@ function renderHealthCharts(pipelines, worst) {
   });
 
   // Health score trend
-  const hDatasets = Object.entries(pipelines)
-    .filter(([, p]) => p.daily_trend && p.daily_trend.length)
-    .map(([pt, p]) => ({
+  const hDatasets = Object.entries(trendSource)
+    .filter(([, entries]) => entries && entries.length)
+    .map(([pt, entries]) => ({
       label: labels[pt] || pt,
-      data: dates.map(d => { const found = p.daily_trend.find(t => t.date === d); return found ? found.health : null; }),
+      data: dates.map(d => { const found = entries.find(t => t.date === d); return found ? (found.health_score || 0) : null; }),
       borderColor: colors[pt] || "#8b949e",
       backgroundColor: "transparent",
       tension: 0.3,

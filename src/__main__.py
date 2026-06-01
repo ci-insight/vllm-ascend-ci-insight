@@ -20,6 +20,7 @@ from .health import compute_health, save_health
 from .alert import evaluate, save_alerts
 from .notify import notify_alerts
 from .interference import detect as detect_interference, save_interference
+from .aggregator import save_snapshot
 
 
 def main():
@@ -110,6 +111,9 @@ def main():
 
     interference_data = detect_interference(reports if reports else [])
     save_interference(interference_data)
+
+    # Save to SQLite aggregator + static JSON for long-term trends
+    save_snapshot(health_data, reports if reports else [])
 
     if alerts and not args.no_notify:
         print(f"\n  Sending notifications for {len(alerts)} alert(s)...")

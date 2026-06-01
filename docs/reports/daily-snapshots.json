@@ -1,0 +1,44 @@
+{
+  "generated_at": "2026-06-01T08:08:35.565246+00:00",
+  "pipeline_types": {
+    "nightly": [
+      {
+        "date": "2026-06-01",
+        "total": 128,
+        "success": 6,
+        "failure": 46,
+        "success_rate": 5.0,
+        "health_score": 0.0,
+        "avg_duration_sec": 121.5,
+        "rating": "danger",
+        "trend": "down"
+      }
+    ],
+    "other": [
+      {
+        "date": "2026-06-01",
+        "total": 12,
+        "success": 0,
+        "failure": 12,
+        "success_rate": 0.0,
+        "health_score": 0.0,
+        "avg_duration_sec": 146.2,
+        "rating": "danger",
+        "trend": "flat"
+      }
+    ],
+    "pr_e2e": [
+      {
+        "date": "2026-06-01",
+        "total": 156,
+        "success": 36,
+        "failure": 70,
+        "success_rate": 23.0,
+        "health_score": 14.0,
+        "avg_duration_sec": 149.6,
+        "rating": "danger",
+        "trend": "down"
+      }
+    ]
+  }
+}
