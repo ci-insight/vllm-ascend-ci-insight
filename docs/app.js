@@ -3,6 +3,18 @@ let allReports = [];
 let allAnalyses = [];
 let allJobs = []; // ALL jobs (including success) for CI stats
 let charts = {};
+
+// Pipeline type classifier (mirrors collector.py)
+function classifyPipeline(wfName) {
+  const patterns = {
+    pr_e2e: [/E2E-Light/, /E2E-Full/, /pr_test/, /PR Create/, /Merge Conflict/, /Image Build/, /model downloader/, /Docs link check/, /Cache csrc/],
+    nightly: [/Nightly-A2/, /Nightly-A3/, /vLLM Main Schedule/, /E2E-upstream/, /Release Code/],
+  };
+  for (const [pt, pats] of Object.entries(patterns)) {
+    for (const p of pats) { if (p.test(wfName)) return pt; }
+  }
+  return "other";
+}
 let ciCharts = {};
 let activeTab = "analysis";
 
@@ -100,6 +112,7 @@ function switchTab(name) {
   if (name === "analysis") {
     renderMetrics();
     if (allAnalyses.length) renderCharts();
+    renderReports();  // Re-apply filters when switching back to this tab
   } else if (name === "ci-stats") {
     if (allJobs.length) renderCIStats();
   } else if (name === "health") {
@@ -149,14 +162,16 @@ async function loadAnalysesData() {
         }
       }
 
-      // Enrich report with CI execution time (earliest run created_at)
+      // Enrich report with CI execution time + pipeline types
       let earliestRun = null;
+      const reportPTypes = new Set();
       for (const run of data.runs || []) {
         if (!earliestRun || run.created_at < earliestRun) earliestRun = run.created_at;
+        const pt = run.pipeline_type || classifyPipeline(run.workflow_name);
+        reportPTypes.add(pt);
       }
-      if (earliestRun) {
-        r._ci_date = earliestRun; // CI execution time, not analysis time
-      }
+      if (earliestRun) r._ci_date = earliestRun;
+      r._pipeline_types = [...reportPTypes];
 
       // All jobs from runs (for CI execution stats)
       for (const run of data.runs || []) {
@@ -170,7 +185,7 @@ async function loadAnalysesData() {
               job_id: job.job_id,
               conclusion: job.conclusion,
               workflow_name: run.workflow_name,
-              pipeline_type: run.pipeline_type || "other",
+              pipeline_type: run.pipeline_type || classifyPipeline(run.workflow_name),
               run_id: run.run_id,
               branch: run.branch,
               started_at: job.started_at,
@@ -542,9 +557,9 @@ function renderReports() {
     filtered = filtered.filter(r => catPRs.has(r.pr_number));
   }
 
-  if (pipeline && allJobs.length) {
-    const ptPRs = new Set(allJobs.filter(j => j.pipeline_type === pipeline).map(j => j.pr_number));
-    filtered = filtered.filter(r => ptPRs.has(r.pr_number));
+  // Pipeline filter: use enriched report data (works immediately)
+  if (pipeline) {
+    filtered = filtered.filter(r => r._pipeline_types && r._pipeline_types.includes(pipeline));
   }
 
   if (!filtered.length) { el.innerHTML = `<div class="empty">${t("noReports")}</div>`; return; }
