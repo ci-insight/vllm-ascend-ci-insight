@@ -19,6 +19,7 @@
   <nav class="tabs">
     <button class="tab active" data-tab="analysis" onclick="switchTab('analysis')">问题分析</button>
     <button class="tab" data-tab="ci-stats" onclick="switchTab('ci-stats')">CI执行分析</button>
+    <button class="tab" data-tab="health" onclick="switchTab('health')">健康概览</button>
   </nav>
 </header>
 
@@ -102,6 +103,13 @@
       </div>
     </section>
   </section>
+
+  <!-- Tab: Health Overview -->
+  <section id="tab-health" class="tab-content">
+    <div id="healthContent">
+      <div class="loading">Loading...</div>
+    </div>
+  </section>
 </main>
 
 <!-- Detail Modal -->
@@ -114,5 +122,6 @@
 
 <script src="i18n.js"></script>
 <script src="app.js"></script>
+<script src="health.js"></script>
 </body>
 </html>

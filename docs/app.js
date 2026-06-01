@@ -36,6 +36,7 @@ function applyI18n() {
   document.querySelectorAll(".tab").forEach(el => {
     if (el.dataset.tab === "analysis") el.textContent = t("tabAnalysis");
     if (el.dataset.tab === "ci-stats") el.textContent = t("tabCIStats");
+    if (el.dataset.tab === "health") el.textContent = t("tabHealth");
   });
 
   // Analysis tab elements
@@ -91,6 +92,8 @@ function switchTab(name) {
     if (allAnalyses.length) renderCharts();
   } else if (name === "ci-stats") {
     if (allJobs.length) renderCIStats();
+  } else if (name === "health") {
+    loadHealthTab();
   }
 }
 
@@ -157,6 +160,7 @@ async function loadAnalysesData() {
               job_id: job.job_id,
               conclusion: job.conclusion,
               workflow_name: run.workflow_name,
+              pipeline_type: run.pipeline_type || "other",
               run_id: run.run_id,
               branch: run.branch,
               started_at: job.started_at,
@@ -586,7 +590,9 @@ function renderDetail(data) {
   } else {
     analyses.forEach(a => {
       const cat = classifyJob(a, a.job_name);
-      html += `<h4><span class="badge badge-${a.severity}">${tSeverity(a.severity)}</span> <span class="badge badge-${cat}">${tCategory(cat)}</span> ${escapeHtml(a.job_name)} <small style="color:var(--text-dim)">(${t("confidence")}: ${a.confidence}%)</small></h4>`;
+      const effort = a.effort || "";
+      const effortBadge = effort ? `<span class="badge badge-effort-${effort}">${t("effort_"+effort) || effort}</span>` : "";
+      html += `<h4><span class="badge badge-${a.severity}">${tSeverity(a.severity)}</span> <span class="badge badge-${cat}">${tCategory(cat)}</span> ${effortBadge} ${escapeHtml(a.job_name)} <small style="color:var(--text-dim)">(${t("confidence")}: ${a.confidence}%)</small></h4>`;
       html += `<div class="root-cause">${escapeHtml(a.root_cause || t("noRootCause"))}</div>`;
       if (a.error_snippets && a.error_snippets.length) {
         html += `<div><strong>${t("errorSnippets")}</strong></div>`;

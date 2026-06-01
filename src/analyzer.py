@@ -41,8 +41,14 @@ Return ONLY a JSON object (no markdown, no code fences) with exactly these field
   "related_files": ["array of file paths mentioned in the errors or likely involved"],
   "fix_suggestions": ["array of 1-3 actionable fix suggestions"],
   "severity": "one of: critical, high, medium, low",
-  "confidence": 0-100
+  "confidence": 0-100,
+  "effort": "one of: low, medium, high"
 }
+
+effort guide:
+- low: lint/format fix, typo, simple config change, PR title fix — minutes to fix
+- medium: code logic fix, test update, dependency change, import fix — hours to fix
+- high: architecture change, multi-file refactor, upstream compat, new implementation — days to fix
 
 Severity guide:
 - critical: build broken, merge blocked, or CI infrastructure failure

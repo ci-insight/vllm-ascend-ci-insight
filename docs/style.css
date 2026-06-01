@@ -168,6 +168,15 @@ main {
 .metric-card.medium .metric-value { color: var(--medium); }
 .metric-card.low .metric-value { color: var(--low); }
 
+/* ── Alert Banners ── */
+.alert-banner {
+  padding: 10px 16px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: var(--text);
+}
+
 /* ── Charts Grid ── */
 .charts {
   display: grid;
@@ -280,6 +289,9 @@ main {
 .badge-perf { background: var(--perf); }
 .badge-lint { background: var(--medium); }
 .badge-other { background: var(--other); }
+.badge-effort-low { background: #16a34a; }
+.badge-effort-medium { background: #ca8a04; color: #000; }
+.badge-effort-high { background: #dc2626; }
 
 /* ── Modal ── */
 .modal {

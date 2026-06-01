@@ -34,6 +34,7 @@ class CIRun:
     pr_number: Optional[int]
     created_at: str
     event: str
+    pipeline_type: str = "other"  # pr_e2e, nightly, weekly, other
     jobs: list[CIJob] = field(default_factory=list)
 
 

@@ -13,6 +13,21 @@ from .models import CIRun, CIJob, StepResult
 
 REPO = "vllm-project/vllm-ascend"
 
+# Pipeline type classification patterns
+PIPELINE_PATTERNS = {
+    "pr_e2e": [r"E2E-Light", r"E2E-Full", r"pr_test", r"PR Create", r"Merge Conflict"],
+    "nightly": [r"Nightly-A2", r"Nightly-A3", r"vLLM Main Schedule", r"E2E-upstream", r"Release Code"],
+    "weekly": [r"weekly", r"Weekly"],
+}
+
+
+def classify_pipeline(workflow_name: str) -> str:
+    for ptype, patterns in PIPELINE_PATTERNS.items():
+        for pat in patterns:
+            if re.search(pat, workflow_name):
+                return ptype
+    return "other"
+
 # Error-indicating patterns to scan in raw logs
 ERROR_PATTERNS = [
     r"\berror\b",
@@ -133,14 +148,16 @@ def get_pr_info(pr_number: int) -> dict:
 
 
 def _build_ci_run(run: dict, jobs: list[CIJob], pr_number: int) -> CIRun:
+    wf_name = run.get("name", "")
     return CIRun(
         run_id=run["databaseId"],
-        workflow_name=run.get("name", ""),
+        workflow_name=wf_name,
         conclusion=run.get("conclusion", ""),
         branch=run.get("headBranch", ""),
         pr_number=pr_number,
         created_at=run.get("createdAt", ""),
         event=run.get("event", ""),
+        pipeline_type=classify_pipeline(wf_name),
         jobs=jobs,
     )
 
