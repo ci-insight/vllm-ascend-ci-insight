@@ -1,0 +1,149 @@
+{
+  "_description": "Single source of truth for CI classification rules. Used by both Python (src/) and JavaScript (docs/).",
+
+  "_workflow_source": "30 workflows from vllm-project/vllm-ascend/.github/workflows/ (2026-06-01)",
+
+  "pipeline_types": {
+    "pr_e2e": {
+      "label": "PR CI",
+      "label_zh": "PR CI",
+      "description": "PR-triggered E2E tests and checks",
+      "patterns": [
+        "E2E-Light", "E2E-Full", "E2E-upstream",
+        "PR Create", "Merge Conflict",
+        "Image Build", "Docs link check",
+        "Cache csrc", "model downloader",
+        "ruff", "mypy", "yapf", "codespell",
+        "actionlint", "shellcheck",
+        "Dependabot"
+      ]
+    },
+    "nightly": {
+      "label": "Nightly",
+      "label_zh": "Nightly",
+      "description": "Scheduled nightly/weekly tests and benchmarks",
+      "patterns": [
+        "Nightly-A2", "Nightly-A3",
+        "vLLM Main Schedule",
+        "accuracy", "Benchmarks",
+        "nightly_benchmarks", "performance",
+        "ascend test", "vllm_ascend_test",
+        "long-term-test", "pd-disaggregation",
+        "a3-test", "310p-test"
+      ]
+    },
+    "build": {
+      "label": "Build/Release",
+      "label_zh": "构建/发布",
+      "description": "Build, package, and release workflows",
+      "patterns": [
+        "Build Wheel", "build / sdist", "build / wheel",
+        "Release Code", "Release Wheel",
+        "release_code", "release_wheel", "release_whl",
+        "build_whl"
+      ]
+    },
+    "other": {
+      "label": "Other",
+      "label_zh": "其他",
+      "description": "Catch-all for unclassified workflows",
+      "patterns": []
+    }
+  },
+
+  "categories": [
+    {
+      "key": "lint",
+      "label": "Lint/Format",
+      "label_zh": "代码规范问题",
+      "color": "#ca8a04",
+      "patterns": [
+        "\\bruff\\b", "pre-commit", "\\bmypy\\b", "\\bflake8\\b",
+        "\\bE\\d{3}\\b", "\\bF\\d{3}\\b", "\\bW\\d{3}\\b",
+        "PR\\s+title", "formatting", "unused\\s+import",
+        "line\\s+too\\s+long", "undefined\\s+name", "imported\\s+but\\s+unused"
+      ]
+    },
+    {
+      "key": "build",
+      "label": "Build/CI Script",
+      "label_zh": "工程脚本问题",
+      "color": "#3fb950",
+      "patterns": [
+        "\\bcmake\\b", "pip\\s+install", "uv\\s+pip", "setup\\.py",
+        "requirements", "wheel\\s", "build\\s+(?:fail|error|broken)",
+        "UV_INDEX", "package\\s.*\\bnot\\s+found", "could\\s+not\\s+find.*version"
+      ]
+    },
+    {
+      "key": "perf",
+      "label": "Performance",
+      "label_zh": "性能问题",
+      "color": "#f85149",
+      "patterns": [
+        "\\bOOM\\b", "out of memory", "memory (?:alloc|leak|exhaust)",
+        "killed", "timed?\\s?out", "timeout"
+      ]
+    },
+    {
+      "key": "infra",
+      "label": "Infrastructure",
+      "label_zh": "基础设施问题",
+      "color": "#d29922",
+      "patterns": [
+        "runner\\s+(?:disconnect|fail|unreachable)", "disk\\s+(?:full|quota)",
+        "node\\s+(?:alloc|fail)", "connection\\s+(?:refused|timeout|reset)",
+        "rate\\s?limit", "HTTP\\s*404", "network\\s+error"
+      ]
+    },
+    {
+      "key": "test",
+      "label": "Test Case",
+      "label_zh": "测试用例问题",
+      "color": "#58a6ff",
+      "patterns": [
+        "\\baccuracy\\s+test\\b", "\\baccuracy.*\\b(?:regression|mismatch|degrad)\\b",
+        "assert.*\\b(?:fail|error)\\b", "\\bflaky\\s+test\\b",
+        "\\bregression\\b", "\\btest_case\\b", "\\btest_.*\\.py\\b"
+      ]
+    },
+    {
+      "key": "compat",
+      "label": "Compatibility",
+      "label_zh": "兼容性问题",
+      "color": "#f778ba",
+      "patterns": [
+        "\\bdeprecated\\b", "\\bremoved\\b.*\\b(?:in|from)\\b",
+        "\\brenamed\\b.*\\bto\\b", "no\\s+longer\\s+(?:exists|available|supported)",
+        "module.*\\b(?:moved|renamed)\\b", "import\\s+path.*\\b(?:changed|wrong)\\b",
+        "incompatible"
+      ]
+    },
+    {
+      "key": "code",
+      "label": "Code Bug",
+      "label_zh": "业务代码问题",
+      "color": "#8957e5",
+      "patterns": [
+        "\\bImportError\\b", "\\bAttributeError\\b", "\\bModuleNotFoundError\\b",
+        "\\bNameError\\b", "\\bTypeError\\b", "\\bValueError\\b",
+        "\\bKeyError\\b", "\\bIndexError\\b", "undefined\\s+name",
+        "not\\s+defined", "has\\s+no\\s+attribute"
+      ]
+    }
+  ],
+
+  "severity_levels": ["critical", "high", "medium", "low"],
+  "health_rating_thresholds": [
+    {"min": 80, "rating": "good", "color": "#16a34a"},
+    {"min": 60, "rating": "fair", "color": "#ca8a04"},
+    {"min": 0,  "rating": "danger", "color": "#dc2626"}
+  ],
+  "health_formula": {
+    "success_rate_weight": 60,
+    "trend_bonus_max": 20,
+    "recency_bonus_max": 20,
+    "consecutive_penalty_per_failure": 15,
+    "consecutive_penalty_max": 30
+  }
+}

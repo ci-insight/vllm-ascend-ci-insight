@@ -11,7 +11,7 @@ let CATEGORY_RULES = null;
 async function loadRules() {
   if (CATEGORY_RULES) return;
   try {
-    const resp = await fetch("../config/rules.json");
+    const resp = await fetch("rules.json");
     if (!resp.ok) throw new Error("HTTP " + resp.status);
     const cfg = await resp.json();
     PIPELINE_PATTERNS = {};

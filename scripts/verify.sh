@@ -60,12 +60,18 @@ print('  PASS')
 "
 echo ""
 
-# 4. Check JS loads from config (fallback is allowed as safety net)
+# 4. Check JS loads from config + docs/ copy is in sync
 echo "[4/5] Checking JS rules..."
 if grep -q 'PIPELINE_PATTERNS = null' docs/app.js && grep -q 'loadRules' docs/app.js; then
-    echo "  PASS: JS loads from config (with fallback)"
+    echo "  PASS: JS loads from rules.json (with fallback)"
 else
-    echo "  WARNING: JS may not load from config/rules.json"
+    echo "  WARNING: JS may not load from rules.json"
+fi
+if diff -q config/rules.json docs/rules.json > /dev/null 2>&1; then
+    echo "  PASS: docs/rules.json in sync with config/rules.json"
+else
+    echo "  FAIL: docs/rules.json out of sync. Run: cp config/rules.json docs/rules.json"
+    exit 1
 fi
 echo ""
 
