@@ -149,19 +149,6 @@ async function loadAnalysesData() {
       if (!resp.ok) continue;
       const data = await resp.json();
 
-      // Analysis (failed job intelligence)
-      for (const a of data.analyses || []) {
-        if (a.confidence > 0) {
-          a._pr_number = r.pr_number;
-          a._pr_title = r.pr_title;
-          a._analyzed_at = r.analyzed_at;
-          a._category = classifyJob(a, a.job_name);
-          const parts = a.job_name.split(" / ");
-          a._workflow = parts[0] || "unknown";
-          allAnalyses.push(a);
-        }
-      }
-
       // Enrich report with CI execution time + pipeline types
       let earliestRun = null;
       const reportPTypes = new Set();
@@ -173,7 +160,7 @@ async function loadAnalysesData() {
       if (earliestRun) r._ci_date = earliestRun;
       r._pipeline_types = [...reportPTypes];
 
-      // All jobs from runs (for CI execution stats)
+      // Populate allJobs FIRST (needed by analysis enrichment below)
       for (const run of data.runs || []) {
         for (const job of run.jobs || []) {
           if (job.started_at && job.completed_at) {
@@ -195,6 +182,23 @@ async function loadAnalysesData() {
               pr_number: r.pr_number,
             });
           }
+        }
+      }
+    } catch (e) { /* skip */ }
+
+    // Now enrich analyses with pipeline type (allJobs is populated)
+    try {
+      for (const a of data.analyses || []) {
+        if (a.confidence > 0) {
+          a._pr_number = r.pr_number;
+          a._pr_title = r.pr_title;
+          a._analyzed_at = r.analyzed_at;
+          a._category = classifyJob(a, a.job_name);
+          const parts = a.job_name.split(" / ");
+          a._workflow = parts[0] || "unknown";
+          const matchedJob = allJobs.find(j => j.job_id === a.job_id);
+          a._pipeline_type = matchedJob ? matchedJob.pipeline_type : classifyPipeline(a.job_name);
+          allAnalyses.push(a);
         }
       }
     } catch (e) { /* skip */ }
@@ -224,10 +228,7 @@ function getFilteredAnalyses() {
     if (f.severity && a.severity !== f.severity) return false;
     if (f.category && a._category !== f.category) return false;
     // Pipeline: filter by the PR's pipeline types (enriched on load)
-    if (f.pipeline) {
-      const pr = allReports.find(r => r.pr_number === a._pr_number);
-      if (!pr || !pr._pipeline_types || !pr._pipeline_types.includes(f.pipeline)) return false;
-    }
+    if (f.pipeline && a._pipeline_type !== f.pipeline) return false;
     return true;
   });
 }
@@ -238,13 +239,12 @@ function renderMetrics() {
   const filtered = getFilteredAnalyses();
   const base = filtered.length ? filtered : allAnalyses;
 
-  // Split by pipeline type using job-level data (respects filters)
+  // Split by pipeline type using analysis-level data
   const prPRs = new Set();
   const nightlyPRs = new Set();
   base.forEach(a => {
-    const jobPts = allJobs.filter(j => j.pr_number === a._pr_number).map(j => j.pipeline_type);
-    if (jobPts.includes("pr_e2e")) prPRs.add(a._pr_number);
-    if (jobPts.includes("nightly")) nightlyPRs.add(a._pr_number);
+    if (a._pipeline_type === "pr_e2e") prPRs.add(a._pr_number);
+    if (a._pipeline_type === "nightly") nightlyPRs.add(a._pr_number);
   });
   const totalJobs = base.length;
   let crit = 0, high = 0, med = 0, low = 0;
