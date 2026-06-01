@@ -207,16 +207,42 @@ async function loadAnalysesData() {
   renderReports();
 }
 
+// ── Filtered Data Helpers ──
+
+function getActiveFilters() {
+  return {
+    severity: document.getElementById("severityFilter")?.value || "",
+    category: document.getElementById("categoryFilter")?.value || "",
+    pipeline: document.getElementById("pipelineFilter")?.value || "",
+  };
+}
+
+function getFilteredAnalyses() {
+  const f = getActiveFilters();
+  return allAnalyses.filter(a => {
+    if (f.severity && a.severity !== f.severity) return false;
+    if (f.category && a._category !== f.category) return false;
+    // Pipeline: filter by the PR's pipeline types (enriched on load)
+    if (f.pipeline) {
+      const pr = allReports.find(r => r.pr_number === a._pr_number);
+      if (!pr || !pr._pipeline_types || !pr._pipeline_types.includes(f.pipeline)) return false;
+    }
+    return true;
+  });
+}
+
 // ── Metrics (Analysis Tab) ──
 
 function renderMetrics() {
-  const totalPRs = allReports.length;
-  const totalJobs = allReports.reduce((s, r) => s + r.failed_job_count, 0);
+  const filtered = getFilteredAnalyses();
+  const filteredPRs = new Set(filtered.map(a => a._pr_number));
+  const totalPRs = filteredPRs.size || allReports.length;
+  const totalJobs = filtered.length || allAnalyses.length;
   let crit = 0, high = 0, med = 0, low = 0;
-  allReports.forEach(r => {
-    if (r.top_severity === "critical") crit++;
-    else if (r.top_severity === "high") high++;
-    else if (r.top_severity === "medium") med++;
+  (filtered.length ? filtered : allAnalyses).forEach(a => {
+    if (a.severity === "critical") crit++;
+    else if (a.severity === "high") high++;
+    else if (a.severity === "medium") med++;
     else low++;
   });
   const avgConf = totalJobs > 0 ? Math.round((crit * 90 + high * 80 + med * 70 + low * 60) / Math.max(1, crit + high + med + low)) : 0;
@@ -238,15 +264,16 @@ function destroyCharts() { Object.values(charts).forEach(c => c.destroy()); char
 
 function renderCharts() {
   destroyCharts();
-  if (!allAnalyses.length) return;
-  renderSeverityChart();
-  renderWorkflowChart();
-  renderCategoryChart();
+  const data = allAnalyses.length ? (getFilteredAnalyses().length ? getFilteredAnalyses() : allAnalyses) : [];
+  if (!data.length) return;
+  renderSeverityChart(data);
+  renderWorkflowChart(data);
+  renderCategoryChart(data);
 }
 
-function renderSeverityChart() {
+function renderSeverityChart(filtered) {
   const counts = { critical: 0, high: 0, medium: 0, low: 0 };
-  allAnalyses.forEach(a => { counts[a.severity] = (counts[a.severity] || 0) + 1; });
+  filtered.forEach(a => { counts[a.severity] = (counts[a.severity] || 0) + 1; });
   const labels = [tSeverity("critical"), tSeverity("high"), tSeverity("medium"), tSeverity("low")];
   const data = [counts.critical, counts.high, counts.medium, counts.low];
   const colors = ["#dc2626", "#ea580c", "#ca8a04", "#16a34a"];
@@ -263,9 +290,9 @@ function renderSeverityChart() {
   });
 }
 
-function renderWorkflowChart() {
+function renderWorkflowChart(filtered) {
   const wfCounts = {};
-  allAnalyses.forEach(a => { wfCounts[a._workflow] = (wfCounts[a._workflow] || 0) + 1; });
+  filtered.forEach(a => { wfCounts[a._workflow] = (wfCounts[a._workflow] || 0) + 1; });
   const sorted = Object.entries(wfCounts).sort((a, b) => b[1] - a[1]).slice(0, 8);
   const wfKeys = sorted.map(([k]) => k);
 
@@ -284,9 +311,9 @@ function renderWorkflowChart() {
   });
 }
 
-function renderCategoryChart() {
+function renderCategoryChart(filtered) {
   const catCounts = {};
-  allAnalyses.forEach(a => { catCounts[a._category] = (catCounts[a._category] || 0) + 1; });
+  filtered.forEach(a => { catCounts[a._category] = (catCounts[a._category] || 0) + 1; });
   const order = ["code", "build", "infra", "test", "lint", "compat", "perf", "other"];
   const catKeys = order.filter(k => catCounts[k]);
   const labels = catKeys.map(k => tCategory(k));
@@ -711,11 +738,12 @@ function showQueueDetail() {
 }
 
 function showDrillDown(filterType, filterValue, displayName) {
+  const base = getFilteredAnalyses().length ? getFilteredAnalyses() : allAnalyses;
   let matches;
-  if (filterType === "severity") matches = allAnalyses.filter(a => a.severity === filterValue);
-  else if (filterType === "workflow") matches = allAnalyses.filter(a => a._workflow === filterValue);
-  else if (filterType === "all") matches = allAnalyses;
-  else matches = allAnalyses.filter(a => a._category === filterValue);
+  if (filterType === "severity") matches = base.filter(a => a.severity === filterValue);
+  else if (filterType === "workflow") matches = base.filter(a => a._workflow === filterValue);
+  else if (filterType === "all") matches = base;
+  else matches = base.filter(a => a._category === filterValue);
 
   const grouped = {};
   matches.forEach(a => {
@@ -762,11 +790,18 @@ function escapeHtml(text) {
 
 // ── Event Handlers ──
 
+function onAnalysisFilterChange() {
+  if (activeTab !== "analysis") return;
+  renderMetrics();
+  if (allAnalyses.length) renderCharts();
+  renderReports();
+}
+
 document.getElementById("searchInput").addEventListener("input", renderReports);
-document.getElementById("severityFilter").addEventListener("change", renderReports);
-document.getElementById("categoryFilter").addEventListener("change", renderReports);
+document.getElementById("severityFilter").addEventListener("change", onAnalysisFilterChange);
+document.getElementById("categoryFilter").addEventListener("change", onAnalysisFilterChange);
 const pipeFilter = document.getElementById("pipelineFilter");
-if (pipeFilter) pipeFilter.addEventListener("change", renderReports);
+if (pipeFilter) pipeFilter.addEventListener("change", onAnalysisFilterChange);
 
 // ── Boot ──
 
