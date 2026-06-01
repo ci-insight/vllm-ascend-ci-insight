@@ -46,6 +46,13 @@
         <option value="perf">Performance</option>
         <option value="other">Other</option>
       </select>
+      <select id="pipelineFilter">
+        <option value="">All Pipelines</option>
+        <option value="pr_e2e">PR CI</option>
+        <option value="nightly">Nightly</option>
+        <option value="weekly">Weekly</option>
+        <option value="other">Other</option>
+      </select>
     </div>
     <section class="metrics" id="metrics"></section>
     <section class="charts">
@@ -61,6 +68,15 @@
 
   <!-- Tab: CI Execution Analysis -->
   <section id="tab-ci-stats" class="tab-content">
+    <div class="filters-bar">
+      <select id="ciPipelineFilter" onchange="renderCIStats()">
+        <option value="">All Pipelines</option>
+        <option value="pr_e2e">PR CI</option>
+        <option value="nightly">Nightly</option>
+        <option value="weekly">Weekly</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
     <section class="metrics" id="ciMetrics"></section>
     <section class="charts">
       <div class="chart-box">

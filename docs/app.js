@@ -71,6 +71,16 @@ function applyI18n() {
   if (elQueue) elQueue.textContent = t("ciQueueWait");
   if (elSuccess) elSuccess.textContent = t("ciSuccessByWF");
   if (elSlow) elSlow.textContent = t("ciSlowestJobs");
+  // Pipeline filter labels
+  ["pipelineFilter", "ciPipelineFilter"].forEach(id => {
+    const sel = document.getElementById(id);
+    if (sel) {
+      sel.options[0].text = t("allPipelines");
+      for (let i = 1; i < sel.options.length; i++) {
+        sel.options[i].text = t("pipeline_" + sel.options[i].value) || sel.options[i].value;
+      }
+    }
+  });
   const elCiTable = document.getElementById("ciTableTitle");
   if (elCiTable) elCiTable.textContent = t("ciTableTitle");
   // CI table headers
@@ -304,17 +314,21 @@ function renderCIStats() {
   if (!allJobs.length) return;
   destroyCICharts();
 
+  // Filter by pipeline type
+  const ptFilter = document.getElementById("ciPipelineFilter")?.value || "";
+  const jobs = ptFilter ? allJobs.filter(j => j.pipeline_type === ptFilter) : allJobs;
+
   // ── Job-level metrics ──
-  const durations = allJobs.map(j => j.duration).filter(d => d > 0);
-  const queueTimes = allJobs.map(j => j.queue_time).filter(q => q >= 0);
-  const avgDur = durations.reduce((s, d) => s + d, 0) / durations.length;
-  const totalJobs = allJobs.length;
-  const success = allJobs.filter(j => j.conclusion === "success").length;
+  const durations = jobs.map(j => j.duration).filter(d => d > 0);
+  const queueTimes = jobs.map(j => j.queue_time).filter(q => q >= 0);
+  const avgDur = durations.reduce((s, d) => s + d, 0) / (durations.length || 1);
+  const totalJobs = jobs.length;
+  const success = jobs.filter(j => j.conclusion === "success").length;
 
   // ── Workflow-run-level metrics ──
   const wfKey = j => `${j.workflow_name}::${j.run_id}`;
   const wfGroups = {};
-  allJobs.forEach(j => { (wfGroups[wfKey(j)] ||= []).push(j); });
+  jobs.forEach(j => { (wfGroups[wfKey(j)] ||= []).push(j); });
 
   _wfRuns = Object.values(wfGroups).map(jobs => {
     const starts = jobs.map(j => new Date(j.started_at));
@@ -406,7 +420,7 @@ function renderCIStats() {
 
   // Queue time by workflow
   const wfQueue = {};
-  allJobs.forEach(j => {
+  jobs.forEach(j => {
     if (!wfQueue[j.workflow_name]) wfQueue[j.workflow_name] = [];
     wfQueue[j.workflow_name].push(j.queue_time);
   });
@@ -430,7 +444,7 @@ function renderCIStats() {
 
   // Success rate by workflow (with actual success/fail counts)
   const wfResults = {};
-  allJobs.forEach(j => {
+  jobs.forEach(j => {
     if (!wfResults[j.workflow_name]) wfResults[j.workflow_name] = { success: 0, failure: 0, skipped: 0 };
     const c = j.conclusion || "skipped";
     wfResults[j.workflow_name][c] = (wfResults[j.workflow_name][c] || 0) + 1;
@@ -458,7 +472,7 @@ function renderCIStats() {
   });
 
   // Slowest jobs
-  const slowest = allJobs.sort((a, b) => b.duration - a.duration).slice(0, 10);
+  const slowest = [...jobs].sort((a, b) => b.duration - a.duration).slice(0, 10);
   ciCharts.slowest = new Chart(document.getElementById("chartSlowest"), {
     type: "bar",
     data: {
@@ -510,6 +524,7 @@ function renderReports() {
   const search = (document.getElementById("searchInput").value || "").toLowerCase();
   const severity = document.getElementById("severityFilter").value;
   const category = document.getElementById("categoryFilter").value;
+  const pipeline = document.getElementById("pipelineFilter")?.value || "";
   const el = document.getElementById("reportList");
 
   let filtered = allReports.filter(r => {
@@ -522,6 +537,11 @@ function renderReports() {
   if (category && allAnalyses.length) {
     const catPRs = new Set(allAnalyses.filter(a => a._category === category).map(a => a._pr_number));
     filtered = filtered.filter(r => catPRs.has(r.pr_number));
+  }
+
+  if (pipeline && allJobs.length) {
+    const ptPRs = new Set(allJobs.filter(j => j.pipeline_type === pipeline).map(j => j.pr_number));
+    filtered = filtered.filter(r => ptPRs.has(r.pr_number));
   }
 
   if (!filtered.length) { el.innerHTML = `<div class="empty">${t("noReports")}</div>`; return; }
@@ -727,6 +747,8 @@ function escapeHtml(text) {
 document.getElementById("searchInput").addEventListener("input", renderReports);
 document.getElementById("severityFilter").addEventListener("change", renderReports);
 document.getElementById("categoryFilter").addEventListener("change", renderReports);
+const pipeFilter = document.getElementById("pipelineFilter");
+if (pipeFilter) pipeFilter.addEventListener("change", renderReports);
 
 // ── Boot ──
 

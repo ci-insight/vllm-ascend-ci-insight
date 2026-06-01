@@ -1,41 +1,4 @@
 {
-  "generated_at": "2026-06-01T08:01:59.860081+00:00",
-  "alerts": [
-    {
-      "rule_id": "R002",
-      "rule_name": "Low Health Score",
-      "severity": "warning",
-      "message": "nightly pipeline health score is 0/100 (below 70)",
-      "details": {
-        "pipeline_type": "nightly",
-        "score": 0,
-        "rating": "danger"
-      },
-      "triggered_at": "2026-06-01T08:01:59.859961+00:00"
-    },
-    {
-      "rule_id": "R002",
-      "rule_name": "Low Health Score",
-      "severity": "warning",
-      "message": "pr_e2e pipeline health score is 14/100 (below 70)",
-      "details": {
-        "pipeline_type": "pr_e2e",
-        "score": 14,
-        "rating": "danger"
-      },
-      "triggered_at": "2026-06-01T08:01:59.859961+00:00"
-    },
-    {
-      "rule_id": "R004",
-      "rule_name": "Nightly Failure",
-      "severity": "critical",
-      "message": "Nightly pipeline has 46 failure(s) out of 128 runs",
-      "details": {
-        "pipeline_type": "nightly",
-        "failures": 46,
-        "total": 128
-      },
-      "triggered_at": "2026-06-01T08:01:59.859961+00:00"
-    }
-  ]
+  "generated_at": "2026-06-01T08:08:35.544952+00:00",
+  "alerts": []
 }
