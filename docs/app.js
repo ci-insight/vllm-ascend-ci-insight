@@ -239,26 +239,46 @@ function renderMetrics() {
   const filtered = getFilteredAnalyses();
   const base = filtered.length ? filtered : allAnalyses;
 
-  // Split by pipeline type: count analyses, not PRs
-  let prCount = 0, nightlyCount = 0;
-  base.forEach(a => {
-    if (a._pipeline_type === "pr_e2e") prCount++;
-    if (a._pipeline_type === "nightly") nightlyCount++;
+  // ── Pipeline-level stats from allJobs ──
+  const ptStats = {};
+  const jobPool = allJobs.length ? allJobs : [];
+  jobPool.forEach(j => {
+    const pt = j.pipeline_type || "other";
+    if (!ptStats[pt]) ptStats[pt] = { workflows: new Set(), runs: new Set(), total: 0, failed: 0 };
+    ptStats[pt].workflows.add(j.workflow_name);
+    ptStats[pt].runs.add(j.workflow_name + "::" + j.run_id);
+    ptStats[pt].total++;
+    if (j.conclusion === "failure") ptStats[pt].failed++;
   });
+
+  // ── Severity counts from analyses ──
   const totalJobs = base.length;
-  let crit = 0, high = 0, med = 0, low = 0;
+  let crit = 0, high = 0, med = 0, low = 0, confSum = 0;
   base.forEach(a => {
     if (a.severity === "critical") crit++;
     else if (a.severity === "high") high++;
     else if (a.severity === "medium") med++;
     else low++;
+    confSum += (a.confidence || 0);
   });
-  const avgConf = totalJobs > 0 ? Math.round((crit * 90 + high * 80 + med * 70 + low * 60) / Math.max(1, crit + high + med + low)) : 0;
+  const avgConf = totalJobs > 0 ? Math.round(confSum / totalJobs) : 0;
+
+  // Pipeline metric cards
+  const ptOrder = ["pr_e2e", "nightly", "other"];
+  let ptCards = "";
+  ptOrder.forEach(pt => {
+    const s = ptStats[pt];
+    if (!s || !s.total) return;
+    const label = t("pipeline_" + pt) || pt;
+    ptCards += `<div class="metric-card clickable" onclick="showPipelineDetail('${pt}')">
+      <div class="metric-value">${s.failed}</div>
+      <div class="metric-label">${label}</div>
+      <div style="font-size:10px;color:var(--text-dim);margin-top:3px">${s.workflows.size} WF · ${s.runs.size} Runs · ${s.total} Jobs</div>
+    </div>`;
+  });
 
   document.getElementById("metrics").innerHTML = `
-    <div class="metric-card clickable" onclick="showDrillDown('all','all','${t("totalFailedJobs")}')"><div class="metric-value">${totalJobs}</div><div class="metric-label">${t("totalFailedJobs")}</div></div>
-    <div class="metric-card clickable"><div class="metric-value">${prCount}</div><div class="metric-label">${t("pipeline_pr_e2e")}</div></div>
-    <div class="metric-card clickable"><div class="metric-value">${nightlyCount}</div><div class="metric-label">${t("pipeline_nightly")}</div></div>
+    ${ptCards}
     <div class="metric-card critical clickable" onclick="showDrillDown('severity','critical','${tSeverity("critical")}')"><div class="metric-value">${crit}</div><div class="metric-label">${tSeverity("critical")}</div></div>
     <div class="metric-card high clickable" onclick="showDrillDown('severity','high','${tSeverity("high")}')"><div class="metric-value">${high}</div><div class="metric-label">${tSeverity("high")}</div></div>
     <div class="metric-card medium clickable" onclick="showDrillDown('severity','medium','${tSeverity("medium")}')"><div class="metric-value">${med}</div><div class="metric-label">${tSeverity("medium")}</div></div>
