@@ -237,15 +237,13 @@ function renderMetrics() {
   const filtered = getFilteredAnalyses();
   const base = filtered.length ? filtered : allAnalyses;
 
-  // Split counts by pipeline type for accurate labels
+  // Split by pipeline type using job-level data (respects filters)
   const prPRs = new Set();
   const nightlyPRs = new Set();
   base.forEach(a => {
-    const r = allReports.find(r => r.pr_number === a._pr_number);
-    if (r && r._pipeline_types) {
-      if (r._pipeline_types.includes("pr_e2e")) prPRs.add(a._pr_number);
-      if (r._pipeline_types.includes("nightly")) nightlyPRs.add(a._pr_number);
-    }
+    const jobPts = allJobs.filter(j => j.pr_number === a._pr_number).map(j => j.pipeline_type);
+    if (jobPts.includes("pr_e2e")) prPRs.add(a._pr_number);
+    if (jobPts.includes("nightly")) nightlyPRs.add(a._pr_number);
   });
   const totalJobs = base.length;
   let crit = 0, high = 0, med = 0, low = 0;
