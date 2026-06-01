@@ -235,11 +235,21 @@ function getFilteredAnalyses() {
 
 function renderMetrics() {
   const filtered = getFilteredAnalyses();
-  const filteredPRs = new Set(filtered.map(a => a._pr_number));
-  const totalPRs = filteredPRs.size || allReports.length;
-  const totalJobs = filtered.length || allAnalyses.length;
+  const base = filtered.length ? filtered : allAnalyses;
+
+  // Split counts by pipeline type for accurate labels
+  const prPRs = new Set();
+  const nightlyPRs = new Set();
+  base.forEach(a => {
+    const r = allReports.find(r => r.pr_number === a._pr_number);
+    if (r && r._pipeline_types) {
+      if (r._pipeline_types.includes("pr_e2e")) prPRs.add(a._pr_number);
+      if (r._pipeline_types.includes("nightly")) nightlyPRs.add(a._pr_number);
+    }
+  });
+  const totalJobs = base.length;
   let crit = 0, high = 0, med = 0, low = 0;
-  (filtered.length ? filtered : allAnalyses).forEach(a => {
+  base.forEach(a => {
     if (a.severity === "critical") crit++;
     else if (a.severity === "high") high++;
     else if (a.severity === "medium") med++;
@@ -248,8 +258,9 @@ function renderMetrics() {
   const avgConf = totalJobs > 0 ? Math.round((crit * 90 + high * 80 + med * 70 + low * 60) / Math.max(1, crit + high + med + low)) : 0;
 
   document.getElementById("metrics").innerHTML = `
-    <div class="metric-card clickable" onclick="showDrillDown('all','all','${t("totalPRs")}')"><div class="metric-value">${totalPRs}</div><div class="metric-label">${t("totalPRs")}</div></div>
-    <div class="metric-card clickable" onclick="showDrillDown('all','all','${t("totalJobs")}')"><div class="metric-value">${totalJobs}</div><div class="metric-label">${t("totalJobs")}</div></div>
+    <div class="metric-card clickable" onclick="showDrillDown('all','all','${t("totalFailedJobs")}')"><div class="metric-value">${totalJobs}</div><div class="metric-label">${t("totalFailedJobs")}</div></div>
+    <div class="metric-card clickable"><div class="metric-value">${prPRs.size}</div><div class="metric-label">${t("pipeline_pr_e2e")}</div></div>
+    <div class="metric-card clickable"><div class="metric-value">${nightlyPRs.size}</div><div class="metric-label">${t("pipeline_nightly")}</div></div>
     <div class="metric-card critical clickable" onclick="showDrillDown('severity','critical','${tSeverity("critical")}')"><div class="metric-value">${crit}</div><div class="metric-label">${tSeverity("critical")}</div></div>
     <div class="metric-card high clickable" onclick="showDrillDown('severity','high','${tSeverity("high")}')"><div class="metric-value">${high}</div><div class="metric-label">${tSeverity("high")}</div></div>
     <div class="metric-card medium clickable" onclick="showDrillDown('severity','medium','${tSeverity("medium")}')"><div class="metric-value">${med}</div><div class="metric-label">${tSeverity("medium")}</div></div>
