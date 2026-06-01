@@ -136,6 +136,15 @@ async function loadAnalysesData() {
         }
       }
 
+      // Enrich report with CI execution time (earliest run created_at)
+      let earliestRun = null;
+      for (const run of data.runs || []) {
+        if (!earliestRun || run.created_at < earliestRun) earliestRun = run.created_at;
+      }
+      if (earliestRun) {
+        r._ci_date = earliestRun; // CI execution time, not analysis time
+      }
+
       // All jobs from runs (for CI execution stats)
       for (const run of data.runs || []) {
         for (const job of run.jobs || []) {
@@ -514,7 +523,8 @@ function renderReports() {
   if (!filtered.length) { el.innerHTML = `<div class="empty">${t("noReports")}</div>`; return; }
 
   el.innerHTML = filtered.map(r => {
-    const date = new Date(r.analyzed_at).toLocaleDateString(currentLang === "zh" ? "zh-CN" : "en-US", { month: "short", day: "numeric" });
+    const ciDate = r._ci_date || r.analyzed_at;
+    const date = new Date(ciDate).toLocaleDateString(currentLang === "zh" ? "zh-CN" : "en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
     return `
       <div class="report-card" onclick="openDetail(${r.pr_number})">
         <div class="card-left">
@@ -555,7 +565,13 @@ function renderDetail(data) {
   let html = `<h2>#${data.pr_number} ${escapeHtml(data.pr_title)}</h2>`;
   html += `<div class="meta-line">${t("author")}: ${escapeHtml(data.pr_author)}</div>`;
   html += `<div class="meta-line">URL: <a href="${escapeHtml(data.pr_url)}" target="_blank">${escapeHtml(data.pr_url)}</a></div>`;
-  html += `<div class="meta-line">${t("analyzed")}: ${new Date(data.analyzed_at).toLocaleString(dateLocale)}</div>`;
+  // Show CI execution time from runs, fall back to analysis time
+  let ciExecTime = data.analyzed_at;
+  if (data.runs && data.runs.length) {
+    const earliest = data.runs.reduce((min, r) => r.created_at && r.created_at < min ? r.created_at : min, data.runs[0].created_at || "");
+    if (earliest) ciExecTime = earliest;
+  }
+  html += `<div class="meta-line">${t("analyzed")}: ${new Date(ciExecTime).toLocaleString(dateLocale)}</div>`;
   html += `<h3>${t("affectedRuns")}</h3>`;
   if (!runs.length) {
     html += `<div class="meta-line">${t("noRuns")}</div>`;
@@ -673,7 +689,10 @@ function showDrillDown(filterType, filterValue, displayName) {
       <span style="color:var(--text-dim);font-size:13px;margin-left:8px">${escapeHtml(pr ? pr.pr_title : "")}</span>
     </div>`;
     items.forEach(a => {
-      const date = new Date(a._analyzed_at).toLocaleDateString(dateLocale, { month: "short", day: "numeric" });
+      // Use CI execution time from the PR's report
+      const pr = allReports.find(r => r.pr_number === a._pr_number);
+      const ciDate = pr?._ci_date || a._analyzed_at;
+      const date = new Date(ciDate).toLocaleDateString(dateLocale, { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
       html += `<div style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px 14px;margin:6px 0">
         <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">
           <span class="badge badge-${a.severity}">${tSeverity(a.severity)}</span>
