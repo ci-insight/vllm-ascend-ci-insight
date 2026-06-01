@@ -50,7 +50,7 @@ function renderHealthUI() {
 
   // Health score cards
   let cardsHtml = "";
-  const ptypes = ["pr_e2e", "nightly", "weekly", "other"];
+  const ptypes = ["pr_e2e", "nightly", "other"];
   for (const pt of ptypes) {
     const p = pipelines[pt];
     if (!p) continue;
