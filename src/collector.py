@@ -7,17 +7,29 @@ import re
 import subprocess
 import sys
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
 from typing import Optional
 
 from .models import CIRun, CIJob, StepResult
 
 REPO = "vllm-project/vllm-ascend"
 
-# Pipeline type classification patterns
-PIPELINE_PATTERNS = {
-    "pr_e2e": [r"E2E-Light", r"E2E-Full", r"pr_test", r"PR Create", r"Merge Conflict", r"Image Build", r"model downloader", r"Docs link check", r"Cache csrc"],
-    "nightly": [r"Nightly-A2", r"Nightly-A3", r"vLLM Main Schedule", r"E2E-upstream", r"Release Code"],
-}
+# Load pipeline classification rules from shared config
+def _load_pipeline_rules() -> dict[str, list[str]]:
+    config_path = Path("config/rules.json")
+    if config_path.exists():
+        data = json.loads(config_path.read_text())
+        return {
+            pt: cfg["patterns"]
+            for pt, cfg in data.get("pipeline_types", {}).items()
+        }
+    # Fallback (should not happen if config is deployed)
+    return {
+        "pr_e2e": ["E2E-Light", "E2E-Full", "pr_test", "PR Create", "Merge Conflict", "Image Build", "model downloader", "Docs link check", "Cache csrc"],
+        "nightly": ["Nightly-A2", "Nightly-A3", "vLLM Main Schedule", "E2E-upstream", "Release Code"],
+    }
+
+PIPELINE_PATTERNS = _load_pipeline_rules()
 
 
 def classify_pipeline(workflow_name: str) -> str:

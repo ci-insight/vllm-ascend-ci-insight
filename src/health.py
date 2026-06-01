@@ -17,11 +17,14 @@ from .models import FailureReport
 REPORTS_DIR = Path("reports")
 HEALTH_FILE = REPORTS_DIR / "health.json"
 
-RATING_THRESHOLDS = [
-    (80, "good", "#16a34a"),
-    (60, "fair", "#ca8a04"),
-    (0, "danger", "#dc2626"),
-]
+def _load_rating_thresholds() -> list[tuple[int, str, str]]:
+    config_path = Path("config/rules.json")
+    if config_path.exists():
+        data = json.loads(config_path.read_text())
+        return [(t["min"], t["rating"], t["color"]) for t in data.get("health_rating_thresholds", [])]
+    return [(80, "good", "#16a34a"), (60, "fair", "#ca8a04"), (0, "danger", "#dc2626")]
+
+RATING_THRESHOLDS = _load_rating_thresholds()
 
 
 def _rating(score: float) -> tuple[str, str]:

@@ -4,34 +4,60 @@ let allAnalyses = [];
 let allJobs = []; // ALL jobs (including success) for CI stats
 let charts = {};
 
-// Pipeline type classifier (mirrors collector.py)
-function classifyPipeline(wfName) {
-  const patterns = {
-    pr_e2e: [/E2E-Light/, /E2E-Full/, /pr_test/, /PR Create/, /Merge Conflict/, /Image Build/, /model downloader/, /Docs link check/, /Cache csrc/],
-    nightly: [/Nightly-A2/, /Nightly-A3/, /vLLM Main Schedule/, /E2E-upstream/, /Release Code/],
+// ---- Loaded from config/rules.json (single source of truth) ----
+let PIPELINE_PATTERNS = null;
+let CATEGORY_RULES = null;
+
+async function loadRules() {
+  if (CATEGORY_RULES) return;
+  try {
+    const resp = await fetch("../config/rules.json");
+    if (!resp.ok) throw new Error("HTTP " + resp.status);
+    const cfg = await resp.json();
+    PIPELINE_PATTERNS = {};
+    for (const [pt, def] of Object.entries(cfg.pipeline_types || {})) {
+      if (def.patterns && def.patterns.length)
+        PIPELINE_PATTERNS[pt] = def.patterns.map(p => new RegExp(p));
+    }
+    CATEGORY_RULES = (cfg.categories || []).map(c =>
+      [c.key, new RegExp(c.patterns.join("|"), "i")]
+    );
+  } catch (e) {
+    console.warn("config/rules.json unavailable, using fallback rules");
+    _loadFallbackRules();
+  }
+}
+
+function _loadFallbackRules() {
+  PIPELINE_PATTERNS = {
+    pr_e2e: [/E2E-Light/, /E2E-Full/, /PR Create/, /Merge Conflict/, /Image Build/, /Docs link check/, /Cache csrc/],
+    nightly: [/Nightly-A2/, /Nightly-A3/, /vLLM Main Schedule/],
   };
-  for (const [pt, pats] of Object.entries(patterns)) {
+  CATEGORY_RULES = [
+    ["lint", /(\bruff\b|pre-commit|E\d{3}|F\d{3}|unused\s+import|line\s+too\s+long|undefined\s+name)/i],
+    ["build", /(\bcmake\b|pip\s+install|uv\s+pip|setup\.py|build\s+(?:fail|error)|UV_INDEX|package\s.*not\s+found)/i],
+    ["perf", /(\bOOM\b|out of memory|killed|timed?\s?out|timeout)/i],
+    ["infra", /(runner\s+(?:disconnect|fail)|connection\s+refused|rate\s?limit|HTTP\s*404)/i],
+    ["test", /(\baccuracy\s+test\b|assert.*\b(?:fail|error)\b|\bflaky\s+test\b|\bregression\b)/i],
+    ["compat", /(\bdeprecated\b|\bremoved\b.*\b(?:in|from)\b|\brenamed\b.*\bto\b|no\s+longer\s+exists|incompatible)/i],
+    ["code", /(\bImportError\b|\bAttributeError\b|\bModuleNotFoundError\b|undefined\s+name|not\s+defined|has\s+no\s+attribute)/i],
+  ];
+}
+
+function classifyPipeline(wfName) {
+  if (!PIPELINE_PATTERNS) return "other";
+  for (const [pt, pats] of Object.entries(PIPELINE_PATTERNS)) {
     for (const p of pats) { if (p.test(wfName)) return pt; }
   }
   return "other";
 }
+
 let ciCharts = {};
 let activeTab = "analysis";
 
-// ── Category Classification ──
-
-const CATEGORY_RULES = [
-  ["lint", /(\bruff\b|pre-commit|\bmypy\b|\bflake8\b|\bE\d{3}\b|\bF\d{3}\b|\bW\d{3}\b|PR\s+title|formatting|unused\s+import|line\s+too\s+long|undefined\s+name|imported\s+but\s+unused)/i],
-  ["build", /(\bcmake\b|pip\s+install|uv\s+pip|setup\.py|requirements|wheel\s|build\s+(?:fail|error|broken)|UV_INDEX|package\s.*\bnot\s+found|could\s+not\s+find.*version)/i],
-  ["perf", /(\bOOM\b|out of memory|memory (?:alloc|leak|exhaust)|killed|timed?\s?out|timeout)/i],
-  ["infra", /(runner\s+(?:disconnect|fail|unreachable)|disk\s+(?:full|quota)|node\s+(?:alloc|fail)|connection\s+(?:refused|timeout|reset)|rate\s?limit|HTTP\s*404|network\s+error)/i],
-  ["test", /(\baccuracy\s+test\b|\baccuracy.*\b(?:regression|mismatch|degrad)\b|assert.*\b(?:fail|error)\b|\bflaky\s+test\b|\bregression\b|\btest_case\b|\btest_.*\.py\b)/i],
-  ["compat", /(\bdeprecated\b|\bremoved\b.*\b(?:in|from)\b|\brenamed\b.*\bto\b|no\s+longer\s+(?:exists|available|supported)|module.*\b(?:moved|renamed)\b|import\s+path.*\b(changed|wrong)\b|incompatible)/i],
-  ["code", /(\bImportError\b|\bAttributeError\b|\bModuleNotFoundError\b|\bNameError\b|\bTypeError\b|\bValueError\b|\bKeyError\b|\bIndexError\b|undefined\s+name|not\s+defined|has\s+no\s+attribute)/i],
-];
-
 function classifyJob(analysis, jobName) {
   const text = [analysis.root_cause || "", (analysis.error_snippets || []).join(" "), jobName].join(" ");
+  if (!CATEGORY_RULES) return "other";
   for (const [cat, re] of CATEGORY_RULES) { if (re.test(text)) return cat; }
   return "other";
 }
@@ -141,6 +167,7 @@ async function loadReports() {
 }
 
 async function loadAnalysesData() {
+  await loadRules(); // ensure classification rules are loaded
   allAnalyses = [];
   allJobs = [];
   for (const r of allReports) {
