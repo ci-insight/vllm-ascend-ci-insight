@@ -55,7 +55,7 @@ function renderHealthUI() {
     const p = pipelines[pt];
     if (!p) continue;
     const label = { pr_e2e: "PR CI", nightly: "Nightly", weekly: "Weekly", other: "Other" }[pt] || pt;
-    cardsHtml += `<div class="metric-card clickable" style="border-left:3px solid ${p.rating_color}">
+    cardsHtml += `<div class="metric-card clickable" onclick="showPipelineDetail('${pt}')" style="border-left:3px solid ${p.rating_color}">
       <div class="metric-value" style="color:${p.rating_color}">${p.health_score}</div>
       <div class="metric-label">${label}</div>
       <div style="font-size:11px;color:var(--text-dim);margin-top:4px">${p.success_rate}% SR · ${p.trend === "up" ? "↗" : p.trend === "down" ? "↘" : "→"}</div>
@@ -208,6 +208,7 @@ function renderHealthCharts(pipelines, worst) {
   });
 
   // Worst workflows
+  const worstNames = worst.map(w => w.name);
   healthCharts.worst = new Chart(document.getElementById("chartHWorst"), {
     type: "bar",
     data: {
@@ -216,6 +217,7 @@ function renderHealthCharts(pipelines, worst) {
     },
     options: {
       indexAxis: "y", responsive: true, maintainAspectRatio: true,
+      onClick: (e, els) => { if (els.length) showWorkflowHealthDetail(worstNames[els[0].index]); },
       plugins: { legend: { display: false } },
       scales: {
         x: { max: 100, grid: { color: "#21262d" }, ticks: { color: "#8b949e", callback: v => v + "%" } },
@@ -223,4 +225,98 @@ function renderHealthCharts(pipelines, worst) {
       },
     },
   });
+
+  // Also add clicks to trend charts
+  ["chartHSuccess", "chartHFailure", "chartHHealth"].forEach(id => {
+    const chart = healthCharts[id === "chartHSuccess" ? "success" : id === "chartHFailure" ? "failure" : "health"];
+    // Trend charts show overview; clicking any chart on this tab shows pipeline detail
+  });
+}
+
+// ── Pipeline Detail Drill-Down ──
+
+function showPipelineDetail(ptype) {
+  const pipelines = healthData?.pipelines || {};
+  const p = pipelines[ptype];
+  if (!p) return;
+
+  const label = { pr_e2e: "PR CI", nightly: "Nightly", weekly: "Weekly", other: "Other" }[ptype] || ptype;
+  const jobs = allJobs.filter(j => j.pipeline_type === ptype);
+  const failed = jobs.filter(j => j.conclusion === "failure");
+
+  // Group failed jobs by workflow
+  const byWF = {};
+  failed.forEach(j => {
+    if (!byWF[j.workflow_name]) byWF[j.workflow_name] = [];
+    byWF[j.workflow_name].push(j);
+  });
+
+  let html = `<h2>${label} Pipeline <span style="color:${p.rating_color};font-size:18px">${p.health_score}/100</span></h2>`;
+  html += `<div style="display:flex;gap:16px;margin:12px 0;flex-wrap:wrap">
+    <div class="metric-card"><div class="metric-value">${p.total}</div><div class="metric-label">Total Jobs</div></div>
+    <div class="metric-card"><div class="metric-value">${p.success_rate}%</div><div class="metric-label">Success Rate</div></div>
+    <div class="metric-card"><div class="metric-value">${p.failure}</div><div class="metric-label">Failures</div></div>
+    <div class="metric-card"><div class="metric-value">${p.recent_24h_failures || 0}</div><div class="metric-label">24h Failures</div></div>
+  </div>`;
+
+  // Consecutive failure details
+  if (p.consecutive_details && p.consecutive_details.length) {
+    html += `<h3>Consecutive Failures</h3>`;
+    p.consecutive_details.forEach(c => {
+      html += `<div class="alert-banner" style="margin:4px 0"><strong>${c.workflow}</strong>: ${c.streak} consecutive failures (penalty: -${c.penalty})</div>`;
+    });
+  }
+
+  // Failed jobs by workflow
+  html += `<h3>Failed Jobs by Workflow (${failed.length} total)</h3>`;
+  for (const [wf, wJobs] of Object.entries(byWF).sort((a, b) => b[1].length - a[1].length)) {
+    html += `<div style="margin:12px 0 4px;font-weight:600;font-size:14px">${escapeHtml(wf)} <span style="color:var(--text-dim);font-weight:400">(${wJobs.length} failures)</span></div>`;
+    wJobs.slice(0, 5).forEach(j => {
+      const runUrl = `https://github.com/vllm-project/vllm-ascend/actions/runs/${j.run_id}`;
+      html += `<div style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:8px 12px;margin:4px 0;font-size:13px">
+        <span class="badge badge-${j.conclusion === 'failure' ? 'critical' : 'medium'}">${j.conclusion}</span>
+        <span style="margin-left:8px">${escapeHtml(j.job_name.length > 60 ? j.job_name.slice(0, 60) + '...' : j.job_name)}</span>
+        <a href="${runUrl}" target="_blank" style="color:var(--link);margin-left:8px;font-size:12px">Run ↗</a>
+        <span style="color:var(--text-dim);margin-left:8px;font-size:12px">${fmtDuration(j.duration)}</span>
+      </div>`;
+    });
+    if (wJobs.length > 5) html += `<div style="color:var(--text-dim);font-size:12px;padding:4px">... and ${wJobs.length - 5} more</div>`;
+  }
+
+  document.getElementById("detailContent").innerHTML = html;
+  document.getElementById("detailModal").classList.add("open");
+}
+
+function showWorkflowHealthDetail(wfName) {
+  const jobs = allJobs.filter(j => j.workflow_name === wfName);
+  const failed = jobs.filter(j => j.conclusion === "failure");
+  const success = jobs.filter(j => j.conclusion === "success");
+  const total = jobs.length;
+  const sr = total ? Math.round(success.length / total * 100) : 0;
+
+  let html = `<h2>${escapeHtml(wfName)} <span style="font-size:16px;color:${sr < 50 ? 'var(--critical)' : sr < 75 ? 'var(--medium)' : 'var(--low)'}">${sr}% SR</span></h2>`;
+  html += `<div style="display:flex;gap:16px;margin:12px 0;flex-wrap:wrap">
+    <div class="metric-card"><div class="metric-value">${total}</div><div class="metric-label">Total Jobs</div></div>
+    <div class="metric-card"><div class="metric-value">${success.length}</div><div class="metric-label">Success</div></div>
+    <div class="metric-card critical"><div class="metric-value">${failed.length}</div><div class="metric-label">Failed</div></div>
+    <div class="metric-card"><div class="metric-value">${fmtDuration(jobs.reduce((s,j) => s + j.duration, 0) / Math.max(1, total))}</div><div class="metric-label">Avg Duration</div></div>
+  </div>`;
+
+  // Show all jobs (newest first)
+  html += `<h3>Jobs</h3>`;
+  const sorted = [...jobs].sort((a, b) => new Date(b.started_at || 0) - new Date(a.started_at || 0));
+  sorted.forEach(j => {
+    const runUrl = `https://github.com/vllm-project/vllm-ascend/actions/runs/${j.run_id}`;
+    const date = new Date(j.started_at).toLocaleDateString(currentLang === "zh" ? "zh-CN" : "en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
+    html += `<div style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:8px 12px;margin:4px 0;font-size:13px">
+      <span class="badge badge-${j.conclusion === 'failure' ? 'critical' : j.conclusion === 'success' ? 'low' : 'other'}">${j.conclusion}</span>
+      <span style="margin-left:8px">${escapeHtml(j.job_name.length > 50 ? j.job_name.slice(0, 50) + '...' : j.job_name)}</span>
+      <span style="color:var(--text-dim);margin-left:8px;font-size:12px">${fmtDuration(j.duration)}</span>
+      <span style="color:var(--text-dim);margin-left:8px;font-size:12px">${date}</span>
+      <a href="${runUrl}" target="_blank" style="color:var(--link);margin-left:8px;font-size:12px">Run ↗</a>
+    </div>`;
+  });
+
+  document.getElementById("detailContent").innerHTML = html;
+  document.getElementById("detailModal").classList.add("open");
 }
