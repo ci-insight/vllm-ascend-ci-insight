@@ -200,11 +200,12 @@ async function loadAnalysesData() {
     } catch (e) { /* skip */ }
   }
 
-  if (allAnalyses.length) renderCharts();
+  if (allAnalyses.length) {
+    renderMetrics();
+    renderCharts();
+    renderReports();
+  }
   if (allJobs.length && activeTab === "ci-stats") renderCIStats();
-
-  // Re-render report list now that category/pipeline filter data is available
-  renderReports();
 }
 
 // ── Filtered Data Helpers ──
