@@ -187,6 +187,9 @@ async function loadAnalysesData() {
 
   if (allAnalyses.length) renderCharts();
   if (allJobs.length && activeTab === "ci-stats") renderCIStats();
+
+  // Re-render report list now that category/pipeline filter data is available
+  renderReports();
 }
 
 // ── Metrics (Analysis Tab) ──

@@ -94,7 +94,7 @@ const I18N = {
     ciWfSuccess: "WF Success",
     ciTableTitle: "Workflow Runs Detail",
     tabHealth: "Health",
-    pipeline_pr: "PR CI",
+    pipeline_pr_e2e: "PR CI",
     pipeline_nightly: "Nightly",
     pipeline_other: "Other",
     allPipelines: "All Pipelines",
