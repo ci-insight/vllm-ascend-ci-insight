@@ -239,12 +239,11 @@ function renderMetrics() {
   const filtered = getFilteredAnalyses();
   const base = filtered.length ? filtered : allAnalyses;
 
-  // Split by pipeline type using analysis-level data
-  const prPRs = new Set();
-  const nightlyPRs = new Set();
+  // Split by pipeline type: count analyses, not PRs
+  let prCount = 0, nightlyCount = 0;
   base.forEach(a => {
-    if (a._pipeline_type === "pr_e2e") prPRs.add(a._pr_number);
-    if (a._pipeline_type === "nightly") nightlyPRs.add(a._pr_number);
+    if (a._pipeline_type === "pr_e2e") prCount++;
+    if (a._pipeline_type === "nightly") nightlyCount++;
   });
   const totalJobs = base.length;
   let crit = 0, high = 0, med = 0, low = 0;
@@ -258,8 +257,8 @@ function renderMetrics() {
 
   document.getElementById("metrics").innerHTML = `
     <div class="metric-card clickable" onclick="showDrillDown('all','all','${t("totalFailedJobs")}')"><div class="metric-value">${totalJobs}</div><div class="metric-label">${t("totalFailedJobs")}</div></div>
-    <div class="metric-card clickable"><div class="metric-value">${prPRs.size}</div><div class="metric-label">${t("pipeline_pr_e2e")}</div></div>
-    <div class="metric-card clickable"><div class="metric-value">${nightlyPRs.size}</div><div class="metric-label">${t("pipeline_nightly")}</div></div>
+    <div class="metric-card clickable"><div class="metric-value">${prCount}</div><div class="metric-label">${t("pipeline_pr_e2e")}</div></div>
+    <div class="metric-card clickable"><div class="metric-value">${nightlyCount}</div><div class="metric-label">${t("pipeline_nightly")}</div></div>
     <div class="metric-card critical clickable" onclick="showDrillDown('severity','critical','${tSeverity("critical")}')"><div class="metric-value">${crit}</div><div class="metric-label">${tSeverity("critical")}</div></div>
     <div class="metric-card high clickable" onclick="showDrillDown('severity','high','${tSeverity("high")}')"><div class="metric-value">${high}</div><div class="metric-label">${tSeverity("high")}</div></div>
     <div class="metric-card medium clickable" onclick="showDrillDown('severity','medium','${tSeverity("medium")}')"><div class="metric-value">${med}</div><div class="metric-label">${tSeverity("medium")}</div></div>
