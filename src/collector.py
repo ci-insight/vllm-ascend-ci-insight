@@ -15,9 +15,8 @@ REPO = "vllm-project/vllm-ascend"
 
 # Pipeline type classification patterns
 PIPELINE_PATTERNS = {
-    "pr_e2e": [r"E2E-Light", r"E2E-Full", r"pr_test", r"PR Create", r"Merge Conflict"],
+    "pr_e2e": [r"E2E-Light", r"E2E-Full", r"pr_test", r"PR Create", r"Merge Conflict", r"Image Build", r"model downloader", r"Docs link check", r"Cache csrc"],
     "nightly": [r"Nightly-A2", r"Nightly-A3", r"vLLM Main Schedule", r"E2E-upstream", r"Release Code"],
-    "weekly": [r"weekly", r"Weekly"],
 }
 
 

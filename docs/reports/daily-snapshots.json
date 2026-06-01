@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-01T08:08:35.565246+00:00",
+  "generated_at": "2026-06-01T09:03:14.787277+00:00",
   "pipeline_types": {
     "nightly": [
       {
@@ -30,12 +30,12 @@
     "pr_e2e": [
       {
         "date": "2026-06-01",
-        "total": 156,
+        "total": 168,
         "success": 36,
-        "failure": 70,
-        "success_rate": 23.0,
-        "health_score": 14.0,
-        "avg_duration_sec": 149.6,
+        "failure": 82,
+        "success_rate": 21.0,
+        "health_score": 0.0,
+        "avg_duration_sec": 149.4,
         "rating": "danger",
         "trend": "down"
       }

@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-06-01T08:08:35.543511+00:00",
+  "generated_at": "2026-06-01T09:03:14.777964+00:00",
   "overall": {
     "total": 296,
     "success": 42,
     "success_rate": 14,
-    "health_score": 5
+    "health_score": 0
   },
   "pipelines": {
     "nightly": {
@@ -37,16 +37,16 @@
         }
       ]
     },
-    "other": {
-      "type": "other",
-      "total": 12,
-      "success": 0,
-      "failure": 12,
-      "success_rate": 0,
+    "pr_e2e": {
+      "type": "pr_e2e",
+      "total": 168,
+      "success": 36,
+      "failure": 82,
+      "success_rate": 21,
       "health_score": 0,
       "rating": "danger",
       "rating_color": "#dc2626",
-      "trend": "flat",
+      "trend": "down",
       "consecutive_details": [
         {
           "workflow": "Cache csrc Build Artifacts",
@@ -59,35 +59,11 @@
       "daily_trend": [
         {
           "date": "2026-05-28",
-          "total": 12,
-          "success": 0,
-          "failure": 12,
-          "success_rate": 0,
-          "health": 0
-        }
-      ]
-    },
-    "pr_e2e": {
-      "type": "pr_e2e",
-      "total": 156,
-      "success": 36,
-      "failure": 70,
-      "success_rate": 23,
-      "health_score": 14,
-      "rating": "danger",
-      "rating_color": "#dc2626",
-      "trend": "down",
-      "consecutive_details": [],
-      "recent_24h_total": 0,
-      "recent_24h_failures": 0,
-      "daily_trend": [
-        {
-          "date": "2026-05-28",
-          "total": 102,
+          "total": 114,
           "success": 36,
-          "failure": 18,
-          "success_rate": 35,
-          "health": 21
+          "failure": 30,
+          "success_rate": 32,
+          "health": 19
         }
       ]
     }
