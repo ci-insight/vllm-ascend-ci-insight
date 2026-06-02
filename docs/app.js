@@ -248,7 +248,12 @@ function renderDataSourceBanner(indexData) {
     const measured = jobs.filter(j => j.conclusion === "success" || j.conclusion === "failure").length;
     const skipped = jobs.filter(j => j.conclusion === "skipped").length;
     const pending = jobs.filter(j => ["queued", "in_progress", "pending"].includes(j.conclusion)).length;
-    ciText = `Current CI metadata: ${formatTimestamp(ciMetadata.generated_at)} · ${ciMetadata.runs?.length || 0}/${ciMetadata.limit || "?"} runs · ${measured}/${jobs.length} measured jobs · ${skipped} skipped · ${pending} pending`;
+    const byPipeline = ciMetadata.measured_jobs_by_pipeline || {};
+    const target = ciMetadata.min_measured_per_pipeline || 0;
+    const targetText = target
+      ? ` · target ${target}/pipeline (${Object.entries(byPipeline).map(([k, v]) => `${k}:${v}`).join(", ")})`
+      : "";
+    ciText = `Current CI metadata: ${formatTimestamp(ciMetadata.generated_at)} · ${ciMetadata.runs?.length || 0}/${ciMetadata.limit || "?"} runs · ${measured}/${jobs.length} measured jobs · ${skipped} skipped · ${pending} pending${targetText}`;
   }
 
   el.innerHTML = `

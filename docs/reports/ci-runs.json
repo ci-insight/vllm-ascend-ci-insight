@@ -1,1643 +1,3960 @@
 {
-  "generated_at": "2026-06-02T03:34:48.316743+00:00",
+  "generated_at": "2026-06-02T05:32:57.170106+00:00",
   "repo": "vllm-project/vllm-ascend",
   "days": 7,
-  "limit": 30,
+  "limit": 200,
+  "min_measured_per_pipeline": 5,
+  "measured_jobs_by_pipeline": {
+    "pr_e2e": 72,
+    "nightly": 5
+  },
   "dataset_kind": "full_ci_run_metadata",
   "runs": [
     {
-      "run_id": 26796667669,
-      "workflow_name": "E2E-Light",
-      "conclusion": "in_progress",
-      "status": "in_progress",
-      "branch": "final_mtp",
-      "created_at": "2026-06-02T03:33:46Z",
-      "updated_at": "2026-06-02T03:34:10Z",
+      "run_id": 26799758222,
+      "workflow_name": "Nightly-A3",
+      "conclusion": "skipped",
+      "status": "completed",
+      "branch": "br_dsv4_950_3.0_2_main_ci_merge",
+      "created_at": "2026-06-02T05:09:26Z",
+      "updated_at": "2026-06-02T05:09:28Z",
       "event": "pull_request",
-      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26796667669",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799758222",
+      "pipeline_type": "nightly",
+      "jobs": [
+        {
+          "job_id": 79003724625,
+          "job_name": "Parse trigger and determine test scope",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:09:27Z",
+          "completed_at": "2026-06-02T05:09:26Z"
+        },
+        {
+          "job_id": 79003724844,
+          "job_name": "Build nightly-a3 image",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:09:27Z",
+          "completed_at": "2026-06-02T05:09:26Z"
+        },
+        {
+          "job_id": 79003724896,
+          "job_name": "Export global env vars as job outputs",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:09:27Z",
+          "completed_at": "2026-06-02T05:09:27Z"
+        },
+        {
+          "job_id": 79003725101,
+          "job_name": "multi-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:09:27Z",
+          "completed_at": "2026-06-02T05:09:27Z"
+        },
+        {
+          "job_id": 79003725213,
+          "job_name": "double-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:09:27Z",
+          "completed_at": "2026-06-02T05:09:27Z"
+        },
+        {
+          "job_id": 79003725350,
+          "job_name": "single-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:09:27Z",
+          "completed_at": "2026-06-02T05:09:27Z"
+        },
+        {
+          "job_id": 79003725666,
+          "job_name": "Merge benchmark artifacts into nightly-a3.zip",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:09:27Z",
+          "completed_at": "2026-06-02T05:09:27Z"
+        },
+        {
+          "job_id": 79003725740,
+          "job_name": "single-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:09:27Z",
+          "completed_at": "2026-06-02T05:09:27Z"
+        },
+        {
+          "job_id": 79003725750,
+          "job_name": "clear-pre-logs",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:09:27Z",
+          "completed_at": "2026-06-02T05:09:27Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26799758184,
+      "workflow_name": "E2E-Full",
+      "conclusion": "skipped",
+      "status": "completed",
+      "branch": "br_dsv4_950_3.0_2_main_ci_merge",
+      "created_at": "2026-06-02T05:09:26Z",
+      "updated_at": "2026-06-02T05:09:27Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799758184",
       "pipeline_type": "pr_e2e",
       "jobs": [
         {
-          "job_id": 78994475669,
+          "job_id": 79003724434,
           "job_name": "changes",
-          "conclusion": "in_progress",
-          "started_at": "2026-06-02T03:34:07Z",
-          "completed_at": null
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:09:27Z",
+          "completed_at": "2026-06-02T05:09:26Z"
         },
         {
-          "job_id": 78994475703,
-          "job_name": "lint / validate-pr-title",
-          "conclusion": "in_progress",
-          "started_at": "2026-06-02T03:34:09Z",
-          "completed_at": null
-        }
-      ]
-    },
-    {
-      "run_id": 26796667668,
-      "workflow_name": "Image Build and Push",
-      "conclusion": "skipped",
-      "status": "completed",
-      "branch": "final_mtp",
-      "created_at": "2026-06-02T03:33:46Z",
-      "updated_at": "2026-06-02T03:33:47Z",
-      "event": "pull_request",
-      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26796667668",
-      "pipeline_type": "pr_e2e",
-      "jobs": [
-        {
-          "job_id": 78994475754,
-          "job_name": "Image Build and Push",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:47Z",
-          "completed_at": "2026-06-02T03:33:47Z"
-        },
-        {
-          "job_id": 78994475871,
-          "job_name": "Image Build and Push",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:47Z",
-          "completed_at": "2026-06-02T03:33:47Z"
-        }
-      ]
-    },
-    {
-      "run_id": 26796667663,
-      "workflow_name": "Nightly-A3",
-      "conclusion": "skipped",
-      "status": "completed",
-      "branch": "final_mtp",
-      "created_at": "2026-06-02T03:33:46Z",
-      "updated_at": "2026-06-02T03:33:48Z",
-      "event": "pull_request",
-      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26796667663",
-      "pipeline_type": "nightly",
-      "jobs": [
-        {
-          "job_id": 78994475833,
-          "job_name": "Parse trigger and determine test scope",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:47Z",
-          "completed_at": "2026-06-02T03:33:47Z"
-        },
-        {
-          "job_id": 78994476115,
-          "job_name": "Export global env vars as job outputs",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:47Z",
-          "completed_at": "2026-06-02T03:33:47Z"
-        },
-        {
-          "job_id": 78994476128,
-          "job_name": "multi-node",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:47Z",
-          "completed_at": "2026-06-02T03:33:47Z"
-        },
-        {
-          "job_id": 78994476301,
-          "job_name": "single-node",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:47Z",
-          "completed_at": "2026-06-02T03:33:47Z"
-        },
-        {
-          "job_id": 78994476350,
-          "job_name": "double-node",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:47Z",
-          "completed_at": "2026-06-02T03:33:47Z"
-        },
-        {
-          "job_id": 78994476480,
-          "job_name": "single-node",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:47Z",
-          "completed_at": "2026-06-02T03:33:47Z"
-        },
-        {
-          "job_id": 78994476514,
-          "job_name": "clear-pre-logs",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:47Z",
-          "completed_at": "2026-06-02T03:33:47Z"
-        },
-        {
-          "job_id": 78994476651,
-          "job_name": "Merge benchmark artifacts into nightly-a3.zip",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:48Z",
-          "completed_at": "2026-06-02T03:33:47Z"
-        },
-        {
-          "job_id": 78994490582,
-          "job_name": "Build nightly-a3 image",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:56Z",
-          "completed_at": "2026-06-02T03:33:47Z"
-        }
-      ]
-    },
-    {
-      "run_id": 26796667661,
-      "workflow_name": "Nightly-A2",
-      "conclusion": "skipped",
-      "status": "completed",
-      "branch": "final_mtp",
-      "created_at": "2026-06-02T03:33:46Z",
-      "updated_at": "2026-06-02T03:33:48Z",
-      "event": "pull_request",
-      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26796667661",
-      "pipeline_type": "nightly",
-      "jobs": [
-        {
-          "job_id": 78994475854,
-          "job_name": "doc-test",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:47Z",
-          "completed_at": "2026-06-02T03:33:47Z"
-        },
-        {
-          "job_id": 78994475947,
-          "job_name": "Build nightly-a2 image",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:47Z",
-          "completed_at": "2026-06-02T03:33:47Z"
-        },
-        {
-          "job_id": 78994475970,
-          "job_name": "Parse trigger and determine test scope",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:47Z",
-          "completed_at": "2026-06-02T03:33:47Z"
-        },
-        {
-          "job_id": 78994476123,
-          "job_name": "Export global env vars as job outputs",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:47Z",
-          "completed_at": "2026-06-02T03:33:47Z"
-        },
-        {
-          "job_id": 78994476136,
-          "job_name": "Generate accuracy test matrix",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:47Z",
-          "completed_at": "2026-06-02T03:33:47Z"
-        },
-        {
-          "job_id": 78994476164,
-          "job_name": "single-node-accuracy-tests-pr-only",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:47Z",
-          "completed_at": "2026-06-02T03:33:47Z"
-        },
-        {
-          "job_id": 78994476228,
-          "job_name": "single-node",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:47Z",
-          "completed_at": "2026-06-02T03:33:47Z"
-        },
-        {
-          "job_id": 78994476306,
-          "job_name": "single-node-accuracy-tests",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:47Z",
-          "completed_at": "2026-06-02T03:33:47Z"
-        },
-        {
-          "job_id": 78994476323,
-          "job_name": "multi-node",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:47Z",
-          "completed_at": "2026-06-02T03:33:47Z"
-        },
-        {
-          "job_id": 78994476441,
-          "job_name": "clear-pre-logs",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:47Z",
-          "completed_at": "2026-06-02T03:33:47Z"
-        },
-        {
-          "job_id": 78994476475,
-          "job_name": "Merge benchmark artifacts into nightly-a2.zip",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:47Z",
-          "completed_at": "2026-06-02T03:33:47Z"
-        }
-      ]
-    },
-    {
-      "run_id": 26796667653,
-      "workflow_name": "E2E-Full",
-      "conclusion": "pending",
-      "status": "pending",
-      "branch": "final_mtp",
-      "created_at": "2026-06-02T03:33:46Z",
-      "updated_at": "2026-06-02T03:33:47Z",
-      "event": "pull_request",
-      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26796667653",
-      "pipeline_type": "pr_e2e",
-      "jobs": []
-    },
-    {
-      "run_id": 26796665377,
-      "workflow_name": "Merge Conflict Labeler",
-      "conclusion": "success",
-      "status": "completed",
-      "branch": "final_mtp",
-      "created_at": "2026-06-02T03:33:42Z",
-      "updated_at": "2026-06-02T03:33:52Z",
-      "event": "pull_request_target",
-      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26796665377",
-      "pipeline_type": "pr_e2e",
-      "jobs": [
-        {
-          "job_id": 78994468416,
-          "job_name": "main",
-          "conclusion": "success",
-          "started_at": "2026-06-02T03:33:44Z",
-          "completed_at": "2026-06-02T03:33:51Z"
-        }
-      ]
-    },
-    {
-      "run_id": 26796665373,
-      "workflow_name": "PR Create",
-      "conclusion": "success",
-      "status": "completed",
-      "branch": "final_mtp",
-      "created_at": "2026-06-02T03:33:42Z",
-      "updated_at": "2026-06-02T03:34:04Z",
-      "event": "pull_request_target",
-      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26796665373",
-      "pipeline_type": "pr_e2e",
-      "jobs": [
-        {
-          "job_id": 78994468272,
-          "job_name": "PR create action",
-          "conclusion": "success",
-          "started_at": "2026-06-02T03:33:45Z",
-          "completed_at": "2026-06-02T03:34:03Z"
-        }
-      ]
-    },
-    {
-      "run_id": 26796654406,
-      "workflow_name": "Nightly-A3",
-      "conclusion": "skipped",
-      "status": "completed",
-      "branch": "fuse_without_share",
-      "created_at": "2026-06-02T03:33:21Z",
-      "updated_at": "2026-06-02T03:33:22Z",
-      "event": "pull_request",
-      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26796654406",
-      "pipeline_type": "nightly",
-      "jobs": [
-        {
-          "job_id": 78994434299,
-          "job_name": "Build nightly-a3 image",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:21Z",
-          "completed_at": "2026-06-02T03:33:21Z"
-        },
-        {
-          "job_id": 78994434383,
-          "job_name": "Export global env vars as job outputs",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:21Z",
-          "completed_at": "2026-06-02T03:33:21Z"
-        },
-        {
-          "job_id": 78994434444,
-          "job_name": "multi-node",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:21Z",
-          "completed_at": "2026-06-02T03:33:21Z"
-        },
-        {
-          "job_id": 78994434533,
-          "job_name": "double-node",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:22Z",
-          "completed_at": "2026-06-02T03:33:21Z"
-        },
-        {
-          "job_id": 78994434693,
-          "job_name": "Merge benchmark artifacts into nightly-a3.zip",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:22Z",
-          "completed_at": "2026-06-02T03:33:21Z"
-        },
-        {
-          "job_id": 78994434696,
-          "job_name": "clear-pre-logs",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:22Z",
-          "completed_at": "2026-06-02T03:33:21Z"
-        },
-        {
-          "job_id": 78994434705,
-          "job_name": "single-node",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:22Z",
-          "completed_at": "2026-06-02T03:33:21Z"
-        },
-        {
-          "job_id": 78994434874,
-          "job_name": "single-node",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:22Z",
-          "completed_at": "2026-06-02T03:33:21Z"
-        },
-        {
-          "job_id": 78994448753,
-          "job_name": "Parse trigger and determine test scope",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:30Z",
-          "completed_at": "2026-06-02T03:33:21Z"
-        }
-      ]
-    },
-    {
-      "run_id": 26796654398,
-      "workflow_name": "E2E-Full",
-      "conclusion": "skipped",
-      "status": "completed",
-      "branch": "fuse_without_share",
-      "created_at": "2026-06-02T03:33:21Z",
-      "updated_at": "2026-06-02T03:33:22Z",
-      "event": "pull_request",
-      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26796654398",
-      "pipeline_type": "pr_e2e",
-      "jobs": [
-        {
-          "job_id": 78994434294,
+          "job_id": 79003724546,
           "job_name": "Parse /e2e comment",
           "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:21Z",
-          "completed_at": "2026-06-02T03:33:21Z"
+          "started_at": "2026-06-02T05:09:27Z",
+          "completed_at": "2026-06-02T05:09:26Z"
         },
         {
-          "job_id": 78994434328,
-          "job_name": "changes",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:21Z",
-          "completed_at": "2026-06-02T03:33:21Z"
-        },
-        {
-          "job_id": 78994434517,
+          "job_id": 79003724820,
           "job_name": "e2e-comment (${{ matrix.vllm_version }})",
           "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:21Z",
-          "completed_at": "2026-06-02T03:33:21Z"
+          "started_at": "2026-06-02T05:09:27Z",
+          "completed_at": "2026-06-02T05:09:27Z"
         },
         {
-          "job_id": 78994434680,
+          "job_id": 79003724863,
           "job_name": "e2e-full",
           "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:22Z",
-          "completed_at": "2026-06-02T03:33:21Z"
+          "started_at": "2026-06-02T05:09:27Z",
+          "completed_at": "2026-06-02T05:09:27Z"
         }
       ]
     },
     {
-      "run_id": 26796654386,
-      "workflow_name": "E2E-Light",
-      "conclusion": "pending",
-      "status": "pending",
-      "branch": "fuse_without_share",
-      "created_at": "2026-06-02T03:33:21Z",
-      "updated_at": "2026-06-02T03:33:21Z",
-      "event": "pull_request",
-      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26796654386",
-      "pipeline_type": "pr_e2e",
-      "jobs": []
-    },
-    {
-      "run_id": 26796654383,
+      "run_id": 26799758174,
       "workflow_name": "Nightly-A2",
       "conclusion": "skipped",
       "status": "completed",
-      "branch": "fuse_without_share",
-      "created_at": "2026-06-02T03:33:21Z",
-      "updated_at": "2026-06-02T03:33:22Z",
+      "branch": "br_dsv4_950_3.0_2_main_ci_merge",
+      "created_at": "2026-06-02T05:09:26Z",
+      "updated_at": "2026-06-02T05:09:28Z",
       "event": "pull_request",
-      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26796654383",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799758174",
       "pipeline_type": "nightly",
       "jobs": [
         {
-          "job_id": 78994434201,
+          "job_id": 79003724721,
           "job_name": "doc-test",
           "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:21Z",
-          "completed_at": "2026-06-02T03:33:21Z"
+          "started_at": "2026-06-02T05:09:27Z",
+          "completed_at": "2026-06-02T05:09:26Z"
         },
         {
-          "job_id": 78994434323,
+          "job_id": 79003724794,
           "job_name": "Export global env vars as job outputs",
           "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:21Z",
-          "completed_at": "2026-06-02T03:33:21Z"
+          "started_at": "2026-06-02T05:09:27Z",
+          "completed_at": "2026-06-02T05:09:27Z"
         },
         {
-          "job_id": 78994434350,
-          "job_name": "Parse trigger and determine test scope",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:21Z",
-          "completed_at": "2026-06-02T03:33:21Z"
-        },
-        {
-          "job_id": 78994434402,
+          "job_id": 79003724798,
           "job_name": "Generate accuracy test matrix",
           "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:21Z",
-          "completed_at": "2026-06-02T03:33:21Z"
+          "started_at": "2026-06-02T05:09:27Z",
+          "completed_at": "2026-06-02T05:09:27Z"
         },
         {
-          "job_id": 78994434459,
-          "job_name": "single-node",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:21Z",
-          "completed_at": "2026-06-02T03:33:21Z"
-        },
-        {
-          "job_id": 78994434539,
-          "job_name": "multi-node",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:22Z",
-          "completed_at": "2026-06-02T03:33:21Z"
-        },
-        {
-          "job_id": 78994434646,
-          "job_name": "single-node-accuracy-tests-pr-only",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:22Z",
-          "completed_at": "2026-06-02T03:33:21Z"
-        },
-        {
-          "job_id": 78994434668,
+          "job_id": 79003724890,
           "job_name": "single-node-accuracy-tests",
           "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:22Z",
-          "completed_at": "2026-06-02T03:33:21Z"
+          "started_at": "2026-06-02T05:09:27Z",
+          "completed_at": "2026-06-02T05:09:27Z"
         },
         {
-          "job_id": 78994434854,
-          "job_name": "Merge benchmark artifacts into nightly-a2.zip",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:22Z",
-          "completed_at": "2026-06-02T03:33:21Z"
-        },
-        {
-          "job_id": 78994434922,
-          "job_name": "clear-pre-logs",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:22Z",
-          "completed_at": "2026-06-02T03:33:21Z"
-        },
-        {
-          "job_id": 78994443699,
-          "job_name": "Build nightly-a2 image",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:27Z",
-          "completed_at": "2026-06-02T03:33:21Z"
-        }
-      ]
-    },
-    {
-      "run_id": 26796654321,
-      "workflow_name": "Image Build and Push",
-      "conclusion": "skipped",
-      "status": "completed",
-      "branch": "fuse_without_share",
-      "created_at": "2026-06-02T03:33:21Z",
-      "updated_at": "2026-06-02T03:33:21Z",
-      "event": "pull_request",
-      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26796654321",
-      "pipeline_type": "pr_e2e",
-      "jobs": [
-        {
-          "job_id": 78994433859,
-          "job_name": "Image Build and Push",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:21Z",
-          "completed_at": "2026-06-02T03:33:21Z"
-        },
-        {
-          "job_id": 78994449378,
-          "job_name": "Image Build and Push",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:31Z",
-          "completed_at": "2026-06-02T03:33:21Z"
-        }
-      ]
-    },
-    {
-      "run_id": 26796653523,
-      "workflow_name": "PR Create",
-      "conclusion": "success",
-      "status": "completed",
-      "branch": "fuse_without_share",
-      "created_at": "2026-06-02T03:33:19Z",
-      "updated_at": "2026-06-02T03:33:37Z",
-      "event": "pull_request_target",
-      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26796653523",
-      "pipeline_type": "pr_e2e",
-      "jobs": [
-        {
-          "job_id": 78994431300,
-          "job_name": "PR create action",
-          "conclusion": "success",
-          "started_at": "2026-06-02T03:33:22Z",
-          "completed_at": "2026-06-02T03:33:36Z"
-        }
-      ]
-    },
-    {
-      "run_id": 26796653515,
-      "workflow_name": "Merge Conflict Labeler",
-      "conclusion": "success",
-      "status": "completed",
-      "branch": "fuse_without_share",
-      "created_at": "2026-06-02T03:33:19Z",
-      "updated_at": "2026-06-02T03:33:32Z",
-      "event": "pull_request_target",
-      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26796653515",
-      "pipeline_type": "pr_e2e",
-      "jobs": [
-        {
-          "job_id": 78994431223,
-          "job_name": "main",
-          "conclusion": "success",
-          "started_at": "2026-06-02T03:33:21Z",
-          "completed_at": "2026-06-02T03:33:31Z"
-        }
-      ]
-    },
-    {
-      "run_id": 26796620048,
-      "workflow_name": "PR Create",
-      "conclusion": "success",
-      "status": "completed",
-      "branch": "dsa/cp-multistream",
-      "created_at": "2026-06-02T03:32:14Z",
-      "updated_at": "2026-06-02T03:32:37Z",
-      "event": "pull_request_target",
-      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26796620048",
-      "pipeline_type": "pr_e2e",
-      "jobs": [
-        {
-          "job_id": 78994329598,
-          "job_name": "PR create action",
-          "conclusion": "success",
-          "started_at": "2026-06-02T03:32:16Z",
-          "completed_at": "2026-06-02T03:32:36Z"
-        }
-      ]
-    },
-    {
-      "run_id": 26796605988,
-      "workflow_name": "E2E-Light",
-      "conclusion": "failure",
-      "status": "completed",
-      "branch": "events_final",
-      "created_at": "2026-06-02T03:31:47Z",
-      "updated_at": "2026-06-02T03:33:14Z",
-      "event": "pull_request",
-      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26796605988",
-      "pipeline_type": "pr_e2e",
-      "jobs": [
-        {
-          "job_id": 78994285885,
-          "job_name": "changes",
-          "conclusion": "success",
-          "started_at": "2026-06-02T03:32:08Z",
-          "completed_at": "2026-06-02T03:33:13Z"
-        },
-        {
-          "job_id": 78994285936,
-          "job_name": "lint / validate-pr-title",
-          "conclusion": "failure",
-          "started_at": "2026-06-02T03:32:12Z",
-          "completed_at": "2026-06-02T03:32:36Z"
-        },
-        {
-          "job_id": 78994363956,
-          "job_name": "lint / pre-commit",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:32:37Z",
-          "completed_at": "2026-06-02T03:32:36Z"
-        },
-        {
-          "job_id": 78994422148,
-          "job_name": "smart test",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:14Z",
-          "completed_at": "2026-06-02T03:33:14Z"
-        },
-        {
-          "job_id": 78994422280,
-          "job_name": "e2e-light",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:33:14Z",
-          "completed_at": "2026-06-02T03:33:14Z"
-        }
-      ]
-    },
-    {
-      "run_id": 26796605063,
-      "workflow_name": "PR Create",
-      "conclusion": "success",
-      "status": "completed",
-      "branch": "events_final",
-      "created_at": "2026-06-02T03:31:45Z",
-      "updated_at": "2026-06-02T03:32:09Z",
-      "event": "pull_request_target",
-      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26796605063",
-      "pipeline_type": "pr_e2e",
-      "jobs": [
-        {
-          "job_id": 78994282111,
-          "job_name": "PR create action",
-          "conclusion": "success",
-          "started_at": "2026-06-02T03:31:48Z",
-          "completed_at": "2026-06-02T03:32:08Z"
-        }
-      ]
-    },
-    {
-      "run_id": 26796462363,
-      "workflow_name": "E2E-Light",
-      "conclusion": "in_progress",
-      "status": "in_progress",
-      "branch": "fuse_without_share",
-      "created_at": "2026-06-02T03:27:18Z",
-      "updated_at": "2026-06-02T03:33:22Z",
-      "event": "pull_request",
-      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26796462363",
-      "pipeline_type": "pr_e2e",
-      "jobs": [
-        {
-          "job_id": 78993823252,
-          "job_name": "changes",
-          "conclusion": "success",
-          "started_at": "2026-06-02T03:27:39Z",
-          "completed_at": "2026-06-02T03:28:39Z"
-        },
-        {
-          "job_id": 78993823336,
-          "job_name": "lint / validate-pr-title",
-          "conclusion": "success",
-          "started_at": "2026-06-02T03:27:42Z",
-          "completed_at": "2026-06-02T03:27:58Z"
-        },
-        {
-          "job_id": 78993890306,
-          "job_name": "lint / pre-commit",
-          "conclusion": "success",
-          "started_at": "2026-06-02T03:28:19Z",
-          "completed_at": "2026-06-02T03:31:20Z"
-        },
-        {
-          "job_id": 78994238118,
-          "job_name": "smart test (v0.20.2) / smart-ut (cpu x0)",
-          "conclusion": "cancelled",
-          "started_at": "2026-06-02T03:31:49Z",
-          "completed_at": "2026-06-02T03:33:46Z"
-        },
-        {
-          "job_id": 78994238120,
-          "job_name": "e2e-light (9090368b650896bf5fc990c921df7eb4c20355a5) / singlecard-light (0)",
-          "conclusion": "in_progress",
-          "started_at": "2026-06-02T03:31:41Z",
-          "completed_at": null
-        },
-        {
-          "job_id": 78994238127,
-          "job_name": "e2e-light (9090368b650896bf5fc990c921df7eb4c20355a5) / multicard-2-light (0)",
-          "conclusion": "cancelled",
-          "started_at": "2026-06-02T03:31:20Z",
-          "completed_at": "2026-06-02T03:33:21Z"
-        },
-        {
-          "job_id": 78994238131,
-          "job_name": "smart test (9090368b650896bf5fc990c921df7eb4c20355a5) / smart-ut (a2 x1)",
-          "conclusion": "cancelled",
-          "started_at": "2026-06-02T03:31:58Z",
-          "completed_at": "2026-06-02T03:33:54Z"
-        },
-        {
-          "job_id": 78994238134,
-          "job_name": "smart test (v0.20.2) / smart-ut (a2 x1)",
-          "conclusion": "cancelled",
-          "started_at": "2026-06-02T03:31:44Z",
-          "completed_at": "2026-06-02T03:33:46Z"
-        },
-        {
-          "job_id": 78994238136,
-          "job_name": "smart test (9090368b650896bf5fc990c921df7eb4c20355a5) / smart-ut (cpu x0)",
-          "conclusion": "cancelled",
-          "started_at": "2026-06-02T03:31:50Z",
-          "completed_at": "2026-06-02T03:33:51Z"
-        },
-        {
-          "job_id": 78994238142,
-          "job_name": "e2e-light (v0.20.2) / singlecard-light (0)",
-          "conclusion": "cancelled",
-          "started_at": "2026-06-02T03:31:58Z",
-          "completed_at": "2026-06-02T03:34:09Z"
-        },
-        {
-          "job_id": 78994238148,
-          "job_name": "e2e-light (9090368b650896bf5fc990c921df7eb4c20355a5) / multicard-4-light (0)",
-          "conclusion": "cancelled",
-          "started_at": "2026-06-02T03:31:20Z",
-          "completed_at": "2026-06-02T03:33:21Z"
-        },
-        {
-          "job_id": 78994238215,
-          "job_name": "e2e-light (v0.20.2) / multicard-2-light (0)",
-          "conclusion": "cancelled",
-          "started_at": "2026-06-02T03:31:20Z",
-          "completed_at": "2026-06-02T03:33:21Z"
-        },
-        {
-          "job_id": 78994238227,
-          "job_name": "e2e-light (v0.20.2) / multicard-4-light (0)",
-          "conclusion": "cancelled",
-          "started_at": "2026-06-02T03:31:20Z",
-          "completed_at": "2026-06-02T03:33:21Z"
-        },
-        {
-          "job_id": 78994238373,
-          "job_name": "e2e-light (9090368b650896bf5fc990c921df7eb4c20355a5) / 310p singlecard",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:31:20Z",
-          "completed_at": "2026-06-02T03:31:20Z"
-        },
-        {
-          "job_id": 78994238410,
-          "job_name": "e2e-light (9090368b650896bf5fc990c921df7eb4c20355a5) / singlecard-full",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:31:20Z",
-          "completed_at": "2026-06-02T03:31:20Z"
-        },
-        {
-          "job_id": 78994238414,
-          "job_name": "e2e-light (9090368b650896bf5fc990c921df7eb4c20355a5) / multicard-2-full",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:31:20Z",
-          "completed_at": "2026-06-02T03:31:20Z"
-        },
-        {
-          "job_id": 78994238435,
-          "job_name": "e2e-light (9090368b650896bf5fc990c921df7eb4c20355a5) / 310p multicards 4cards",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:31:20Z",
-          "completed_at": "2026-06-02T03:31:20Z"
-        },
-        {
-          "job_id": 78994238445,
-          "job_name": "e2e-light (v0.20.2) / 310p singlecard",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:31:20Z",
-          "completed_at": "2026-06-02T03:31:20Z"
-        },
-        {
-          "job_id": 78994238457,
-          "job_name": "e2e-light (9090368b650896bf5fc990c921df7eb4c20355a5) / multicard-4-full",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:31:20Z",
-          "completed_at": "2026-06-02T03:31:20Z"
-        },
-        {
-          "job_id": 78994238485,
-          "job_name": "e2e-light (v0.20.2) / multicard-2-full",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:31:20Z",
-          "completed_at": "2026-06-02T03:31:20Z"
-        },
-        {
-          "job_id": 78994238560,
-          "job_name": "e2e-light (v0.20.2) / multicard-4-full",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:31:20Z",
-          "completed_at": "2026-06-02T03:31:20Z"
-        },
-        {
-          "job_id": 78994238573,
-          "job_name": "e2e-light (v0.20.2) / 310p multicards 4cards",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:31:20Z",
-          "completed_at": "2026-06-02T03:31:20Z"
-        },
-        {
-          "job_id": 78994238623,
-          "job_name": "e2e-light (v0.20.2) / singlecard-full",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:31:21Z",
-          "completed_at": "2026-06-02T03:31:20Z"
-        }
-      ]
-    },
-    {
-      "run_id": 26796461886,
-      "workflow_name": "PR Create",
-      "conclusion": "success",
-      "status": "completed",
-      "branch": "fuse_without_share",
-      "created_at": "2026-06-02T03:27:18Z",
-      "updated_at": "2026-06-02T03:27:38Z",
-      "event": "pull_request_target",
-      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26796461886",
-      "pipeline_type": "pr_e2e",
-      "jobs": [
-        {
-          "job_id": 78993821968,
-          "job_name": "PR create action",
-          "conclusion": "success",
-          "started_at": "2026-06-02T03:27:20Z",
-          "completed_at": "2026-06-02T03:27:37Z"
-        }
-      ]
-    },
-    {
-      "run_id": 26796443567,
-      "workflow_name": "Nightly-A3",
-      "conclusion": "skipped",
-      "status": "completed",
-      "branch": "final_mtp",
-      "created_at": "2026-06-02T03:26:44Z",
-      "updated_at": "2026-06-02T03:26:46Z",
-      "event": "pull_request",
-      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26796443567",
-      "pipeline_type": "nightly",
-      "jobs": [
-        {
-          "job_id": 78993765148,
-          "job_name": "Build nightly-a3 image",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:26:45Z",
-          "completed_at": "2026-06-02T03:26:45Z"
-        },
-        {
-          "job_id": 78993765304,
-          "job_name": "Export global env vars as job outputs",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:26:45Z",
-          "completed_at": "2026-06-02T03:26:45Z"
-        },
-        {
-          "job_id": 78993765524,
-          "job_name": "multi-node",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:26:45Z",
-          "completed_at": "2026-06-02T03:26:45Z"
-        },
-        {
-          "job_id": 78993765898,
-          "job_name": "double-node",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:26:45Z",
-          "completed_at": "2026-06-02T03:26:45Z"
-        },
-        {
-          "job_id": 78993765987,
-          "job_name": "single-node",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:26:45Z",
-          "completed_at": "2026-06-02T03:26:45Z"
-        },
-        {
-          "job_id": 78993766178,
-          "job_name": "Merge benchmark artifacts into nightly-a3.zip",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:26:45Z",
-          "completed_at": "2026-06-02T03:26:45Z"
-        },
-        {
-          "job_id": 78993766202,
-          "job_name": "clear-pre-logs",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:26:45Z",
-          "completed_at": "2026-06-02T03:26:45Z"
-        },
-        {
-          "job_id": 78993766501,
-          "job_name": "single-node",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:26:45Z",
-          "completed_at": "2026-06-02T03:26:45Z"
-        },
-        {
-          "job_id": 78993780012,
-          "job_name": "Parse trigger and determine test scope",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:26:52Z",
-          "completed_at": "2026-06-02T03:26:45Z"
-        }
-      ]
-    },
-    {
-      "run_id": 26796443561,
-      "workflow_name": "Image Build and Push",
-      "conclusion": "skipped",
-      "status": "completed",
-      "branch": "final_mtp",
-      "created_at": "2026-06-02T03:26:44Z",
-      "updated_at": "2026-06-02T03:26:45Z",
-      "event": "pull_request",
-      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26796443561",
-      "pipeline_type": "pr_e2e",
-      "jobs": [
-        {
-          "job_id": 78993764863,
-          "job_name": "Image Build and Push",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:26:45Z",
-          "completed_at": "2026-06-02T03:26:44Z"
-        },
-        {
-          "job_id": 78993765184,
-          "job_name": "Image Build and Push",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:26:45Z",
-          "completed_at": "2026-06-02T03:26:44Z"
-        }
-      ]
-    },
-    {
-      "run_id": 26796443546,
-      "workflow_name": "E2E-Light",
-      "conclusion": "failure",
-      "status": "completed",
-      "branch": "final_mtp",
-      "created_at": "2026-06-02T03:26:44Z",
-      "updated_at": "2026-06-02T03:29:49Z",
-      "event": "pull_request",
-      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26796443546",
-      "pipeline_type": "pr_e2e",
-      "jobs": [
-        {
-          "job_id": 78993764822,
-          "job_name": "changes",
-          "conclusion": "success",
-          "started_at": "2026-06-02T03:27:11Z",
-          "completed_at": "2026-06-02T03:28:13Z"
-        },
-        {
-          "job_id": 78993764908,
-          "job_name": "lint / validate-pr-title",
-          "conclusion": "success",
-          "started_at": "2026-06-02T03:27:12Z",
-          "completed_at": "2026-06-02T03:27:27Z"
-        },
-        {
-          "job_id": 78993837782,
-          "job_name": "lint / pre-commit",
-          "conclusion": "failure",
-          "started_at": "2026-06-02T03:27:48Z",
-          "completed_at": "2026-06-02T03:29:47Z"
-        },
-        {
-          "job_id": 78994069940,
-          "job_name": "e2e-light",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:29:48Z",
-          "completed_at": "2026-06-02T03:29:47Z"
-        },
-        {
-          "job_id": 78994070097,
-          "job_name": "smart test",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:29:48Z",
-          "completed_at": "2026-06-02T03:29:47Z"
-        }
-      ]
-    },
-    {
-      "run_id": 26796443542,
-      "workflow_name": "Nightly-A2",
-      "conclusion": "skipped",
-      "status": "completed",
-      "branch": "final_mtp",
-      "created_at": "2026-06-02T03:26:44Z",
-      "updated_at": "2026-06-02T03:26:46Z",
-      "event": "pull_request",
-      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26796443542",
-      "pipeline_type": "nightly",
-      "jobs": [
-        {
-          "job_id": 78993764981,
-          "job_name": "doc-test",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:26:45Z",
-          "completed_at": "2026-06-02T03:26:45Z"
-        },
-        {
-          "job_id": 78993765210,
-          "job_name": "Build nightly-a2 image",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:26:45Z",
-          "completed_at": "2026-06-02T03:26:45Z"
-        },
-        {
-          "job_id": 78993765235,
-          "job_name": "Parse trigger and determine test scope",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:26:45Z",
-          "completed_at": "2026-06-02T03:26:45Z"
-        },
-        {
-          "job_id": 78993765455,
-          "job_name": "Generate accuracy test matrix",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:26:45Z",
-          "completed_at": "2026-06-02T03:26:45Z"
-        },
-        {
-          "job_id": 78993765459,
-          "job_name": "single-node",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:26:45Z",
-          "completed_at": "2026-06-02T03:26:45Z"
-        },
-        {
-          "job_id": 78993765540,
+          "job_id": 79003725040,
           "job_name": "single-node-accuracy-tests-pr-only",
           "conclusion": "skipped",
-          "started_at": "2026-06-02T03:26:45Z",
-          "completed_at": "2026-06-02T03:26:45Z"
+          "started_at": "2026-06-02T05:09:27Z",
+          "completed_at": "2026-06-02T05:09:27Z"
         },
         {
-          "job_id": 78993765554,
-          "job_name": "Export global env vars as job outputs",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:26:45Z",
-          "completed_at": "2026-06-02T03:26:45Z"
-        },
-        {
-          "job_id": 78993765800,
-          "job_name": "single-node-accuracy-tests",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:26:45Z",
-          "completed_at": "2026-06-02T03:26:45Z"
-        },
-        {
-          "job_id": 78993765917,
+          "job_id": 79003725100,
           "job_name": "multi-node",
           "conclusion": "skipped",
-          "started_at": "2026-06-02T03:26:45Z",
-          "completed_at": "2026-06-02T03:26:45Z"
+          "started_at": "2026-06-02T05:09:27Z",
+          "completed_at": "2026-06-02T05:09:27Z"
         },
         {
-          "job_id": 78993766012,
+          "job_id": 79003725111,
+          "job_name": "single-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:09:27Z",
+          "completed_at": "2026-06-02T05:09:27Z"
+        },
+        {
+          "job_id": 79003725295,
           "job_name": "Merge benchmark artifacts into nightly-a2.zip",
           "conclusion": "skipped",
-          "started_at": "2026-06-02T03:26:45Z",
-          "completed_at": "2026-06-02T03:26:45Z"
+          "started_at": "2026-06-02T05:09:27Z",
+          "completed_at": "2026-06-02T05:09:27Z"
         },
         {
-          "job_id": 78993766077,
+          "job_id": 79003725514,
           "job_name": "clear-pre-logs",
           "conclusion": "skipped",
-          "started_at": "2026-06-02T03:26:45Z",
-          "completed_at": "2026-06-02T03:26:45Z"
+          "started_at": "2026-06-02T05:09:27Z",
+          "completed_at": "2026-06-02T05:09:27Z"
+        },
+        {
+          "job_id": 79003735146,
+          "job_name": "Build nightly-a2 image",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:09:33Z",
+          "completed_at": "2026-06-02T05:09:26Z"
+        },
+        {
+          "job_id": 79003739333,
+          "job_name": "Parse trigger and determine test scope",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:09:36Z",
+          "completed_at": "2026-06-02T05:09:26Z"
         }
       ]
     },
     {
-      "run_id": 26796443536,
-      "workflow_name": "E2E-Full",
-      "conclusion": "in_progress",
-      "status": "in_progress",
-      "branch": "final_mtp",
-      "created_at": "2026-06-02T03:26:44Z",
-      "updated_at": "2026-06-02T03:33:48Z",
-      "event": "pull_request",
-      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26796443536",
-      "pipeline_type": "pr_e2e",
-      "jobs": [
-        {
-          "job_id": 78993853458,
-          "job_name": "changes",
-          "conclusion": "success",
-          "started_at": "2026-06-02T03:27:58Z",
-          "completed_at": "2026-06-02T03:28:44Z"
-        },
-        {
-          "job_id": 78993853500,
-          "job_name": "Parse /e2e comment / Parse /e2e comment",
-          "conclusion": "success",
-          "started_at": "2026-06-02T03:28:06Z",
-          "completed_at": "2026-06-02T03:28:17Z"
-        },
-        {
-          "job_id": 78993853752,
-          "job_name": "Parse /e2e comment / Parse nightly trigger and determine test scope",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:27:38Z",
-          "completed_at": "2026-06-02T03:27:38Z"
-        },
-        {
-          "job_id": 78993924126,
-          "job_name": "e2e-comment (${{ matrix.vllm_version }})",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:28:18Z",
-          "completed_at": "2026-06-02T03:28:17Z"
-        },
-        {
-          "job_id": 78993966696,
-          "job_name": "e2e-full (9090368b650896bf5fc990c921df7eb4c20355a5) / singlecard-full (1)",
-          "conclusion": "cancelled",
-          "started_at": "2026-06-02T03:29:05Z",
-          "completed_at": "2026-06-02T03:34:39Z"
-        },
-        {
-          "job_id": 78993966704,
-          "job_name": "e2e-full (9090368b650896bf5fc990c921df7eb4c20355a5) / singlecard-full (0)",
-          "conclusion": "in_progress",
-          "started_at": "2026-06-02T03:29:07Z",
-          "completed_at": null
-        },
-        {
-          "job_id": 78993966708,
-          "job_name": "e2e-full (9090368b650896bf5fc990c921df7eb4c20355a5) / multicard-4-full (0)",
-          "conclusion": "cancelled",
-          "started_at": "2026-06-02T03:28:44Z",
-          "completed_at": "2026-06-02T03:33:47Z"
-        },
-        {
-          "job_id": 78993966723,
-          "job_name": "e2e-full (9090368b650896bf5fc990c921df7eb4c20355a5) / multicard-2-full (0)",
-          "conclusion": "cancelled",
-          "started_at": "2026-06-02T03:28:44Z",
-          "completed_at": "2026-06-02T03:33:47Z"
-        },
-        {
-          "job_id": 78993966755,
-          "job_name": "e2e-full (v0.20.2) / singlecard-full (1)",
-          "conclusion": "cancelled",
-          "started_at": "2026-06-02T03:29:13Z",
-          "completed_at": "2026-06-02T03:34:38Z"
-        },
-        {
-          "job_id": 78993966761,
-          "job_name": "e2e-full (v0.20.2) / multicard-4-full (0)",
-          "conclusion": "cancelled",
-          "started_at": "2026-06-02T03:28:44Z",
-          "completed_at": "2026-06-02T03:33:47Z"
-        },
-        {
-          "job_id": 78993966762,
-          "job_name": "e2e-full (v0.20.2) / multicard-2-full (0)",
-          "conclusion": "cancelled",
-          "started_at": "2026-06-02T03:28:44Z",
-          "completed_at": "2026-06-02T03:33:47Z"
-        },
-        {
-          "job_id": 78993966774,
-          "job_name": "e2e-full (v0.20.2) / singlecard-full (0)",
-          "conclusion": "cancelled",
-          "started_at": "2026-06-02T03:29:12Z",
-          "completed_at": "2026-06-02T03:34:38Z"
-        },
-        {
-          "job_id": 78993966797,
-          "job_name": "e2e-full (9090368b650896bf5fc990c921df7eb4c20355a5) / 310p singlecard",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:28:44Z",
-          "completed_at": "2026-06-02T03:28:44Z"
-        },
-        {
-          "job_id": 78993966837,
-          "job_name": "e2e-full (v0.20.2) / multicard-2-light",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:28:44Z",
-          "completed_at": "2026-06-02T03:28:44Z"
-        },
-        {
-          "job_id": 78993966845,
-          "job_name": "e2e-full (9090368b650896bf5fc990c921df7eb4c20355a5) / 310p multicards 4cards",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:28:44Z",
-          "completed_at": "2026-06-02T03:28:44Z"
-        },
-        {
-          "job_id": 78993966866,
-          "job_name": "e2e-full (v0.20.2) / 310p multicards 4cards",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:28:44Z",
-          "completed_at": "2026-06-02T03:28:44Z"
-        },
-        {
-          "job_id": 78993967044,
-          "job_name": "e2e-full (9090368b650896bf5fc990c921df7eb4c20355a5) / singlecard-light",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:28:45Z",
-          "completed_at": "2026-06-02T03:28:44Z"
-        },
-        {
-          "job_id": 78993967055,
-          "job_name": "e2e-full (9090368b650896bf5fc990c921df7eb4c20355a5) / multicard-2-light",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:28:45Z",
-          "completed_at": "2026-06-02T03:28:44Z"
-        },
-        {
-          "job_id": 78993967091,
-          "job_name": "e2e-full (9090368b650896bf5fc990c921df7eb4c20355a5) / multicard-4-light",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:28:45Z",
-          "completed_at": "2026-06-02T03:28:44Z"
-        },
-        {
-          "job_id": 78993967111,
-          "job_name": "e2e-full (v0.20.2) / 310p singlecard",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:28:45Z",
-          "completed_at": "2026-06-02T03:28:44Z"
-        },
-        {
-          "job_id": 78993967132,
-          "job_name": "e2e-full (v0.20.2) / multicard-4-light",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:28:45Z",
-          "completed_at": "2026-06-02T03:28:44Z"
-        },
-        {
-          "job_id": 78993967167,
-          "job_name": "e2e-full (v0.20.2) / singlecard-light",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:28:45Z",
-          "completed_at": "2026-06-02T03:28:44Z"
-        }
-      ]
-    },
-    {
-      "run_id": 26796441812,
-      "workflow_name": "Merge Conflict Labeler",
-      "conclusion": "success",
-      "status": "completed",
-      "branch": "final_mtp",
-      "created_at": "2026-06-02T03:26:41Z",
-      "updated_at": "2026-06-02T03:26:48Z",
-      "event": "pull_request_target",
-      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26796441812",
-      "pipeline_type": "pr_e2e",
-      "jobs": [
-        {
-          "job_id": 78993758097,
-          "job_name": "main",
-          "conclusion": "success",
-          "started_at": "2026-06-02T03:26:42Z",
-          "completed_at": "2026-06-02T03:26:48Z"
-        }
-      ]
-    },
-    {
-      "run_id": 26796441811,
-      "workflow_name": "PR Create",
-      "conclusion": "success",
-      "status": "completed",
-      "branch": "final_mtp",
-      "created_at": "2026-06-02T03:26:41Z",
-      "updated_at": "2026-06-02T03:27:00Z",
-      "event": "pull_request_target",
-      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26796441811",
-      "pipeline_type": "pr_e2e",
-      "jobs": [
-        {
-          "job_id": 78993758135,
-          "job_name": "PR create action",
-          "conclusion": "success",
-          "started_at": "2026-06-02T03:26:43Z",
-          "completed_at": "2026-06-02T03:26:59Z"
-        }
-      ]
-    },
-    {
-      "run_id": 26796393342,
-      "workflow_name": "E2E-Full",
-      "conclusion": "skipped",
-      "status": "completed",
-      "branch": "bugfix/v0202rc-post-request-store-init",
-      "created_at": "2026-06-02T03:25:08Z",
-      "updated_at": "2026-06-02T03:25:09Z",
-      "event": "pull_request",
-      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26796393342",
-      "pipeline_type": "pr_e2e",
-      "jobs": [
-        {
-          "job_id": 78993599106,
-          "job_name": "changes",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:25:08Z",
-          "completed_at": "2026-06-02T03:25:08Z"
-        },
-        {
-          "job_id": 78993599318,
-          "job_name": "Parse /e2e comment",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:25:08Z",
-          "completed_at": "2026-06-02T03:25:08Z"
-        },
-        {
-          "job_id": 78993599360,
-          "job_name": "e2e-full",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:25:08Z",
-          "completed_at": "2026-06-02T03:25:08Z"
-        },
-        {
-          "job_id": 78993599438,
-          "job_name": "e2e-comment (${{ matrix.vllm_version }})",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:25:09Z",
-          "completed_at": "2026-06-02T03:25:08Z"
-        }
-      ]
-    },
-    {
-      "run_id": 26796393312,
+      "run_id": 26799758164,
       "workflow_name": "E2E-Light",
       "conclusion": "queued",
       "status": "queued",
-      "branch": "bugfix/v0202rc-post-request-store-init",
-      "created_at": "2026-06-02T03:25:08Z",
-      "updated_at": "2026-06-02T03:30:04Z",
+      "branch": "br_dsv4_950_3.0_2_main_ci_merge",
+      "created_at": "2026-06-02T05:09:26Z",
+      "updated_at": "2026-06-02T05:13:22Z",
       "event": "pull_request",
-      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26796393312",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799758164",
       "pipeline_type": "pr_e2e",
       "jobs": [
         {
-          "job_id": 78993688107,
+          "job_id": 79003724038,
           "job_name": "changes",
           "conclusion": "success",
-          "started_at": "2026-06-02T03:26:22Z",
-          "completed_at": "2026-06-02T03:27:22Z"
+          "started_at": "2026-06-02T05:09:47Z",
+          "completed_at": "2026-06-02T05:10:46Z"
         },
         {
-          "job_id": 78993688131,
+          "job_id": 79003724054,
           "job_name": "lint / validate-pr-title",
           "conclusion": "success",
-          "started_at": "2026-06-02T03:26:25Z",
-          "completed_at": "2026-06-02T03:26:41Z"
+          "started_at": "2026-06-02T05:09:48Z",
+          "completed_at": "2026-06-02T05:10:05Z"
         },
         {
-          "job_id": 78993757861,
+          "job_id": 79003788309,
           "job_name": "lint / pre-commit",
           "conclusion": "success",
-          "started_at": "2026-06-02T03:27:01Z",
-          "completed_at": "2026-06-02T03:30:03Z"
+          "started_at": "2026-06-02T05:10:27Z",
+          "completed_at": "2026-06-02T05:13:22Z"
         },
         {
-          "job_id": 78994094829,
-          "job_name": "smart test (39910f2b25aacc09f5e7f166cdf0030b19f8b9e8) / smart-ut (cpu x0)",
-          "conclusion": "in_progress",
-          "started_at": "2026-06-02T03:30:24Z",
-          "completed_at": null
-        },
-        {
-          "job_id": 78994094861,
-          "job_name": "smart test (39910f2b25aacc09f5e7f166cdf0030b19f8b9e8) / smart-ut (a2 x1)",
-          "conclusion": "in_progress",
-          "started_at": "2026-06-02T03:30:33Z",
-          "completed_at": null
-        },
-        {
-          "job_id": 78994094876,
-          "job_name": "smart test (v0.20.2) / smart-ut (a2 x1)",
-          "conclusion": "in_progress",
-          "started_at": "2026-06-02T03:30:32Z",
-          "completed_at": null
-        },
-        {
-          "job_id": 78994094888,
-          "job_name": "smart test (v0.20.2) / smart-ut (cpu x0)",
-          "conclusion": "in_progress",
-          "started_at": "2026-06-02T03:30:40Z",
-          "completed_at": null
-        },
-        {
-          "job_id": 78994094894,
-          "job_name": "e2e-light (39910f2b25aacc09f5e7f166cdf0030b19f8b9e8) / multicard-2-light (0)",
-          "conclusion": "queued",
-          "started_at": "2026-06-02T03:30:04Z",
-          "completed_at": null
-        },
-        {
-          "job_id": 78994094900,
-          "job_name": "e2e-light (39910f2b25aacc09f5e7f166cdf0030b19f8b9e8) / multicard-4-light (0)",
-          "conclusion": "queued",
-          "started_at": "2026-06-02T03:30:04Z",
-          "completed_at": null
-        },
-        {
-          "job_id": 78994094910,
-          "job_name": "e2e-light (39910f2b25aacc09f5e7f166cdf0030b19f8b9e8) / singlecard-light (0)",
-          "conclusion": "in_progress",
-          "started_at": "2026-06-02T03:30:26Z",
-          "completed_at": null
-        },
-        {
-          "job_id": 78994094922,
-          "job_name": "e2e-light (v0.20.2) / multicard-2-light (0)",
-          "conclusion": "queued",
-          "started_at": "2026-06-02T03:30:04Z",
-          "completed_at": null
-        },
-        {
-          "job_id": 78994094947,
+          "job_id": 79004105352,
           "job_name": "e2e-light (v0.20.2) / singlecard-light (0)",
           "conclusion": "in_progress",
-          "started_at": "2026-06-02T03:30:27Z",
+          "started_at": "2026-06-02T05:13:44Z",
           "completed_at": null
         },
         {
-          "job_id": 78994094972,
+          "job_id": 79004105365,
           "job_name": "e2e-light (v0.20.2) / multicard-4-light (0)",
           "conclusion": "queued",
-          "started_at": "2026-06-02T03:30:04Z",
+          "started_at": "2026-06-02T05:13:22Z",
           "completed_at": null
         },
         {
-          "job_id": 78994095039,
-          "job_name": "e2e-light (39910f2b25aacc09f5e7f166cdf0030b19f8b9e8) / multicard-4-full",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:30:04Z",
-          "completed_at": "2026-06-02T03:30:04Z"
+          "job_id": 79004105371,
+          "job_name": "smart test (9090368b650896bf5fc990c921df7eb4c20355a5) / smart-ut (cpu x0)",
+          "conclusion": "success",
+          "started_at": "2026-06-02T05:13:46Z",
+          "completed_at": "2026-06-02T05:22:23Z"
         },
         {
-          "job_id": 78994095066,
-          "job_name": "e2e-light (39910f2b25aacc09f5e7f166cdf0030b19f8b9e8) / singlecard-full",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:30:04Z",
-          "completed_at": "2026-06-02T03:30:04Z"
+          "job_id": 79004105375,
+          "job_name": "smart test (9090368b650896bf5fc990c921df7eb4c20355a5) / smart-ut (a3 x2)",
+          "conclusion": "in_progress",
+          "started_at": "2026-06-02T05:13:52Z",
+          "completed_at": null
         },
         {
-          "job_id": 78994095147,
-          "job_name": "e2e-light (39910f2b25aacc09f5e7f166cdf0030b19f8b9e8) / 310p multicards 4cards",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:30:04Z",
-          "completed_at": "2026-06-02T03:30:04Z"
-        },
-        {
-          "job_id": 78994095244,
-          "job_name": "e2e-light (39910f2b25aacc09f5e7f166cdf0030b19f8b9e8) / 310p singlecard",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:30:04Z",
-          "completed_at": "2026-06-02T03:30:04Z"
-        },
-        {
-          "job_id": 78994095306,
-          "job_name": "e2e-light (v0.20.2) / multicard-4-full",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:30:04Z",
-          "completed_at": "2026-06-02T03:30:04Z"
-        },
-        {
-          "job_id": 78994095384,
-          "job_name": "e2e-light (v0.20.2) / singlecard-full",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:30:04Z",
-          "completed_at": "2026-06-02T03:30:04Z"
-        },
-        {
-          "job_id": 78994095430,
-          "job_name": "e2e-light (v0.20.2) / 310p multicards 4cards",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:30:04Z",
-          "completed_at": "2026-06-02T03:30:04Z"
-        },
-        {
-          "job_id": 78994095445,
-          "job_name": "e2e-light (39910f2b25aacc09f5e7f166cdf0030b19f8b9e8) / multicard-2-full",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:30:04Z",
-          "completed_at": "2026-06-02T03:30:04Z"
-        },
-        {
-          "job_id": 78994095461,
+          "job_id": 79004105376,
           "job_name": "e2e-light (v0.20.2) / 310p singlecard",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:30:04Z",
-          "completed_at": "2026-06-02T03:30:04Z"
+          "conclusion": "in_progress",
+          "started_at": "2026-06-02T05:13:50Z",
+          "completed_at": null
         },
         {
-          "job_id": 78994095520,
+          "job_id": 79004105379,
+          "job_name": "smart test (v0.20.2) / smart-ut (a3 x2)",
+          "conclusion": "in_progress",
+          "started_at": "2026-06-02T05:13:44Z",
+          "completed_at": null
+        },
+        {
+          "job_id": 79004105384,
+          "job_name": "e2e-light (9090368b650896bf5fc990c921df7eb4c20355a5) / 310p singlecard",
+          "conclusion": "in_progress",
+          "started_at": "2026-06-02T05:13:54Z",
+          "completed_at": null
+        },
+        {
+          "job_id": 79004105388,
+          "job_name": "smart test (9090368b650896bf5fc990c921df7eb4c20355a5) / smart-ut (a2 x1)",
+          "conclusion": "in_progress",
+          "started_at": "2026-06-02T05:13:51Z",
+          "completed_at": null
+        },
+        {
+          "job_id": 79004105392,
+          "job_name": "smart test (v0.20.2) / smart-ut (cpu x0)",
+          "conclusion": "success",
+          "started_at": "2026-06-02T05:13:46Z",
+          "completed_at": "2026-06-02T05:22:21Z"
+        },
+        {
+          "job_id": 79004105393,
+          "job_name": "e2e-light (9090368b650896bf5fc990c921df7eb4c20355a5) / multicard-4-light (0)",
+          "conclusion": "queued",
+          "started_at": "2026-06-02T05:13:22Z",
+          "completed_at": null
+        },
+        {
+          "job_id": 79004105400,
+          "job_name": "e2e-light (v0.20.2) / multicard-2-light (0)",
+          "conclusion": "in_progress",
+          "started_at": "2026-06-02T05:21:00Z",
+          "completed_at": null
+        },
+        {
+          "job_id": 79004105404,
+          "job_name": "e2e-light (9090368b650896bf5fc990c921df7eb4c20355a5) / singlecard-light (0)",
+          "conclusion": "in_progress",
+          "started_at": "2026-06-02T05:14:00Z",
+          "completed_at": null
+        },
+        {
+          "job_id": 79004105419,
+          "job_name": "e2e-light (9090368b650896bf5fc990c921df7eb4c20355a5) / 310p multicards 4cards",
+          "conclusion": "in_progress",
+          "started_at": "2026-06-02T05:13:47Z",
+          "completed_at": null
+        },
+        {
+          "job_id": 79004105424,
+          "job_name": "e2e-light (9090368b650896bf5fc990c921df7eb4c20355a5) / multicard-2-light (0)",
+          "conclusion": "in_progress",
+          "started_at": "2026-06-02T05:20:18Z",
+          "completed_at": null
+        },
+        {
+          "job_id": 79004105431,
+          "job_name": "e2e-light (v0.20.2) / 310p multicards 4cards",
+          "conclusion": "in_progress",
+          "started_at": "2026-06-02T05:13:49Z",
+          "completed_at": null
+        },
+        {
+          "job_id": 79004105498,
+          "job_name": "smart test (v0.20.2) / smart-ut (a2 x1)",
+          "conclusion": "in_progress",
+          "started_at": "2026-06-02T05:13:50Z",
+          "completed_at": null
+        },
+        {
+          "job_id": 79004105541,
           "job_name": "e2e-light (v0.20.2) / multicard-2-full",
           "conclusion": "skipped",
-          "started_at": "2026-06-02T03:30:04Z",
-          "completed_at": "2026-06-02T03:30:04Z"
+          "started_at": "2026-06-02T05:13:23Z",
+          "completed_at": "2026-06-02T05:13:22Z"
+        },
+        {
+          "job_id": 79004105624,
+          "job_name": "e2e-light (v0.20.2) / multicard-4-full",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:13:23Z",
+          "completed_at": "2026-06-02T05:13:22Z"
+        },
+        {
+          "job_id": 79004105666,
+          "job_name": "e2e-light (9090368b650896bf5fc990c921df7eb4c20355a5) / multicard-4-full",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:13:23Z",
+          "completed_at": "2026-06-02T05:13:22Z"
+        },
+        {
+          "job_id": 79004105807,
+          "job_name": "e2e-light (9090368b650896bf5fc990c921df7eb4c20355a5) / multicard-2-full",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:13:23Z",
+          "completed_at": "2026-06-02T05:13:22Z"
+        },
+        {
+          "job_id": 79004105813,
+          "job_name": "e2e-light (v0.20.2) / singlecard-full",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:13:23Z",
+          "completed_at": "2026-06-02T05:13:22Z"
+        },
+        {
+          "job_id": 79004105828,
+          "job_name": "e2e-light (9090368b650896bf5fc990c921df7eb4c20355a5) / singlecard-full",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:13:23Z",
+          "completed_at": "2026-06-02T05:13:22Z"
         }
       ]
     },
     {
-      "run_id": 26796393298,
-      "workflow_name": "Nightly-A3",
-      "conclusion": "skipped",
-      "status": "completed",
-      "branch": "bugfix/v0202rc-post-request-store-init",
-      "created_at": "2026-06-02T03:25:08Z",
-      "updated_at": "2026-06-02T03:25:09Z",
-      "event": "pull_request",
-      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26796393298",
-      "pipeline_type": "nightly",
-      "jobs": [
-        {
-          "job_id": 78993599209,
-          "job_name": "Build nightly-a3 image",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:25:08Z",
-          "completed_at": "2026-06-02T03:25:08Z"
-        },
-        {
-          "job_id": 78993599328,
-          "job_name": "Parse trigger and determine test scope",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:25:08Z",
-          "completed_at": "2026-06-02T03:25:08Z"
-        },
-        {
-          "job_id": 78993599495,
-          "job_name": "Export global env vars as job outputs",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:25:09Z",
-          "completed_at": "2026-06-02T03:25:08Z"
-        },
-        {
-          "job_id": 78993599806,
-          "job_name": "multi-node",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:25:09Z",
-          "completed_at": "2026-06-02T03:25:08Z"
-        },
-        {
-          "job_id": 78993599969,
-          "job_name": "double-node",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:25:09Z",
-          "completed_at": "2026-06-02T03:25:09Z"
-        },
-        {
-          "job_id": 78993600086,
-          "job_name": "single-node",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:25:09Z",
-          "completed_at": "2026-06-02T03:25:09Z"
-        },
-        {
-          "job_id": 78993600310,
-          "job_name": "single-node",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:25:09Z",
-          "completed_at": "2026-06-02T03:25:09Z"
-        },
-        {
-          "job_id": 78993600429,
-          "job_name": "clear-pre-logs",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:25:09Z",
-          "completed_at": "2026-06-02T03:25:09Z"
-        },
-        {
-          "job_id": 78993600984,
-          "job_name": "Merge benchmark artifacts into nightly-a3.zip",
-          "conclusion": "skipped",
-          "started_at": "2026-06-02T03:25:09Z",
-          "completed_at": "2026-06-02T03:25:09Z"
-        }
-      ]
-    },
-    {
-      "run_id": 26796393292,
+      "run_id": 26799758154,
       "workflow_name": "Image Build and Push",
       "conclusion": "skipped",
       "status": "completed",
-      "branch": "bugfix/v0202rc-post-request-store-init",
-      "created_at": "2026-06-02T03:25:08Z",
-      "updated_at": "2026-06-02T03:25:08Z",
+      "branch": "br_dsv4_950_3.0_2_main_ci_merge",
+      "created_at": "2026-06-02T05:09:26Z",
+      "updated_at": "2026-06-02T05:09:27Z",
       "event": "pull_request",
-      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26796393292",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799758154",
       "pipeline_type": "pr_e2e",
       "jobs": [
         {
-          "job_id": 78993598924,
+          "job_id": 79003724218,
           "job_name": "Image Build and Push",
           "conclusion": "skipped",
-          "started_at": "2026-06-02T03:25:08Z",
-          "completed_at": "2026-06-02T03:25:08Z"
+          "started_at": "2026-06-02T05:09:26Z",
+          "completed_at": "2026-06-02T05:09:26Z"
         },
         {
-          "job_id": 78993612631,
+          "job_id": 79003733423,
           "job_name": "Image Build and Push",
           "conclusion": "skipped",
-          "started_at": "2026-06-02T03:25:16Z",
-          "completed_at": "2026-06-02T03:25:08Z"
+          "started_at": "2026-06-02T05:09:32Z",
+          "completed_at": "2026-06-02T05:09:26Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26799757067,
+      "workflow_name": "PR Create",
+      "conclusion": "success",
+      "status": "completed",
+      "branch": "br_dsv4_950_3.0_2_main_ci_merge",
+      "created_at": "2026-06-02T05:09:24Z",
+      "updated_at": "2026-06-02T05:09:42Z",
+      "event": "pull_request_target",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799757067",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 79003720568,
+          "job_name": "PR create action",
+          "conclusion": "success",
+          "started_at": "2026-06-02T05:09:26Z",
+          "completed_at": "2026-06-02T05:09:41Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26799757060,
+      "workflow_name": "Merge Conflict Labeler",
+      "conclusion": "success",
+      "status": "completed",
+      "branch": "br_dsv4_950_3.0_2_main_ci_merge",
+      "created_at": "2026-06-02T05:09:24Z",
+      "updated_at": "2026-06-02T05:09:32Z",
+      "event": "pull_request_target",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799757060",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 79003720599,
+          "job_name": "main",
+          "conclusion": "success",
+          "started_at": "2026-06-02T05:09:26Z",
+          "completed_at": "2026-06-02T05:09:31Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26799484664,
+      "workflow_name": "Nightly-A3",
+      "conclusion": "skipped",
+      "status": "completed",
+      "branch": "br_dsv4_950_3.0_2_main_ci_merge",
+      "created_at": "2026-06-02T05:01:03Z",
+      "updated_at": "2026-06-02T05:01:05Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799484664",
+      "pipeline_type": "nightly",
+      "jobs": [
+        {
+          "job_id": 79002886492,
+          "job_name": "Build nightly-a3 image",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:01:04Z",
+          "completed_at": "2026-06-02T05:01:04Z"
+        },
+        {
+          "job_id": 79002886768,
+          "job_name": "Parse trigger and determine test scope",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:01:04Z",
+          "completed_at": "2026-06-02T05:01:04Z"
+        },
+        {
+          "job_id": 79002886949,
+          "job_name": "Export global env vars as job outputs",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:01:04Z",
+          "completed_at": "2026-06-02T05:01:04Z"
+        },
+        {
+          "job_id": 79002887078,
+          "job_name": "double-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:01:04Z",
+          "completed_at": "2026-06-02T05:01:04Z"
+        },
+        {
+          "job_id": 79002887278,
+          "job_name": "multi-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:01:04Z",
+          "completed_at": "2026-06-02T05:01:04Z"
+        },
+        {
+          "job_id": 79002887512,
+          "job_name": "single-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:01:04Z",
+          "completed_at": "2026-06-02T05:01:04Z"
+        },
+        {
+          "job_id": 79002887564,
+          "job_name": "clear-pre-logs",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:01:04Z",
+          "completed_at": "2026-06-02T05:01:04Z"
+        },
+        {
+          "job_id": 79002887575,
+          "job_name": "Merge benchmark artifacts into nightly-a3.zip",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:01:04Z",
+          "completed_at": "2026-06-02T05:01:04Z"
+        },
+        {
+          "job_id": 79002887629,
+          "job_name": "single-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:01:04Z",
+          "completed_at": "2026-06-02T05:01:04Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26799484663,
+      "workflow_name": "E2E-Light",
+      "conclusion": "failure",
+      "status": "completed",
+      "branch": "br_dsv4_950_3.0_2_main_ci_merge",
+      "created_at": "2026-06-02T05:01:03Z",
+      "updated_at": "2026-06-02T05:04:07Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799484663",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 79002886187,
+          "job_name": "changes",
+          "conclusion": "success",
+          "started_at": "2026-06-02T05:01:26Z",
+          "completed_at": "2026-06-02T05:02:40Z"
+        },
+        {
+          "job_id": 79002886220,
+          "job_name": "lint / validate-pr-title",
+          "conclusion": "success",
+          "started_at": "2026-06-02T05:01:24Z",
+          "completed_at": "2026-06-02T05:01:49Z"
+        },
+        {
+          "job_id": 79002963512,
+          "job_name": "lint / pre-commit",
+          "conclusion": "failure",
+          "started_at": "2026-06-02T05:02:10Z",
+          "completed_at": "2026-06-02T05:04:06Z"
+        },
+        {
+          "job_id": 79003194155,
+          "job_name": "smart test",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:04:06Z",
+          "completed_at": "2026-06-02T05:04:06Z"
+        },
+        {
+          "job_id": 79003194460,
+          "job_name": "e2e-light",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:04:07Z",
+          "completed_at": "2026-06-02T05:04:06Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26799484656,
+      "workflow_name": "E2E-Full",
+      "conclusion": "skipped",
+      "status": "completed",
+      "branch": "br_dsv4_950_3.0_2_main_ci_merge",
+      "created_at": "2026-06-02T05:01:03Z",
+      "updated_at": "2026-06-02T05:01:04Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799484656",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 79002886486,
+          "job_name": "Parse /e2e comment",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:01:04Z",
+          "completed_at": "2026-06-02T05:01:04Z"
+        },
+        {
+          "job_id": 79002886667,
+          "job_name": "changes",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:01:04Z",
+          "completed_at": "2026-06-02T05:01:04Z"
+        },
+        {
+          "job_id": 79002886713,
+          "job_name": "e2e-comment (${{ matrix.vllm_version }})",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:01:04Z",
+          "completed_at": "2026-06-02T05:01:04Z"
+        },
+        {
+          "job_id": 79002886807,
+          "job_name": "e2e-full",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:01:04Z",
+          "completed_at": "2026-06-02T05:01:04Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26799484655,
+      "workflow_name": "Nightly-A2",
+      "conclusion": "skipped",
+      "status": "completed",
+      "branch": "br_dsv4_950_3.0_2_main_ci_merge",
+      "created_at": "2026-06-02T05:01:03Z",
+      "updated_at": "2026-06-02T05:01:05Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799484655",
+      "pipeline_type": "nightly",
+      "jobs": [
+        {
+          "job_id": 79002886457,
+          "job_name": "Parse trigger and determine test scope",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:01:04Z",
+          "completed_at": "2026-06-02T05:01:03Z"
+        },
+        {
+          "job_id": 79002886641,
+          "job_name": "Export global env vars as job outputs",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:01:04Z",
+          "completed_at": "2026-06-02T05:01:04Z"
+        },
+        {
+          "job_id": 79002886717,
+          "job_name": "single-node-accuracy-tests-pr-only",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:01:04Z",
+          "completed_at": "2026-06-02T05:01:04Z"
+        },
+        {
+          "job_id": 79002886723,
+          "job_name": "single-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:01:04Z",
+          "completed_at": "2026-06-02T05:01:04Z"
+        },
+        {
+          "job_id": 79002886838,
+          "job_name": "single-node-accuracy-tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:01:04Z",
+          "completed_at": "2026-06-02T05:01:04Z"
+        },
+        {
+          "job_id": 79002887081,
+          "job_name": "multi-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:01:04Z",
+          "completed_at": "2026-06-02T05:01:04Z"
+        },
+        {
+          "job_id": 79002887189,
+          "job_name": "Merge benchmark artifacts into nightly-a2.zip",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:01:04Z",
+          "completed_at": "2026-06-02T05:01:04Z"
+        },
+        {
+          "job_id": 79002887208,
+          "job_name": "clear-pre-logs",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:01:04Z",
+          "completed_at": "2026-06-02T05:01:04Z"
+        },
+        {
+          "job_id": 79002896571,
+          "job_name": "doc-test",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:01:09Z",
+          "completed_at": "2026-06-02T05:01:03Z"
+        },
+        {
+          "job_id": 79002900330,
+          "job_name": "Build nightly-a2 image",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:01:12Z",
+          "completed_at": "2026-06-02T05:01:03Z"
+        },
+        {
+          "job_id": 79002901917,
+          "job_name": "Generate accuracy test matrix",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:01:13Z",
+          "completed_at": "2026-06-02T05:01:04Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26799484640,
+      "workflow_name": "Image Build and Push",
+      "conclusion": "skipped",
+      "status": "completed",
+      "branch": "br_dsv4_950_3.0_2_main_ci_merge",
+      "created_at": "2026-06-02T05:01:03Z",
+      "updated_at": "2026-06-02T05:01:05Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799484640",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 79002886225,
+          "job_name": "Image Build and Push",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:01:04Z",
+          "completed_at": "2026-06-02T05:01:03Z"
+        },
+        {
+          "job_id": 79002886505,
+          "job_name": "Image Build and Push",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:01:04Z",
+          "completed_at": "2026-06-02T05:01:03Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26799483914,
+      "workflow_name": "Merge Conflict Labeler",
+      "conclusion": "success",
+      "status": "completed",
+      "branch": "br_dsv4_950_3.0_2_main_ci_merge",
+      "created_at": "2026-06-02T05:01:02Z",
+      "updated_at": "2026-06-02T05:01:10Z",
+      "event": "pull_request_target",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799483914",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 79002883934,
+          "job_name": "main",
+          "conclusion": "success",
+          "started_at": "2026-06-02T05:01:04Z",
+          "completed_at": "2026-06-02T05:01:09Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26799483910,
+      "workflow_name": "PR Create",
+      "conclusion": "success",
+      "status": "completed",
+      "branch": "br_dsv4_950_3.0_2_main_ci_merge",
+      "created_at": "2026-06-02T05:01:02Z",
+      "updated_at": "2026-06-02T05:01:21Z",
+      "event": "pull_request_target",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799483910",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 79002884104,
+          "job_name": "PR create action",
+          "conclusion": "success",
+          "started_at": "2026-06-02T05:01:04Z",
+          "completed_at": "2026-06-02T05:01:20Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26799308974,
+      "workflow_name": "E2E-Light",
+      "conclusion": "in_progress",
+      "status": "in_progress",
+      "branch": "main",
+      "created_at": "2026-06-02T04:55:52Z",
+      "updated_at": "2026-06-02T05:01:14Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799308974",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 79002366443,
+          "job_name": "changes",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:56:18Z",
+          "completed_at": "2026-06-02T04:57:31Z"
+        },
+        {
+          "job_id": 79002366453,
+          "job_name": "lint / validate-pr-title",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:56:13Z",
+          "completed_at": "2026-06-02T04:56:41Z"
+        },
+        {
+          "job_id": 79002447435,
+          "job_name": "lint / pre-commit",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:57:04Z",
+          "completed_at": "2026-06-02T05:00:02Z"
+        },
+        {
+          "job_id": 79002770265,
+          "job_name": "smart test (9090368b650896bf5fc990c921df7eb4c20355a5) / smart-ut (cpu x0)",
+          "conclusion": "success",
+          "started_at": "2026-06-02T05:00:30Z",
+          "completed_at": "2026-06-02T05:09:38Z"
+        },
+        {
+          "job_id": 79002770281,
+          "job_name": "smart test (v0.20.2) / smart-ut (a2 x1)",
+          "conclusion": "in_progress",
+          "started_at": "2026-06-02T05:00:23Z",
+          "completed_at": null
+        },
+        {
+          "job_id": 79002770299,
+          "job_name": "smart test (9090368b650896bf5fc990c921df7eb4c20355a5) / smart-ut (a2 x1)",
+          "conclusion": "in_progress",
+          "started_at": "2026-06-02T05:00:26Z",
+          "completed_at": null
+        },
+        {
+          "job_id": 79002770352,
+          "job_name": "smart test (v0.20.2) / smart-ut (cpu x0)",
+          "conclusion": "success",
+          "started_at": "2026-06-02T05:01:13Z",
+          "completed_at": "2026-06-02T05:09:45Z"
+        },
+        {
+          "job_id": 79002770593,
+          "job_name": "e2e-light",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:00:02Z",
+          "completed_at": "2026-06-02T05:00:02Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26799308966,
+      "workflow_name": "Nightly-A3",
+      "conclusion": "skipped",
+      "status": "completed",
+      "branch": "main",
+      "created_at": "2026-06-02T04:55:52Z",
+      "updated_at": "2026-06-02T04:55:54Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799308966",
+      "pipeline_type": "nightly",
+      "jobs": [
+        {
+          "job_id": 79002366609,
+          "job_name": "Parse trigger and determine test scope",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:55:53Z",
+          "completed_at": "2026-06-02T04:55:53Z"
+        },
+        {
+          "job_id": 79002366883,
+          "job_name": "Build nightly-a3 image",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:55:53Z",
+          "completed_at": "2026-06-02T04:55:53Z"
+        },
+        {
+          "job_id": 79002366992,
+          "job_name": "Export global env vars as job outputs",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:55:53Z",
+          "completed_at": "2026-06-02T04:55:53Z"
+        },
+        {
+          "job_id": 79002367229,
+          "job_name": "multi-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:55:53Z",
+          "completed_at": "2026-06-02T04:55:53Z"
+        },
+        {
+          "job_id": 79002367560,
+          "job_name": "double-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:55:53Z",
+          "completed_at": "2026-06-02T04:55:53Z"
+        },
+        {
+          "job_id": 79002367748,
+          "job_name": "clear-pre-logs",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:55:53Z",
+          "completed_at": "2026-06-02T04:55:53Z"
+        },
+        {
+          "job_id": 79002367760,
+          "job_name": "single-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:55:53Z",
+          "completed_at": "2026-06-02T04:55:53Z"
+        },
+        {
+          "job_id": 79002368053,
+          "job_name": "single-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:55:54Z",
+          "completed_at": "2026-06-02T04:55:53Z"
+        },
+        {
+          "job_id": 79002368079,
+          "job_name": "Merge benchmark artifacts into nightly-a3.zip",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:55:54Z",
+          "completed_at": "2026-06-02T04:55:53Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26799308955,
+      "workflow_name": "E2E-Full",
+      "conclusion": "queued",
+      "status": "queued",
+      "branch": "main",
+      "created_at": "2026-06-02T04:55:52Z",
+      "updated_at": "2026-06-02T04:57:21Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799308955",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 79002366501,
+          "job_name": "Parse /e2e comment / Parse /e2e comment",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:56:40Z",
+          "completed_at": "2026-06-02T04:56:52Z"
+        },
+        {
+          "job_id": 79002366507,
+          "job_name": "changes",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:56:30Z",
+          "completed_at": "2026-06-02T04:57:21Z"
+        },
+        {
+          "job_id": 79002366856,
+          "job_name": "Parse /e2e comment / Parse nightly trigger and determine test scope",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:55:53Z",
+          "completed_at": "2026-06-02T04:55:53Z"
+        },
+        {
+          "job_id": 79002464582,
+          "job_name": "e2e-comment (${{ matrix.vllm_version }})",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:56:52Z",
+          "completed_at": "2026-06-02T04:56:52Z"
+        },
+        {
+          "job_id": 79002508828,
+          "job_name": "e2e-full (9090368b650896bf5fc990c921df7eb4c20355a5) / multicard-2-full (0)",
+          "conclusion": "in_progress",
+          "started_at": "2026-06-02T04:57:47Z",
+          "completed_at": null
+        },
+        {
+          "job_id": 79002508841,
+          "job_name": "e2e-full (9090368b650896bf5fc990c921df7eb4c20355a5) / singlecard-full (0)",
+          "conclusion": "in_progress",
+          "started_at": "2026-06-02T04:57:45Z",
+          "completed_at": null
+        },
+        {
+          "job_id": 79002508844,
+          "job_name": "e2e-full (9090368b650896bf5fc990c921df7eb4c20355a5) / multicard-4-full (0)",
+          "conclusion": "queued",
+          "started_at": "2026-06-02T04:57:21Z",
+          "completed_at": null
+        },
+        {
+          "job_id": 79002508852,
+          "job_name": "e2e-full (v0.20.2) / multicard-4-full (0)",
+          "conclusion": "queued",
+          "started_at": "2026-06-02T04:57:21Z",
+          "completed_at": null
+        },
+        {
+          "job_id": 79002508853,
+          "job_name": "e2e-full (9090368b650896bf5fc990c921df7eb4c20355a5) / singlecard-full (1)",
+          "conclusion": "in_progress",
+          "started_at": "2026-06-02T04:57:51Z",
+          "completed_at": null
+        },
+        {
+          "job_id": 79002508854,
+          "job_name": "e2e-full (v0.20.2) / multicard-2-full (0)",
+          "conclusion": "failure",
+          "started_at": "2026-06-02T04:58:53Z",
+          "completed_at": "2026-06-02T05:20:36Z"
+        },
+        {
+          "job_id": 79002508857,
+          "job_name": "e2e-full (v0.20.2) / singlecard-full (0)",
+          "conclusion": "in_progress",
+          "started_at": "2026-06-02T04:57:46Z",
+          "completed_at": null
+        },
+        {
+          "job_id": 79002508952,
+          "job_name": "e2e-full (v0.20.2) / singlecard-full (1)",
+          "conclusion": "in_progress",
+          "started_at": "2026-06-02T04:57:42Z",
+          "completed_at": null
+        },
+        {
+          "job_id": 79002509071,
+          "job_name": "e2e-full (9090368b650896bf5fc990c921df7eb4c20355a5) / 310p multicards 4cards",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:57:21Z",
+          "completed_at": "2026-06-02T04:57:21Z"
+        },
+        {
+          "job_id": 79002509115,
+          "job_name": "e2e-full (9090368b650896bf5fc990c921df7eb4c20355a5) / 310p singlecard",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:57:21Z",
+          "completed_at": "2026-06-02T04:57:21Z"
+        },
+        {
+          "job_id": 79002509116,
+          "job_name": "e2e-full (9090368b650896bf5fc990c921df7eb4c20355a5) / singlecard-light",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:57:21Z",
+          "completed_at": "2026-06-02T04:57:21Z"
+        },
+        {
+          "job_id": 79002509123,
+          "job_name": "e2e-full (9090368b650896bf5fc990c921df7eb4c20355a5) / multicard-4-light",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:57:21Z",
+          "completed_at": "2026-06-02T04:57:21Z"
+        },
+        {
+          "job_id": 79002509146,
+          "job_name": "e2e-full (v0.20.2) / singlecard-light",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:57:21Z",
+          "completed_at": "2026-06-02T04:57:21Z"
+        },
+        {
+          "job_id": 79002509179,
+          "job_name": "e2e-full (9090368b650896bf5fc990c921df7eb4c20355a5) / multicard-2-light",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:57:21Z",
+          "completed_at": "2026-06-02T04:57:21Z"
+        },
+        {
+          "job_id": 79002509180,
+          "job_name": "e2e-full (v0.20.2) / multicard-2-light",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:57:21Z",
+          "completed_at": "2026-06-02T04:57:21Z"
+        },
+        {
+          "job_id": 79002509226,
+          "job_name": "e2e-full (v0.20.2) / 310p singlecard",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:57:21Z",
+          "completed_at": "2026-06-02T04:57:21Z"
+        },
+        {
+          "job_id": 79002509236,
+          "job_name": "e2e-full (v0.20.2) / multicard-4-light",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:57:21Z",
+          "completed_at": "2026-06-02T04:57:21Z"
+        },
+        {
+          "job_id": 79002509254,
+          "job_name": "e2e-full (v0.20.2) / 310p multicards 4cards",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:57:21Z",
+          "completed_at": "2026-06-02T04:57:21Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26799308954,
+      "workflow_name": "Nightly-A2",
+      "conclusion": "skipped",
+      "status": "completed",
+      "branch": "main",
+      "created_at": "2026-06-02T04:55:52Z",
+      "updated_at": "2026-06-02T04:55:53Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799308954",
+      "pipeline_type": "nightly",
+      "jobs": [
+        {
+          "job_id": 79002366579,
+          "job_name": "Build nightly-a2 image",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:55:53Z",
+          "completed_at": "2026-06-02T04:55:52Z"
+        },
+        {
+          "job_id": 79002366694,
+          "job_name": "single-node-accuracy-tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:55:53Z",
+          "completed_at": "2026-06-02T04:55:53Z"
+        },
+        {
+          "job_id": 79002366701,
+          "job_name": "Parse trigger and determine test scope",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:55:53Z",
+          "completed_at": "2026-06-02T04:55:52Z"
+        },
+        {
+          "job_id": 79002366702,
+          "job_name": "doc-test",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:55:53Z",
+          "completed_at": "2026-06-02T04:55:52Z"
+        },
+        {
+          "job_id": 79002366718,
+          "job_name": "Export global env vars as job outputs",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:55:53Z",
+          "completed_at": "2026-06-02T04:55:53Z"
+        },
+        {
+          "job_id": 79002366724,
+          "job_name": "multi-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:55:53Z",
+          "completed_at": "2026-06-02T04:55:53Z"
+        },
+        {
+          "job_id": 79002366743,
+          "job_name": "Generate accuracy test matrix",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:55:53Z",
+          "completed_at": "2026-06-02T04:55:53Z"
+        },
+        {
+          "job_id": 79002366849,
+          "job_name": "single-node-accuracy-tests-pr-only",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:55:53Z",
+          "completed_at": "2026-06-02T04:55:53Z"
+        },
+        {
+          "job_id": 79002366953,
+          "job_name": "Merge benchmark artifacts into nightly-a2.zip",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:55:53Z",
+          "completed_at": "2026-06-02T04:55:53Z"
+        },
+        {
+          "job_id": 79002367103,
+          "job_name": "clear-pre-logs",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:55:53Z",
+          "completed_at": "2026-06-02T04:55:53Z"
+        },
+        {
+          "job_id": 79002380642,
+          "job_name": "single-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:56:02Z",
+          "completed_at": "2026-06-02T04:55:53Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26799308945,
+      "workflow_name": "Image Build and Push",
+      "conclusion": "skipped",
+      "status": "completed",
+      "branch": "main",
+      "created_at": "2026-06-02T04:55:52Z",
+      "updated_at": "2026-06-02T04:55:53Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799308945",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 79002366393,
+          "job_name": "Image Build and Push",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:55:53Z",
+          "completed_at": "2026-06-02T04:55:52Z"
+        },
+        {
+          "job_id": 79002366610,
+          "job_name": "Image Build and Push",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:55:53Z",
+          "completed_at": "2026-06-02T04:55:52Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26799308159,
+      "workflow_name": "Merge Conflict Labeler",
+      "conclusion": "success",
+      "status": "completed",
+      "branch": "main",
+      "created_at": "2026-06-02T04:55:51Z",
+      "updated_at": "2026-06-02T04:55:58Z",
+      "event": "pull_request_target",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799308159",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 79002364218,
+          "job_name": "main",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:55:52Z",
+          "completed_at": "2026-06-02T04:55:57Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26799308129,
+      "workflow_name": "PR Create",
+      "conclusion": "success",
+      "status": "completed",
+      "branch": "main",
+      "created_at": "2026-06-02T04:55:51Z",
+      "updated_at": "2026-06-02T04:56:06Z",
+      "event": "pull_request_target",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799308129",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 79002364297,
+          "job_name": "PR create action",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:55:53Z",
+          "completed_at": "2026-06-02T04:56:05Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26799273231,
+      "workflow_name": "Nightly-A2",
+      "conclusion": "skipped",
+      "status": "completed",
+      "branch": "br_dsv4_950_3.0_2_main_ci_merge",
+      "created_at": "2026-06-02T04:54:49Z",
+      "updated_at": "2026-06-02T04:54:50Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799273231",
+      "pipeline_type": "nightly",
+      "jobs": [
+        {
+          "job_id": 79002261773,
+          "job_name": "Parse trigger and determine test scope",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:54:49Z",
+          "completed_at": "2026-06-02T04:54:49Z"
+        },
+        {
+          "job_id": 79002261912,
+          "job_name": "doc-test",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:54:49Z",
+          "completed_at": "2026-06-02T04:54:49Z"
+        },
+        {
+          "job_id": 79002262006,
+          "job_name": "Build nightly-a2 image",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:54:49Z",
+          "completed_at": "2026-06-02T04:54:49Z"
+        },
+        {
+          "job_id": 79002262072,
+          "job_name": "Export global env vars as job outputs",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:54:49Z",
+          "completed_at": "2026-06-02T04:54:49Z"
+        },
+        {
+          "job_id": 79002262139,
+          "job_name": "single-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:54:49Z",
+          "completed_at": "2026-06-02T04:54:49Z"
+        },
+        {
+          "job_id": 79002262147,
+          "job_name": "Generate accuracy test matrix",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:54:49Z",
+          "completed_at": "2026-06-02T04:54:49Z"
+        },
+        {
+          "job_id": 79002262150,
+          "job_name": "single-node-accuracy-tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:54:49Z",
+          "completed_at": "2026-06-02T04:54:49Z"
+        },
+        {
+          "job_id": 79002262331,
+          "job_name": "multi-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:54:49Z",
+          "completed_at": "2026-06-02T04:54:49Z"
+        },
+        {
+          "job_id": 79002262389,
+          "job_name": "single-node-accuracy-tests-pr-only",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:54:50Z",
+          "completed_at": "2026-06-02T04:54:49Z"
+        },
+        {
+          "job_id": 79002262489,
+          "job_name": "clear-pre-logs",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:54:50Z",
+          "completed_at": "2026-06-02T04:54:49Z"
+        },
+        {
+          "job_id": 79002262801,
+          "job_name": "Merge benchmark artifacts into nightly-a2.zip",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:54:50Z",
+          "completed_at": "2026-06-02T04:54:49Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26799273230,
+      "workflow_name": "E2E-Full",
+      "conclusion": "skipped",
+      "status": "completed",
+      "branch": "br_dsv4_950_3.0_2_main_ci_merge",
+      "created_at": "2026-06-02T04:54:49Z",
+      "updated_at": "2026-06-02T04:54:50Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799273230",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 79002261904,
+          "job_name": "changes",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:54:49Z",
+          "completed_at": "2026-06-02T04:54:49Z"
+        },
+        {
+          "job_id": 79002262087,
+          "job_name": "e2e-comment (${{ matrix.vllm_version }})",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:54:49Z",
+          "completed_at": "2026-06-02T04:54:49Z"
+        },
+        {
+          "job_id": 79002262129,
+          "job_name": "e2e-full",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:54:49Z",
+          "completed_at": "2026-06-02T04:54:49Z"
+        },
+        {
+          "job_id": 79002277639,
+          "job_name": "Parse /e2e comment",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:54:58Z",
+          "completed_at": "2026-06-02T04:54:49Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26799273213,
+      "workflow_name": "Image Build and Push",
+      "conclusion": "skipped",
+      "status": "completed",
+      "branch": "br_dsv4_950_3.0_2_main_ci_merge",
+      "created_at": "2026-06-02T04:54:49Z",
+      "updated_at": "2026-06-02T04:54:49Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799273213",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 79002261852,
+          "job_name": "Image Build and Push",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:54:49Z",
+          "completed_at": "2026-06-02T04:54:49Z"
+        },
+        {
+          "job_id": 79002271843,
+          "job_name": "Image Build and Push",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:54:55Z",
+          "completed_at": "2026-06-02T04:54:49Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26799273199,
+      "workflow_name": "Nightly-A3",
+      "conclusion": "skipped",
+      "status": "completed",
+      "branch": "br_dsv4_950_3.0_2_main_ci_merge",
+      "created_at": "2026-06-02T04:54:49Z",
+      "updated_at": "2026-06-02T04:54:50Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799273199",
+      "pipeline_type": "nightly",
+      "jobs": [
+        {
+          "job_id": 79002261982,
+          "job_name": "Build nightly-a3 image",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:54:49Z",
+          "completed_at": "2026-06-02T04:54:49Z"
+        },
+        {
+          "job_id": 79002262215,
+          "job_name": "Export global env vars as job outputs",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:54:49Z",
+          "completed_at": "2026-06-02T04:54:49Z"
+        },
+        {
+          "job_id": 79002262366,
+          "job_name": "multi-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:54:50Z",
+          "completed_at": "2026-06-02T04:54:49Z"
+        },
+        {
+          "job_id": 79002262488,
+          "job_name": "double-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:54:50Z",
+          "completed_at": "2026-06-02T04:54:49Z"
+        },
+        {
+          "job_id": 79002262735,
+          "job_name": "single-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:54:50Z",
+          "completed_at": "2026-06-02T04:54:50Z"
+        },
+        {
+          "job_id": 79002262794,
+          "job_name": "single-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:54:50Z",
+          "completed_at": "2026-06-02T04:54:49Z"
+        },
+        {
+          "job_id": 79002262846,
+          "job_name": "clear-pre-logs",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:54:50Z",
+          "completed_at": "2026-06-02T04:54:49Z"
+        },
+        {
+          "job_id": 79002263021,
+          "job_name": "Merge benchmark artifacts into nightly-a3.zip",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:54:50Z",
+          "completed_at": "2026-06-02T04:54:50Z"
+        },
+        {
+          "job_id": 79002274117,
+          "job_name": "Parse trigger and determine test scope",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:54:56Z",
+          "completed_at": "2026-06-02T04:54:49Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26799273188,
+      "workflow_name": "E2E-Light",
+      "conclusion": "failure",
+      "status": "completed",
+      "branch": "br_dsv4_950_3.0_2_main_ci_merge",
+      "created_at": "2026-06-02T04:54:49Z",
+      "updated_at": "2026-06-02T04:58:08Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799273188",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 79002261537,
+          "job_name": "changes",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:55:10Z",
+          "completed_at": "2026-06-02T04:56:20Z"
+        },
+        {
+          "job_id": 79002261552,
+          "job_name": "lint / validate-pr-title",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:55:12Z",
+          "completed_at": "2026-06-02T04:55:36Z"
+        },
+        {
+          "job_id": 79002339787,
+          "job_name": "lint / pre-commit",
+          "conclusion": "failure",
+          "started_at": "2026-06-02T04:55:59Z",
+          "completed_at": "2026-06-02T04:58:07Z"
+        },
+        {
+          "job_id": 79002585318,
+          "job_name": "smart test",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:58:08Z",
+          "completed_at": "2026-06-02T04:58:07Z"
+        },
+        {
+          "job_id": 79002585400,
+          "job_name": "e2e-light",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:58:08Z",
+          "completed_at": "2026-06-02T04:58:07Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26799272204,
+      "workflow_name": "Merge Conflict Labeler",
+      "conclusion": "success",
+      "status": "completed",
+      "branch": "br_dsv4_950_3.0_2_main_ci_merge",
+      "created_at": "2026-06-02T04:54:47Z",
+      "updated_at": "2026-06-02T04:54:55Z",
+      "event": "pull_request_target",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799272204",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 79002258713,
+          "job_name": "main",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:54:49Z",
+          "completed_at": "2026-06-02T04:54:54Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26799272201,
+      "workflow_name": "PR Create",
+      "conclusion": "success",
+      "status": "completed",
+      "branch": "br_dsv4_950_3.0_2_main_ci_merge",
+      "created_at": "2026-06-02T04:54:47Z",
+      "updated_at": "2026-06-02T04:55:02Z",
+      "event": "pull_request_target",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799272201",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 79002258666,
+          "job_name": "PR create action",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:54:49Z",
+          "completed_at": "2026-06-02T04:55:01Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26799090375,
+      "workflow_name": "Image Build and Push",
+      "conclusion": "skipped",
+      "status": "completed",
+      "branch": "upgrade",
+      "created_at": "2026-06-02T04:49:18Z",
+      "updated_at": "2026-06-02T04:49:19Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799090375",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 79001725519,
+          "job_name": "Image Build and Push",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:49:19Z",
+          "completed_at": "2026-06-02T04:49:18Z"
+        },
+        {
+          "job_id": 79001734687,
+          "job_name": "Image Build and Push",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:49:25Z",
+          "completed_at": "2026-06-02T04:49:18Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26799090361,
+      "workflow_name": "E2E-Light",
+      "conclusion": "success",
+      "status": "completed",
+      "branch": "upgrade",
+      "created_at": "2026-06-02T04:49:18Z",
+      "updated_at": "2026-06-02T05:04:48Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799090361",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 79001759564,
+          "job_name": "changes",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:50:02Z",
+          "completed_at": "2026-06-02T04:51:00Z"
+        },
+        {
+          "job_id": 79001759604,
+          "job_name": "lint / validate-pr-title",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:50:01Z",
+          "completed_at": "2026-06-02T04:50:17Z"
+        },
+        {
+          "job_id": 79001820947,
+          "job_name": "lint / pre-commit",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:50:38Z",
+          "completed_at": "2026-06-02T04:53:43Z"
+        },
+        {
+          "job_id": 79002155683,
+          "job_name": "smart test (9090368b650896bf5fc990c921df7eb4c20355a5) / smart-ut (a3 x2)",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:54:37Z",
+          "completed_at": "2026-06-02T05:02:13Z"
+        },
+        {
+          "job_id": 79002155687,
+          "job_name": "smart test (9090368b650896bf5fc990c921df7eb4c20355a5) / smart-ut (cpu x0)",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:54:04Z",
+          "completed_at": "2026-06-02T05:03:29Z"
+        },
+        {
+          "job_id": 79002155692,
+          "job_name": "smart test (9090368b650896bf5fc990c921df7eb4c20355a5) / smart-ut (a2 x1)",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:54:06Z",
+          "completed_at": "2026-06-02T05:03:51Z"
+        },
+        {
+          "job_id": 79002155699,
+          "job_name": "smart test (v0.21.0) / smart-ut (a3 x2)",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:54:38Z",
+          "completed_at": "2026-06-02T05:02:04Z"
+        },
+        {
+          "job_id": 79002155703,
+          "job_name": "smart test (v0.21.0) / smart-ut (cpu x0)",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:54:54Z",
+          "completed_at": "2026-06-02T05:04:47Z"
+        },
+        {
+          "job_id": 79002155712,
+          "job_name": "smart test (v0.21.0) / smart-ut (a2 x1)",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:54:07Z",
+          "completed_at": "2026-06-02T05:02:59Z"
+        },
+        {
+          "job_id": 79002155869,
+          "job_name": "e2e-light",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:53:43Z",
+          "completed_at": "2026-06-02T04:53:43Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26799090345,
+      "workflow_name": "Nightly-A3",
+      "conclusion": "skipped",
+      "status": "completed",
+      "branch": "upgrade",
+      "created_at": "2026-06-02T04:49:18Z",
+      "updated_at": "2026-06-02T04:49:19Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799090345",
+      "pipeline_type": "nightly",
+      "jobs": [
+        {
+          "job_id": 79001725545,
+          "job_name": "Build nightly-a3 image",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:49:19Z",
+          "completed_at": "2026-06-02T04:49:18Z"
+        },
+        {
+          "job_id": 79001725724,
+          "job_name": "Export global env vars as job outputs",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:49:19Z",
+          "completed_at": "2026-06-02T04:49:19Z"
+        },
+        {
+          "job_id": 79001725877,
+          "job_name": "multi-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:49:19Z",
+          "completed_at": "2026-06-02T04:49:19Z"
+        },
+        {
+          "job_id": 79001726005,
+          "job_name": "double-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:49:19Z",
+          "completed_at": "2026-06-02T04:49:19Z"
+        },
+        {
+          "job_id": 79001726050,
+          "job_name": "Merge benchmark artifacts into nightly-a3.zip",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:49:19Z",
+          "completed_at": "2026-06-02T04:49:19Z"
+        },
+        {
+          "job_id": 79001726071,
+          "job_name": "single-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:49:19Z",
+          "completed_at": "2026-06-02T04:49:19Z"
+        },
+        {
+          "job_id": 79001726167,
+          "job_name": "clear-pre-logs",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:49:19Z",
+          "completed_at": "2026-06-02T04:49:19Z"
+        },
+        {
+          "job_id": 79001726308,
+          "job_name": "single-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:49:19Z",
+          "completed_at": "2026-06-02T04:49:19Z"
+        },
+        {
+          "job_id": 79001736400,
+          "job_name": "Parse trigger and determine test scope",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:49:26Z",
+          "completed_at": "2026-06-02T04:49:18Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26799090336,
+      "workflow_name": "E2E-Full",
+      "conclusion": "queued",
+      "status": "queued",
+      "branch": "upgrade",
+      "created_at": "2026-06-02T04:49:18Z",
+      "updated_at": "2026-06-02T04:49:56Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799090336",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 79001784851,
+          "job_name": "changes",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:50:16Z",
+          "completed_at": "2026-06-02T04:51:04Z"
+        },
+        {
+          "job_id": 79001784876,
+          "job_name": "Parse /e2e comment / Parse /e2e comment",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:51:07Z",
+          "completed_at": "2026-06-02T04:51:18Z"
+        },
+        {
+          "job_id": 79001785439,
+          "job_name": "Parse /e2e comment / Parse nightly trigger and determine test scope",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:49:56Z",
+          "completed_at": "2026-06-02T04:49:56Z"
+        },
+        {
+          "job_id": 79001897598,
+          "job_name": "e2e-full (9090368b650896bf5fc990c921df7eb4c20355a5) / multicard-4-full (0)",
+          "conclusion": "queued",
+          "started_at": "2026-06-02T04:51:04Z",
+          "completed_at": null
+        },
+        {
+          "job_id": 79001897604,
+          "job_name": "e2e-full (9090368b650896bf5fc990c921df7eb4c20355a5) / singlecard-full (0)",
+          "conclusion": "in_progress",
+          "started_at": "2026-06-02T04:51:28Z",
+          "completed_at": null
+        },
+        {
+          "job_id": 79001897609,
+          "job_name": "e2e-full (v0.21.0) / multicard-2-full (0)",
+          "conclusion": "in_progress",
+          "started_at": "2026-06-02T04:51:25Z",
+          "completed_at": null
+        },
+        {
+          "job_id": 79001897611,
+          "job_name": "e2e-full (9090368b650896bf5fc990c921df7eb4c20355a5) / multicard-2-full (0)",
+          "conclusion": "in_progress",
+          "started_at": "2026-06-02T04:51:27Z",
+          "completed_at": null
+        },
+        {
+          "job_id": 79001897616,
+          "job_name": "e2e-full (9090368b650896bf5fc990c921df7eb4c20355a5) / singlecard-full (1)",
+          "conclusion": "in_progress",
+          "started_at": "2026-06-02T04:51:33Z",
+          "completed_at": null
+        },
+        {
+          "job_id": 79001897621,
+          "job_name": "e2e-full (v0.21.0) / singlecard-full (1)",
+          "conclusion": "in_progress",
+          "started_at": "2026-06-02T04:51:24Z",
+          "completed_at": null
+        },
+        {
+          "job_id": 79001897626,
+          "job_name": "e2e-full (v0.21.0) / singlecard-full (0)",
+          "conclusion": "in_progress",
+          "started_at": "2026-06-02T04:51:28Z",
+          "completed_at": null
+        },
+        {
+          "job_id": 79001897662,
+          "job_name": "e2e-full (v0.21.0) / multicard-4-full (0)",
+          "conclusion": "queued",
+          "started_at": "2026-06-02T04:51:04Z",
+          "completed_at": null
+        },
+        {
+          "job_id": 79001897838,
+          "job_name": "e2e-full (v0.21.0) / 310p multicards 4cards",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:51:04Z",
+          "completed_at": "2026-06-02T04:51:04Z"
+        },
+        {
+          "job_id": 79001897876,
+          "job_name": "e2e-full (9090368b650896bf5fc990c921df7eb4c20355a5) / 310p multicards 4cards",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:51:04Z",
+          "completed_at": "2026-06-02T04:51:04Z"
+        },
+        {
+          "job_id": 79001897881,
+          "job_name": "e2e-full (v0.21.0) / multicard-4-light",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:51:04Z",
+          "completed_at": "2026-06-02T04:51:04Z"
+        },
+        {
+          "job_id": 79001897890,
+          "job_name": "e2e-full (9090368b650896bf5fc990c921df7eb4c20355a5) / multicard-4-light",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:51:04Z",
+          "completed_at": "2026-06-02T04:51:04Z"
+        },
+        {
+          "job_id": 79001897913,
+          "job_name": "e2e-full (v0.21.0) / 310p singlecard",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:51:04Z",
+          "completed_at": "2026-06-02T04:51:04Z"
+        },
+        {
+          "job_id": 79001897939,
+          "job_name": "e2e-full (9090368b650896bf5fc990c921df7eb4c20355a5) / singlecard-light",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:51:04Z",
+          "completed_at": "2026-06-02T04:51:04Z"
+        },
+        {
+          "job_id": 79001898004,
+          "job_name": "e2e-full (9090368b650896bf5fc990c921df7eb4c20355a5) / 310p singlecard",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:51:04Z",
+          "completed_at": "2026-06-02T04:51:04Z"
+        },
+        {
+          "job_id": 79001898014,
+          "job_name": "e2e-full (v0.21.0) / singlecard-light",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:51:04Z",
+          "completed_at": "2026-06-02T04:51:04Z"
+        },
+        {
+          "job_id": 79001898042,
+          "job_name": "e2e-full (9090368b650896bf5fc990c921df7eb4c20355a5) / multicard-2-light",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:51:04Z",
+          "completed_at": "2026-06-02T04:51:04Z"
+        },
+        {
+          "job_id": 79001898086,
+          "job_name": "e2e-full (v0.21.0) / multicard-2-light",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:51:04Z",
+          "completed_at": "2026-06-02T04:51:04Z"
+        },
+        {
+          "job_id": 79001921813,
+          "job_name": "e2e-comment (${{ matrix.vllm_version }})",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:51:19Z",
+          "completed_at": "2026-06-02T04:51:18Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26799090334,
+      "workflow_name": "Nightly-A2",
+      "conclusion": "skipped",
+      "status": "completed",
+      "branch": "upgrade",
+      "created_at": "2026-06-02T04:49:18Z",
+      "updated_at": "2026-06-02T04:49:20Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799090334",
+      "pipeline_type": "nightly",
+      "jobs": [
+        {
+          "job_id": 79001725614,
+          "job_name": "Parse trigger and determine test scope",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:49:19Z",
+          "completed_at": "2026-06-02T04:49:18Z"
+        },
+        {
+          "job_id": 79001725863,
+          "job_name": "Generate accuracy test matrix",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:49:19Z",
+          "completed_at": "2026-06-02T04:49:19Z"
+        },
+        {
+          "job_id": 79001725928,
+          "job_name": "single-node-accuracy-tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:49:19Z",
+          "completed_at": "2026-06-02T04:49:19Z"
+        },
+        {
+          "job_id": 79001725994,
+          "job_name": "single-node-accuracy-tests-pr-only",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:49:19Z",
+          "completed_at": "2026-06-02T04:49:19Z"
+        },
+        {
+          "job_id": 79001726096,
+          "job_name": "single-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:49:19Z",
+          "completed_at": "2026-06-02T04:49:19Z"
+        },
+        {
+          "job_id": 79001726475,
+          "job_name": "multi-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:49:19Z",
+          "completed_at": "2026-06-02T04:49:19Z"
+        },
+        {
+          "job_id": 79001726508,
+          "job_name": "clear-pre-logs",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:49:19Z",
+          "completed_at": "2026-06-02T04:49:19Z"
+        },
+        {
+          "job_id": 79001726515,
+          "job_name": "Merge benchmark artifacts into nightly-a2.zip",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:49:19Z",
+          "completed_at": "2026-06-02T04:49:19Z"
+        },
+        {
+          "job_id": 79001735065,
+          "job_name": "Build nightly-a2 image",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:49:25Z",
+          "completed_at": "2026-06-02T04:49:18Z"
+        },
+        {
+          "job_id": 79001735745,
+          "job_name": "Export global env vars as job outputs",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:49:25Z",
+          "completed_at": "2026-06-02T04:49:19Z"
+        },
+        {
+          "job_id": 79001737397,
+          "job_name": "doc-test",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:49:26Z",
+          "completed_at": "2026-06-02T04:49:18Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26799089648,
+      "workflow_name": "Merge Conflict Labeler",
+      "conclusion": "success",
+      "status": "completed",
+      "branch": "upgrade",
+      "created_at": "2026-06-02T04:49:17Z",
+      "updated_at": "2026-06-02T04:49:25Z",
+      "event": "pull_request_target",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799089648",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 79001723353,
+          "job_name": "main",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:49:19Z",
+          "completed_at": "2026-06-02T04:49:24Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26799089645,
+      "workflow_name": "PR Create",
+      "conclusion": "success",
+      "status": "completed",
+      "branch": "upgrade",
+      "created_at": "2026-06-02T04:49:17Z",
+      "updated_at": "2026-06-02T04:49:37Z",
+      "event": "pull_request_target",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799089645",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 79001723209,
+          "job_name": "PR create action",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:49:19Z",
+          "completed_at": "2026-06-02T04:49:36Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26799057619,
+      "workflow_name": "E2E-Light",
+      "conclusion": "cancelled",
+      "status": "completed",
+      "branch": "upgrade",
+      "created_at": "2026-06-02T04:48:17Z",
+      "updated_at": "2026-06-02T04:49:41Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799057619",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 79001628663,
+          "job_name": "changes",
+          "conclusion": "cancelled",
+          "started_at": "2026-06-02T04:48:40Z",
+          "completed_at": "2026-06-02T04:49:40Z"
+        },
+        {
+          "job_id": 79001628681,
+          "job_name": "lint / validate-pr-title",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:48:38Z",
+          "completed_at": "2026-06-02T04:48:54Z"
+        },
+        {
+          "job_id": 79001686337,
+          "job_name": "lint / pre-commit",
+          "conclusion": "cancelled",
+          "started_at": "2026-06-02T04:49:15Z",
+          "completed_at": "2026-06-02T04:49:22Z"
+        },
+        {
+          "job_id": 79001759223,
+          "job_name": "smart test",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:49:40Z",
+          "completed_at": "2026-06-02T04:49:40Z"
+        },
+        {
+          "job_id": 79001759241,
+          "job_name": "e2e-light",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:49:40Z",
+          "completed_at": "2026-06-02T04:49:40Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26799057603,
+      "workflow_name": "Nightly-A2",
+      "conclusion": "skipped",
+      "status": "completed",
+      "branch": "upgrade",
+      "created_at": "2026-06-02T04:48:17Z",
+      "updated_at": "2026-06-02T04:48:18Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799057603",
+      "pipeline_type": "nightly",
+      "jobs": [
+        {
+          "job_id": 79001628876,
+          "job_name": "Build nightly-a2 image",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:48:17Z",
+          "completed_at": "2026-06-02T04:48:17Z"
+        },
+        {
+          "job_id": 79001628928,
+          "job_name": "Parse trigger and determine test scope",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:48:17Z",
+          "completed_at": "2026-06-02T04:48:17Z"
+        },
+        {
+          "job_id": 79001629113,
+          "job_name": "single-node-accuracy-tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:48:18Z",
+          "completed_at": "2026-06-02T04:48:17Z"
+        },
+        {
+          "job_id": 79001629137,
+          "job_name": "Export global env vars as job outputs",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:48:18Z",
+          "completed_at": "2026-06-02T04:48:17Z"
+        },
+        {
+          "job_id": 79001629159,
+          "job_name": "single-node-accuracy-tests-pr-only",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:48:18Z",
+          "completed_at": "2026-06-02T04:48:17Z"
+        },
+        {
+          "job_id": 79001629285,
+          "job_name": "multi-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:48:18Z",
+          "completed_at": "2026-06-02T04:48:17Z"
+        },
+        {
+          "job_id": 79001629313,
+          "job_name": "single-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:48:18Z",
+          "completed_at": "2026-06-02T04:48:17Z"
+        },
+        {
+          "job_id": 79001629355,
+          "job_name": "Merge benchmark artifacts into nightly-a2.zip",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:48:18Z",
+          "completed_at": "2026-06-02T04:48:17Z"
+        },
+        {
+          "job_id": 79001629501,
+          "job_name": "clear-pre-logs",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:48:18Z",
+          "completed_at": "2026-06-02T04:48:17Z"
+        },
+        {
+          "job_id": 79001639814,
+          "job_name": "doc-test",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:48:24Z",
+          "completed_at": "2026-06-02T04:48:17Z"
+        },
+        {
+          "job_id": 79001640987,
+          "job_name": "Generate accuracy test matrix",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:48:25Z",
+          "completed_at": "2026-06-02T04:48:17Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26799057580,
+      "workflow_name": "Image Build and Push",
+      "conclusion": "skipped",
+      "status": "completed",
+      "branch": "upgrade",
+      "created_at": "2026-06-02T04:48:17Z",
+      "updated_at": "2026-06-02T04:48:17Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799057580",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 79001628598,
+          "job_name": "Image Build and Push",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:48:17Z",
+          "completed_at": "2026-06-02T04:48:17Z"
+        },
+        {
+          "job_id": 79001639948,
+          "job_name": "Image Build and Push",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:48:24Z",
+          "completed_at": "2026-06-02T04:48:17Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26799057567,
+      "workflow_name": "Nightly-A3",
+      "conclusion": "skipped",
+      "status": "completed",
+      "branch": "upgrade",
+      "created_at": "2026-06-02T04:48:17Z",
+      "updated_at": "2026-06-02T04:48:18Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799057567",
+      "pipeline_type": "nightly",
+      "jobs": [
+        {
+          "job_id": 79001628722,
+          "job_name": "Build nightly-a3 image",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:48:17Z",
+          "completed_at": "2026-06-02T04:48:17Z"
+        },
+        {
+          "job_id": 79001628848,
+          "job_name": "Parse trigger and determine test scope",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:48:17Z",
+          "completed_at": "2026-06-02T04:48:17Z"
+        },
+        {
+          "job_id": 79001629142,
+          "job_name": "Export global env vars as job outputs",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:48:18Z",
+          "completed_at": "2026-06-02T04:48:17Z"
+        },
+        {
+          "job_id": 79001629176,
+          "job_name": "multi-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:48:18Z",
+          "completed_at": "2026-06-02T04:48:17Z"
+        },
+        {
+          "job_id": 79001629233,
+          "job_name": "double-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:48:18Z",
+          "completed_at": "2026-06-02T04:48:17Z"
+        },
+        {
+          "job_id": 79001629470,
+          "job_name": "single-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:48:18Z",
+          "completed_at": "2026-06-02T04:48:18Z"
+        },
+        {
+          "job_id": 79001629528,
+          "job_name": "clear-pre-logs",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:48:18Z",
+          "completed_at": "2026-06-02T04:48:18Z"
+        },
+        {
+          "job_id": 79001629723,
+          "job_name": "Merge benchmark artifacts into nightly-a3.zip",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:48:18Z",
+          "completed_at": "2026-06-02T04:48:18Z"
+        },
+        {
+          "job_id": 79001629836,
+          "job_name": "single-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:48:18Z",
+          "completed_at": "2026-06-02T04:48:18Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26799057562,
+      "workflow_name": "E2E-Full",
+      "conclusion": "cancelled",
+      "status": "completed",
+      "branch": "upgrade",
+      "created_at": "2026-06-02T04:48:17Z",
+      "updated_at": "2026-06-02T04:49:56Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799057562",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 79001629616,
+          "job_name": "changes",
+          "conclusion": "cancelled",
+          "started_at": "2026-06-02T04:48:41Z",
+          "completed_at": "2026-06-02T04:49:55Z"
+        },
+        {
+          "job_id": 79001629657,
+          "job_name": "Parse /e2e comment / Parse /e2e comment",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:48:46Z",
+          "completed_at": "2026-06-02T04:48:58Z"
+        },
+        {
+          "job_id": 79001629834,
+          "job_name": "Parse /e2e comment / Parse nightly trigger and determine test scope",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:48:18Z",
+          "completed_at": "2026-06-02T04:48:18Z"
+        },
+        {
+          "job_id": 79001692269,
+          "job_name": "e2e-comment (${{ matrix.vllm_version }})",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:48:58Z",
+          "completed_at": "2026-06-02T04:48:58Z"
+        },
+        {
+          "job_id": 79001784881,
+          "job_name": "e2e-full",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:49:56Z",
+          "completed_at": "2026-06-02T04:49:56Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26799056774,
+      "workflow_name": "Merge Conflict Labeler",
+      "conclusion": "success",
+      "status": "completed",
+      "branch": "upgrade",
+      "created_at": "2026-06-02T04:48:15Z",
+      "updated_at": "2026-06-02T04:48:23Z",
+      "event": "pull_request_target",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799056774",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 79001626106,
+          "job_name": "main",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:48:17Z",
+          "completed_at": "2026-06-02T04:48:22Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26799056744,
+      "workflow_name": "PR Create",
+      "conclusion": "success",
+      "status": "completed",
+      "branch": "upgrade",
+      "created_at": "2026-06-02T04:48:15Z",
+      "updated_at": "2026-06-02T04:48:32Z",
+      "event": "pull_request_target",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26799056744",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 79001625870,
+          "job_name": "PR create action",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:48:17Z",
+          "completed_at": "2026-06-02T04:48:31Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26798034819,
+      "workflow_name": "E2E-Full",
+      "conclusion": "skipped",
+      "status": "completed",
+      "branch": "profile-graph",
+      "created_at": "2026-06-02T04:16:14Z",
+      "updated_at": "2026-06-02T04:16:15Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26798034819",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 78998556921,
+          "job_name": "changes",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:16:14Z",
+          "completed_at": "2026-06-02T04:16:14Z"
+        },
+        {
+          "job_id": 78998556999,
+          "job_name": "Parse /e2e comment",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:16:14Z",
+          "completed_at": "2026-06-02T04:16:14Z"
+        },
+        {
+          "job_id": 78998557192,
+          "job_name": "e2e-comment (${{ matrix.vllm_version }})",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:16:15Z",
+          "completed_at": "2026-06-02T04:16:14Z"
+        },
+        {
+          "job_id": 78998557193,
+          "job_name": "e2e-full",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:16:15Z",
+          "completed_at": "2026-06-02T04:16:14Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26798034743,
+      "workflow_name": "Nightly-A3",
+      "conclusion": "skipped",
+      "status": "completed",
+      "branch": "profile-graph",
+      "created_at": "2026-06-02T04:16:14Z",
+      "updated_at": "2026-06-02T04:16:15Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26798034743",
+      "pipeline_type": "nightly",
+      "jobs": [
+        {
+          "job_id": 78998556562,
+          "job_name": "Build nightly-a3 image",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:16:14Z",
+          "completed_at": "2026-06-02T04:16:14Z"
+        },
+        {
+          "job_id": 78998556786,
+          "job_name": "Parse trigger and determine test scope",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:16:14Z",
+          "completed_at": "2026-06-02T04:16:14Z"
+        },
+        {
+          "job_id": 78998556887,
+          "job_name": "Export global env vars as job outputs",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:16:14Z",
+          "completed_at": "2026-06-02T04:16:14Z"
+        },
+        {
+          "job_id": 78998557227,
+          "job_name": "multi-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:16:15Z",
+          "completed_at": "2026-06-02T04:16:14Z"
+        },
+        {
+          "job_id": 78998557324,
+          "job_name": "single-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:16:15Z",
+          "completed_at": "2026-06-02T04:16:14Z"
+        },
+        {
+          "job_id": 78998557387,
+          "job_name": "double-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:16:15Z",
+          "completed_at": "2026-06-02T04:16:14Z"
+        },
+        {
+          "job_id": 78998557444,
+          "job_name": "Merge benchmark artifacts into nightly-a3.zip",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:16:15Z",
+          "completed_at": "2026-06-02T04:16:15Z"
+        },
+        {
+          "job_id": 78998557503,
+          "job_name": "clear-pre-logs",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:16:15Z",
+          "completed_at": "2026-06-02T04:16:14Z"
+        },
+        {
+          "job_id": 78998557509,
+          "job_name": "single-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:16:15Z",
+          "completed_at": "2026-06-02T04:16:15Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26798034729,
+      "workflow_name": "E2E-Light",
+      "conclusion": "queued",
+      "status": "queued",
+      "branch": "profile-graph",
+      "created_at": "2026-06-02T04:16:14Z",
+      "updated_at": "2026-06-02T05:09:01Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26798034729",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 79003681758,
+          "job_name": "lint / validate-pr-title",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:16:38Z",
+          "completed_at": "2026-06-02T04:16:54Z"
+        },
+        {
+          "job_id": 79003681970,
+          "job_name": "changes",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:16:35Z",
+          "completed_at": "2026-06-02T04:17:32Z"
+        },
+        {
+          "job_id": 79003682302,
+          "job_name": "lint / pre-commit",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:17:15Z",
+          "completed_at": "2026-06-02T04:20:13Z"
+        },
+        {
+          "job_id": 79003682529,
+          "job_name": "e2e-light (9090368b650896bf5fc990c921df7eb4c20355a5) / multicard-4-light (0)",
+          "conclusion": "queued",
+          "started_at": "2026-06-02T05:09:01Z",
+          "completed_at": null
+        },
+        {
+          "job_id": 79003682560,
+          "job_name": "e2e-light (9090368b650896bf5fc990c921df7eb4c20355a5) / singlecard-light (0)",
+          "conclusion": "failure",
+          "started_at": "2026-06-02T05:09:25Z",
+          "completed_at": "2026-06-02T05:25:26Z"
+        },
+        {
+          "job_id": 79003682566,
+          "job_name": "e2e-light (v0.20.2) / multicard-4-light (0)",
+          "conclusion": "queued",
+          "started_at": "2026-06-02T05:09:01Z",
+          "completed_at": null
+        },
+        {
+          "job_id": 79003682571,
+          "job_name": "e2e-light (v0.20.2) / singlecard-light (0)",
+          "conclusion": "failure",
+          "started_at": "2026-06-02T05:09:22Z",
+          "completed_at": "2026-06-02T05:26:19Z"
+        },
+        {
+          "job_id": 79003682683,
+          "job_name": "e2e-light (9090368b650896bf5fc990c921df7eb4c20355a5) / 310p singlecard",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:20:35Z",
+          "completed_at": "2026-06-02T05:02:21Z"
+        },
+        {
+          "job_id": 79003682690,
+          "job_name": "e2e-light (v0.20.2) / singlecard-full",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:09:01Z",
+          "completed_at": "2026-06-02T04:20:13Z"
+        },
+        {
+          "job_id": 79003682767,
+          "job_name": "smart test (v0.20.2) / smart-ut (cpu x0)",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:20:41Z",
+          "completed_at": "2026-06-02T04:28:59Z"
+        },
+        {
+          "job_id": 79003682816,
+          "job_name": "smart test (v0.20.2) / smart-ut (a2 x1)",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:20:51Z",
+          "completed_at": "2026-06-02T04:53:00Z"
+        },
+        {
+          "job_id": 79003682831,
+          "job_name": "smart test (9090368b650896bf5fc990c921df7eb4c20355a5) / smart-ut (a2 x1)",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:20:37Z",
+          "completed_at": "2026-06-02T04:53:10Z"
+        },
+        {
+          "job_id": 79003682844,
+          "job_name": "e2e-light (9090368b650896bf5fc990c921df7eb4c20355a5) / multicard-2-light (0)",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:30:42Z",
+          "completed_at": "2026-06-02T04:58:31Z"
+        },
+        {
+          "job_id": 79003682851,
+          "job_name": "e2e-light (v0.20.2) / 310p singlecard",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:20:44Z",
+          "completed_at": "2026-06-02T04:59:29Z"
+        },
+        {
+          "job_id": 79003682881,
+          "job_name": "e2e-light (v0.20.2) / multicard-2-light (0)",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:30:20Z",
+          "completed_at": "2026-06-02T05:00:28Z"
+        },
+        {
+          "job_id": 79003682882,
+          "job_name": "e2e-light (9090368b650896bf5fc990c921df7eb4c20355a5) / multicard-4-full",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:09:01Z",
+          "completed_at": "2026-06-02T04:20:13Z"
+        },
+        {
+          "job_id": 79003682886,
+          "job_name": "e2e-light (9090368b650896bf5fc990c921df7eb4c20355a5) / singlecard-full",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:09:01Z",
+          "completed_at": "2026-06-02T04:20:13Z"
+        },
+        {
+          "job_id": 79003682895,
+          "job_name": "e2e-light (9090368b650896bf5fc990c921df7eb4c20355a5) / 310p multicards 4cards",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:21:52Z",
+          "completed_at": "2026-06-02T04:54:25Z"
+        },
+        {
+          "job_id": 79003682907,
+          "job_name": "smart test (9090368b650896bf5fc990c921df7eb4c20355a5) / smart-ut (cpu x0)",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:20:42Z",
+          "completed_at": "2026-06-02T04:29:32Z"
+        },
+        {
+          "job_id": 79003682909,
+          "job_name": "e2e-light (v0.20.2) / multicard-4-full",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:09:01Z",
+          "completed_at": "2026-06-02T04:20:14Z"
+        },
+        {
+          "job_id": 79003682915,
+          "job_name": "e2e-light (9090368b650896bf5fc990c921df7eb4c20355a5) / multicard-2-full",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:09:01Z",
+          "completed_at": "2026-06-02T04:20:13Z"
+        },
+        {
+          "job_id": 79003682953,
+          "job_name": "e2e-light (v0.20.2) / 310p multicards 4cards",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:22:50Z",
+          "completed_at": "2026-06-02T04:54:09Z"
+        },
+        {
+          "job_id": 79003683033,
+          "job_name": "e2e-light (v0.20.2) / multicard-2-full",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T05:09:01Z",
+          "completed_at": "2026-06-02T04:20:13Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26798034716,
+      "workflow_name": "Nightly-A2",
+      "conclusion": "skipped",
+      "status": "completed",
+      "branch": "profile-graph",
+      "created_at": "2026-06-02T04:16:14Z",
+      "updated_at": "2026-06-02T04:16:15Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26798034716",
+      "pipeline_type": "nightly",
+      "jobs": [
+        {
+          "job_id": 78998556465,
+          "job_name": "Parse trigger and determine test scope",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:16:14Z",
+          "completed_at": "2026-06-02T04:16:14Z"
+        },
+        {
+          "job_id": 78998556509,
+          "job_name": "doc-test",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:16:14Z",
+          "completed_at": "2026-06-02T04:16:14Z"
+        },
+        {
+          "job_id": 78998556627,
+          "job_name": "Export global env vars as job outputs",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:16:14Z",
+          "completed_at": "2026-06-02T04:16:14Z"
+        },
+        {
+          "job_id": 78998556677,
+          "job_name": "Build nightly-a2 image",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:16:14Z",
+          "completed_at": "2026-06-02T04:16:14Z"
+        },
+        {
+          "job_id": 78998556781,
+          "job_name": "Generate accuracy test matrix",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:16:14Z",
+          "completed_at": "2026-06-02T04:16:14Z"
+        },
+        {
+          "job_id": 78998557109,
+          "job_name": "single-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:16:15Z",
+          "completed_at": "2026-06-02T04:16:14Z"
+        },
+        {
+          "job_id": 78998557117,
+          "job_name": "multi-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:16:15Z",
+          "completed_at": "2026-06-02T04:16:14Z"
+        },
+        {
+          "job_id": 78998557136,
+          "job_name": "single-node-accuracy-tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:16:15Z",
+          "completed_at": "2026-06-02T04:16:14Z"
+        },
+        {
+          "job_id": 78998557144,
+          "job_name": "single-node-accuracy-tests-pr-only",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:16:15Z",
+          "completed_at": "2026-06-02T04:16:14Z"
+        },
+        {
+          "job_id": 78998557277,
+          "job_name": "Merge benchmark artifacts into nightly-a2.zip",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:16:15Z",
+          "completed_at": "2026-06-02T04:16:14Z"
+        },
+        {
+          "job_id": 78998557303,
+          "job_name": "clear-pre-logs",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:16:15Z",
+          "completed_at": "2026-06-02T04:16:14Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26798034715,
+      "workflow_name": "Image Build and Push",
+      "conclusion": "skipped",
+      "status": "completed",
+      "branch": "profile-graph",
+      "created_at": "2026-06-02T04:16:14Z",
+      "updated_at": "2026-06-02T04:16:14Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26798034715",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 78998556361,
+          "job_name": "Image Build and Push",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:16:14Z",
+          "completed_at": "2026-06-02T04:16:14Z"
+        },
+        {
+          "job_id": 78998556518,
+          "job_name": "Image Build and Push",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:16:14Z",
+          "completed_at": "2026-06-02T04:16:14Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26798033845,
+      "workflow_name": "PR Create",
+      "conclusion": "success",
+      "status": "completed",
+      "branch": "profile-graph",
+      "created_at": "2026-06-02T04:16:12Z",
+      "updated_at": "2026-06-02T04:16:28Z",
+      "event": "pull_request_target",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26798033845",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 78998553350,
+          "job_name": "PR create action",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:16:14Z",
+          "completed_at": "2026-06-02T04:16:28Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26798033841,
+      "workflow_name": "Merge Conflict Labeler",
+      "conclusion": "success",
+      "status": "completed",
+      "branch": "profile-graph",
+      "created_at": "2026-06-02T04:16:12Z",
+      "updated_at": "2026-06-02T04:16:20Z",
+      "event": "pull_request_target",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26798033841",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 78998553305,
+          "job_name": "main",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:16:14Z",
+          "completed_at": "2026-06-02T04:16:19Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26797669729,
+      "workflow_name": "Issue Create/Update Labeler",
+      "conclusion": "success",
+      "status": "completed",
+      "branch": "main",
+      "created_at": "2026-06-02T04:04:26Z",
+      "updated_at": "2026-06-02T04:04:32Z",
+      "event": "issues",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26797669729",
+      "pipeline_type": "other",
+      "jobs": [
+        {
+          "job_id": 78997450137,
+          "job_name": "triage",
+          "conclusion": "success",
+          "started_at": "2026-06-02T04:04:28Z",
+          "completed_at": "2026-06-02T04:04:31Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26797293224,
+      "workflow_name": "Cancel runs on PR close",
+      "conclusion": "success",
+      "status": "completed",
+      "branch": "fix/chunk-wqb-matmul-65536-0.20.2rc",
+      "created_at": "2026-06-02T03:53:08Z",
+      "updated_at": "2026-06-02T03:53:14Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26797293224",
+      "pipeline_type": "other",
+      "jobs": [
+        {
+          "job_id": 78996336025,
+          "job_name": "cancel",
+          "conclusion": "success",
+          "started_at": "2026-06-02T03:53:10Z",
+          "completed_at": "2026-06-02T03:53:14Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26797285255,
+      "workflow_name": "Nightly-A2",
+      "conclusion": "skipped",
+      "status": "completed",
+      "branch": "0525_log",
+      "created_at": "2026-06-02T03:52:54Z",
+      "updated_at": "2026-06-02T03:52:56Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26797285255",
+      "pipeline_type": "nightly",
+      "jobs": [
+        {
+          "job_id": 78996313538,
+          "job_name": "Parse trigger and determine test scope",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:52:55Z",
+          "completed_at": "2026-06-02T03:52:55Z"
+        },
+        {
+          "job_id": 78996313778,
+          "job_name": "Build nightly-a2 image",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:52:55Z",
+          "completed_at": "2026-06-02T03:52:55Z"
+        },
+        {
+          "job_id": 78996313780,
+          "job_name": "doc-test",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:52:55Z",
+          "completed_at": "2026-06-02T03:52:55Z"
+        },
+        {
+          "job_id": 78996313870,
+          "job_name": "single-node-accuracy-tests-pr-only",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:52:55Z",
+          "completed_at": "2026-06-02T03:52:55Z"
+        },
+        {
+          "job_id": 78996313962,
+          "job_name": "single-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:52:55Z",
+          "completed_at": "2026-06-02T03:52:55Z"
+        },
+        {
+          "job_id": 78996313965,
+          "job_name": "Generate accuracy test matrix",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:52:55Z",
+          "completed_at": "2026-06-02T03:52:55Z"
+        },
+        {
+          "job_id": 78996313980,
+          "job_name": "Export global env vars as job outputs",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:52:55Z",
+          "completed_at": "2026-06-02T03:52:55Z"
+        },
+        {
+          "job_id": 78996314002,
+          "job_name": "single-node-accuracy-tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:52:55Z",
+          "completed_at": "2026-06-02T03:52:55Z"
+        },
+        {
+          "job_id": 78996314217,
+          "job_name": "multi-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:52:55Z",
+          "completed_at": "2026-06-02T03:52:55Z"
+        },
+        {
+          "job_id": 78996314274,
+          "job_name": "Merge benchmark artifacts into nightly-a2.zip",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:52:55Z",
+          "completed_at": "2026-06-02T03:52:55Z"
+        },
+        {
+          "job_id": 78996314330,
+          "job_name": "clear-pre-logs",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:52:55Z",
+          "completed_at": "2026-06-02T03:52:55Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26797285252,
+      "workflow_name": "Image Build and Push",
+      "conclusion": "skipped",
+      "status": "completed",
+      "branch": "0525_log",
+      "created_at": "2026-06-02T03:52:54Z",
+      "updated_at": "2026-06-02T03:52:55Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26797285252",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 78996313629,
+          "job_name": "Image Build and Push",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:52:55Z",
+          "completed_at": "2026-06-02T03:52:55Z"
+        },
+        {
+          "job_id": 78996324847,
+          "job_name": "Image Build and Push",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:02Z",
+          "completed_at": "2026-06-02T03:52:55Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26797285250,
+      "workflow_name": "Nightly-A3",
+      "conclusion": "skipped",
+      "status": "completed",
+      "branch": "0525_log",
+      "created_at": "2026-06-02T03:52:54Z",
+      "updated_at": "2026-06-02T03:52:56Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26797285250",
+      "pipeline_type": "nightly",
+      "jobs": [
+        {
+          "job_id": 78996313799,
+          "job_name": "Build nightly-a3 image",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:52:55Z",
+          "completed_at": "2026-06-02T03:52:55Z"
+        },
+        {
+          "job_id": 78996313923,
+          "job_name": "Parse trigger and determine test scope",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:52:55Z",
+          "completed_at": "2026-06-02T03:52:55Z"
+        },
+        {
+          "job_id": 78996314164,
+          "job_name": "Export global env vars as job outputs",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:52:55Z",
+          "completed_at": "2026-06-02T03:52:55Z"
+        },
+        {
+          "job_id": 78996314287,
+          "job_name": "multi-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:52:55Z",
+          "completed_at": "2026-06-02T03:52:55Z"
+        },
+        {
+          "job_id": 78996314416,
+          "job_name": "double-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:52:55Z",
+          "completed_at": "2026-06-02T03:52:55Z"
+        },
+        {
+          "job_id": 78996314487,
+          "job_name": "single-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:52:56Z",
+          "completed_at": "2026-06-02T03:52:55Z"
+        },
+        {
+          "job_id": 78996314639,
+          "job_name": "clear-pre-logs",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:52:56Z",
+          "completed_at": "2026-06-02T03:52:55Z"
+        },
+        {
+          "job_id": 78996314703,
+          "job_name": "single-node",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:52:56Z",
+          "completed_at": "2026-06-02T03:52:55Z"
+        },
+        {
+          "job_id": 78996314805,
+          "job_name": "Merge benchmark artifacts into nightly-a3.zip",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:52:56Z",
+          "completed_at": "2026-06-02T03:52:55Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26797285249,
+      "workflow_name": "E2E-Full",
+      "conclusion": "queued",
+      "status": "queued",
+      "branch": "0525_log",
+      "created_at": "2026-06-02T03:52:54Z",
+      "updated_at": "2026-06-02T03:54:08Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26797285249",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 78996313441,
+          "job_name": "changes",
+          "conclusion": "success",
+          "started_at": "2026-06-02T03:53:23Z",
+          "completed_at": "2026-06-02T03:54:08Z"
+        },
+        {
+          "job_id": 78996313468,
+          "job_name": "Parse /e2e comment / Parse /e2e comment",
+          "conclusion": "success",
+          "started_at": "2026-06-02T03:53:23Z",
+          "completed_at": "2026-06-02T03:53:34Z"
+        },
+        {
+          "job_id": 78996313639,
+          "job_name": "Parse /e2e comment / Parse nightly trigger and determine test scope",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:52:55Z",
+          "completed_at": "2026-06-02T03:52:55Z"
+        },
+        {
+          "job_id": 78996376684,
+          "job_name": "e2e-comment (${{ matrix.vllm_version }})",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:34Z",
+          "completed_at": "2026-06-02T03:53:34Z"
+        },
+        {
+          "job_id": 78996430196,
+          "job_name": "e2e-full (9090368b650896bf5fc990c921df7eb4c20355a5) / multicard-2-full (0)",
+          "conclusion": "in_progress",
+          "started_at": "2026-06-02T04:26:37Z",
+          "completed_at": null
+        },
+        {
+          "job_id": 78996430202,
+          "job_name": "e2e-full (9090368b650896bf5fc990c921df7eb4c20355a5) / singlecard-full (0)",
+          "conclusion": "in_progress",
+          "started_at": "2026-06-02T03:54:30Z",
+          "completed_at": null
+        },
+        {
+          "job_id": 78996430217,
+          "job_name": "e2e-full (9090368b650896bf5fc990c921df7eb4c20355a5) / singlecard-full (1)",
+          "conclusion": "in_progress",
+          "started_at": "2026-06-02T03:54:34Z",
+          "completed_at": null
+        },
+        {
+          "job_id": 78996430262,
+          "job_name": "e2e-full (9090368b650896bf5fc990c921df7eb4c20355a5) / multicard-4-full (0)",
+          "conclusion": "queued",
+          "started_at": "2026-06-02T03:54:08Z",
+          "completed_at": null
+        },
+        {
+          "job_id": 78996430277,
+          "job_name": "e2e-full (v0.20.2) / singlecard-full (1)",
+          "conclusion": "in_progress",
+          "started_at": "2026-06-02T03:54:43Z",
+          "completed_at": null
+        },
+        {
+          "job_id": 78996430278,
+          "job_name": "e2e-full (v0.20.2) / singlecard-full (0)",
+          "conclusion": "in_progress",
+          "started_at": "2026-06-02T03:54:43Z",
+          "completed_at": null
+        },
+        {
+          "job_id": 78996430284,
+          "job_name": "e2e-full (v0.20.2) / multicard-2-full (0)",
+          "conclusion": "in_progress",
+          "started_at": "2026-06-02T04:26:49Z",
+          "completed_at": null
+        },
+        {
+          "job_id": 78996430292,
+          "job_name": "e2e-full (v0.20.2) / multicard-4-full (0)",
+          "conclusion": "queued",
+          "started_at": "2026-06-02T03:54:08Z",
+          "completed_at": null
+        },
+        {
+          "job_id": 78996430471,
+          "job_name": "e2e-full (9090368b650896bf5fc990c921df7eb4c20355a5) / 310p singlecard",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:54:08Z",
+          "completed_at": "2026-06-02T03:54:08Z"
+        },
+        {
+          "job_id": 78996430495,
+          "job_name": "e2e-full (9090368b650896bf5fc990c921df7eb4c20355a5) / multicard-4-light",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:54:08Z",
+          "completed_at": "2026-06-02T03:54:08Z"
+        },
+        {
+          "job_id": 78996430529,
+          "job_name": "e2e-full (v0.20.2) / 310p multicards 4cards",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:54:08Z",
+          "completed_at": "2026-06-02T03:54:08Z"
+        },
+        {
+          "job_id": 78996430552,
+          "job_name": "e2e-full (v0.20.2) / singlecard-light",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:54:08Z",
+          "completed_at": "2026-06-02T03:54:08Z"
+        },
+        {
+          "job_id": 78996430685,
+          "job_name": "e2e-full (9090368b650896bf5fc990c921df7eb4c20355a5) / 310p multicards 4cards",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:54:08Z",
+          "completed_at": "2026-06-02T03:54:08Z"
+        },
+        {
+          "job_id": 78996430728,
+          "job_name": "e2e-full (9090368b650896bf5fc990c921df7eb4c20355a5) / multicard-2-light",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:54:08Z",
+          "completed_at": "2026-06-02T03:54:08Z"
+        },
+        {
+          "job_id": 78996430752,
+          "job_name": "e2e-full (v0.20.2) / multicard-2-light",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:54:09Z",
+          "completed_at": "2026-06-02T03:54:08Z"
+        },
+        {
+          "job_id": 78996430792,
+          "job_name": "e2e-full (9090368b650896bf5fc990c921df7eb4c20355a5) / singlecard-light",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:54:09Z",
+          "completed_at": "2026-06-02T03:54:08Z"
+        },
+        {
+          "job_id": 78996430828,
+          "job_name": "e2e-full (v0.20.2) / 310p singlecard",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:54:09Z",
+          "completed_at": "2026-06-02T03:54:08Z"
+        },
+        {
+          "job_id": 78996430864,
+          "job_name": "e2e-full (v0.20.2) / multicard-4-light",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:54:09Z",
+          "completed_at": "2026-06-02T03:54:08Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26797285245,
+      "workflow_name": "E2E-Light",
+      "conclusion": "success",
+      "status": "completed",
+      "branch": "0525_log",
+      "created_at": "2026-06-02T03:52:54Z",
+      "updated_at": "2026-06-02T04:31:30Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26797285245",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 78996313269,
+          "job_name": "changes",
+          "conclusion": "success",
+          "started_at": "2026-06-02T03:53:15Z",
+          "completed_at": "2026-06-02T03:54:21Z"
+        },
+        {
+          "job_id": 78996313289,
+          "job_name": "lint / validate-pr-title",
+          "conclusion": "success",
+          "started_at": "2026-06-02T03:53:22Z",
+          "completed_at": "2026-06-02T03:53:46Z"
+        },
+        {
+          "job_id": 78996394428,
+          "job_name": "lint / pre-commit",
+          "conclusion": "success",
+          "started_at": "2026-06-02T03:54:08Z",
+          "completed_at": "2026-06-02T03:57:15Z"
+        },
+        {
+          "job_id": 78996726721,
+          "job_name": "smart test (v0.20.2) / smart-ut (a2 x1)",
+          "conclusion": "success",
+          "started_at": "2026-06-02T03:57:49Z",
+          "completed_at": "2026-06-02T04:31:29Z"
+        },
+        {
+          "job_id": 78996726725,
+          "job_name": "smart test (v0.20.2) / smart-ut (cpu x0)",
+          "conclusion": "success",
+          "started_at": "2026-06-02T03:57:42Z",
+          "completed_at": "2026-06-02T04:07:12Z"
+        },
+        {
+          "job_id": 78996726732,
+          "job_name": "smart test (9090368b650896bf5fc990c921df7eb4c20355a5) / smart-ut (a2 x1)",
+          "conclusion": "success",
+          "started_at": "2026-06-02T03:57:52Z",
+          "completed_at": "2026-06-02T04:31:18Z"
+        },
+        {
+          "job_id": 78996726743,
+          "job_name": "smart test (9090368b650896bf5fc990c921df7eb4c20355a5) / smart-ut (cpu x0)",
+          "conclusion": "success",
+          "started_at": "2026-06-02T03:57:52Z",
+          "completed_at": "2026-06-02T04:06:55Z"
+        },
+        {
+          "job_id": 78996726902,
+          "job_name": "e2e-light",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:57:15Z",
+          "completed_at": "2026-06-02T03:57:15Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26797285017,
+      "workflow_name": "Merge Conflict Labeler",
+      "conclusion": "success",
+      "status": "completed",
+      "branch": "0525_log",
+      "created_at": "2026-06-02T03:52:54Z",
+      "updated_at": "2026-06-02T03:53:04Z",
+      "event": "pull_request_target",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26797285017",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 78996312701,
+          "job_name": "main",
+          "conclusion": "success",
+          "started_at": "2026-06-02T03:52:56Z",
+          "completed_at": "2026-06-02T03:53:03Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26797284975,
+      "workflow_name": "PR Create",
+      "conclusion": "success",
+      "status": "completed",
+      "branch": "0525_log",
+      "created_at": "2026-06-02T03:52:54Z",
+      "updated_at": "2026-06-02T03:53:18Z",
+      "event": "pull_request_target",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26797284975",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 78996312619,
+          "job_name": "PR create action",
+          "conclusion": "success",
+          "started_at": "2026-06-02T03:52:56Z",
+          "completed_at": "2026-06-02T03:53:18Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26797279873,
+      "workflow_name": "E2E-Full",
+      "conclusion": "skipped",
+      "status": "completed",
+      "branch": "zxy_models",
+      "created_at": "2026-06-02T03:52:45Z",
+      "updated_at": "2026-06-02T03:52:46Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26797279873",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 78996298882,
+          "job_name": "changes",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:52:46Z",
+          "completed_at": "2026-06-02T03:52:46Z"
+        },
+        {
+          "job_id": 78996298987,
+          "job_name": "e2e-comment (${{ matrix.vllm_version }})",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:52:46Z",
+          "completed_at": "2026-06-02T03:52:46Z"
+        },
+        {
+          "job_id": 78996299039,
+          "job_name": "Parse /e2e comment",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:52:46Z",
+          "completed_at": "2026-06-02T03:52:46Z"
+        },
+        {
+          "job_id": 78996299089,
+          "job_name": "e2e-full",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:52:46Z",
+          "completed_at": "2026-06-02T03:52:46Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26797279866,
+      "workflow_name": "Nightly-A2",
+      "conclusion": "failure",
+      "status": "completed",
+      "branch": "zxy_models",
+      "created_at": "2026-06-02T03:52:45Z",
+      "updated_at": "2026-06-02T04:20:01Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26797279866",
+      "pipeline_type": "nightly",
+      "jobs": [
+        {
+          "job_id": 78996298517,
+          "job_name": "Parse trigger and determine test scope / Parse nightly trigger and determine test scope",
+          "conclusion": "success",
+          "started_at": "2026-06-02T03:53:09Z",
+          "completed_at": "2026-06-02T03:53:20Z"
+        },
+        {
+          "job_id": 78996298688,
+          "job_name": "doc-test",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:52:46Z",
+          "completed_at": "2026-06-02T03:52:45Z"
+        },
+        {
+          "job_id": 78996298917,
+          "job_name": "Build nightly-a2 image",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:52:46Z",
+          "completed_at": "2026-06-02T03:52:45Z"
+        },
+        {
+          "job_id": 78996298990,
+          "job_name": "Parse trigger and determine test scope / Parse /e2e comment",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:52:46Z",
+          "completed_at": "2026-06-02T03:52:46Z"
+        },
+        {
+          "job_id": 78996355098,
+          "job_name": "Export global env vars as job outputs",
+          "conclusion": "success",
+          "started_at": "2026-06-02T03:53:42Z",
+          "completed_at": "2026-06-02T03:53:50Z"
+        },
+        {
+          "job_id": 78996355369,
+          "job_name": "Generate accuracy test matrix",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:21Z",
+          "completed_at": "2026-06-02T03:53:20Z"
+        },
+        {
+          "job_id": 78996401093,
+          "job_name": "single-node (main, qwen3-0.6b-multi-instance, linux-aarch64-a2b3-1, Qwen3-0.6B-multi-instance.yaml) / qwen3-0.6b-multi-instance",
+          "conclusion": "failure",
+          "started_at": "2026-06-02T03:54:18Z",
+          "completed_at": "2026-06-02T04:20:00Z"
+        },
+        {
+          "job_id": 78996401165,
+          "job_name": "single-node-accuracy-tests-pr-only",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:50Z",
+          "completed_at": "2026-06-02T03:53:50Z"
+        },
+        {
+          "job_id": 78996401345,
+          "job_name": "single-node (main, test_custom_op, linux-aarch64-a2b3-1, tests/e2e/nightly/single_node/ops/single... / inputs.name || inputs.config_file_path || inputs.tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:50Z",
+          "completed_at": "2026-06-02T03:53:50Z"
+        },
+        {
+          "job_id": 78996401379,
+          "job_name": "single-node (main, Qwen3.5-27B-w8a8-A2, linux-aarch64-a2b3-2, Qwen3.5-27B-w8a8-A2.yaml) / inputs.name || inputs.config_file_path || inputs.tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:50Z",
+          "completed_at": "2026-06-02T03:53:50Z"
+        },
+        {
+          "job_id": 78996401410,
+          "job_name": "single-node-accuracy-tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:50Z",
+          "completed_at": "2026-06-02T03:53:50Z"
+        },
+        {
+          "job_id": 78996401433,
+          "job_name": "single-node (main, MiniMax-M2.5-w8a8-QuaRot-A2, linux-aarch64-a2b3-8, MiniMax-M2.5-w8a8-QuaRot-A2... / inputs.name || inputs.config_file_path || inputs.tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:50Z",
+          "completed_at": "2026-06-02T03:53:50Z"
+        },
+        {
+          "job_id": 78996401475,
+          "job_name": "single-node (main, qwen3-vl-32b-instruct-w8a8, linux-aarch64-a2b3-4, Qwen3-VL-32B-Instruct-W8A8.y... / inputs.name || inputs.config_file_path || inputs.tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:50Z",
+          "completed_at": "2026-06-02T03:53:50Z"
+        },
+        {
+          "job_id": 78996401551,
+          "job_name": "single-node (main, qwen3-32b-int8, linux-aarch64-a2b3-4, Qwen3-32B-Int8-A2.yaml) / inputs.name || inputs.config_file_path || inputs.tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:50Z",
+          "completed_at": "2026-06-02T03:53:50Z"
+        },
+        {
+          "job_id": 78996401563,
+          "job_name": "single-node (main, test_custom_op_multi_card, linux-aarch64-a2b3-4, tests/e2e/nightly/single_node... / inputs.name || inputs.config_file_path || inputs.tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:50Z",
+          "completed_at": "2026-06-02T03:53:50Z"
+        },
+        {
+          "job_id": 78996401590,
+          "job_name": "single-node (main, Qwen3.5-397B-A17B-w4a8-mtp, linux-aarch64-a2b3-8, Qwen3.5-122B-A10B-W8A8-A2.yaml) / inputs.name || inputs.config_file_path || inputs.tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:50Z",
+          "completed_at": "2026-06-02T03:53:50Z"
+        },
+        {
+          "job_id": 78998898388,
+          "job_name": "multi-node (main, multi-node-Kimi-K2.5-W4A8-A2, Kimi-K2_5-W4A8-A2-dual-nodes.yaml, 2) / inputs.config_file_path",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:20:01Z",
+          "completed_at": "2026-06-02T04:20:00Z"
+        },
+        {
+          "job_id": 78998898519,
+          "job_name": "multi-node (main, multi-node-GLM-5.1-w8a8-A2, GLM5_1-W8A8-A2-dual-nodes.yaml, 2) / inputs.config_file_path",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:20:01Z",
+          "completed_at": "2026-06-02T04:20:00Z"
+        },
+        {
+          "job_id": 78998898530,
+          "job_name": "multi-node (main, multi-node-qwen3-235b-dp, Qwen3-235B-A22B-A2.yaml, 2) / inputs.config_file_path",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:20:01Z",
+          "completed_at": "2026-06-02T04:20:00Z"
+        },
+        {
+          "job_id": 78998898662,
+          "job_name": "clear-pre-logs",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:20:01Z",
+          "completed_at": "2026-06-02T04:20:00Z"
+        },
+        {
+          "job_id": 78998898844,
+          "job_name": "Merge benchmark artifacts into nightly-a2.zip",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T04:20:01Z",
+          "completed_at": "2026-06-02T04:20:00Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26797279864,
+      "workflow_name": "Image Build and Push",
+      "conclusion": "skipped",
+      "status": "completed",
+      "branch": "zxy_models",
+      "created_at": "2026-06-02T03:52:45Z",
+      "updated_at": "2026-06-02T03:52:46Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26797279864",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 78996298656,
+          "job_name": "Image Build and Push",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:52:46Z",
+          "completed_at": "2026-06-02T03:52:45Z"
+        },
+        {
+          "job_id": 78996298825,
+          "job_name": "Image Build and Push",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:52:46Z",
+          "completed_at": "2026-06-02T03:52:45Z"
+        }
+      ]
+    },
+    {
+      "run_id": 26797279858,
+      "workflow_name": "Nightly-A3",
+      "conclusion": "success",
+      "status": "completed",
+      "branch": "zxy_models",
+      "created_at": "2026-06-02T03:52:45Z",
+      "updated_at": "2026-06-02T03:53:27Z",
+      "event": "pull_request",
+      "url": "https://github.com/vllm-project/vllm-ascend/actions/runs/26797279858",
+      "pipeline_type": "nightly",
+      "jobs": [
+        {
+          "job_id": 78996298560,
+          "job_name": "Parse trigger and determine test scope / Parse nightly trigger and determine test scope",
+          "conclusion": "success",
+          "started_at": "2026-06-02T03:53:06Z",
+          "completed_at": "2026-06-02T03:53:18Z"
+        },
+        {
+          "job_id": 78996298861,
+          "job_name": "Parse trigger and determine test scope / Parse /e2e comment",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:52:46Z",
+          "completed_at": "2026-06-02T03:52:46Z"
+        },
+        {
+          "job_id": 78996298926,
+          "job_name": "Build nightly-a3 image",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:52:46Z",
+          "completed_at": "2026-06-02T03:52:45Z"
+        },
+        {
+          "job_id": 78996351122,
+          "job_name": "Export global env vars as job outputs",
+          "conclusion": "success",
+          "started_at": "2026-06-02T03:53:20Z",
+          "completed_at": "2026-06-02T03:53:24Z"
+        },
+        {
+          "job_id": 78996361263,
+          "job_name": "multi-node (main, multi-node-deepseek-v3.2-W8A8-EP, DeepSeek-V3_2-W8A8-EP.yaml, 4) / inputs.config_file_path",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:24Z",
+          "completed_at": "2026-06-02T03:53:24Z"
+        },
+        {
+          "job_id": 78996361443,
+          "job_name": "multi-node (main, multi-node-GLM5_1-W8A8-EP, GLM5_1-W8A8-EP.yaml, 4) / inputs.config_file_path",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:24Z",
+          "completed_at": "2026-06-02T03:53:24Z"
+        },
+        {
+          "job_id": 78996361478,
+          "job_name": "multi-node (main, GLM5_1-W8A8-EP-external, GLM5_1-W8A8-EP-external.yaml, 4, tests/e2e/nightly/mul... / inputs.config_file_path",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:25Z",
+          "completed_at": "2026-06-02T03:53:24Z"
+        },
+        {
+          "job_id": 78996362009,
+          "job_name": "double-node (main, multi-node-qwenw8a8-2node-eplb, Qwen3-235B-W8A8-EPLB.yaml, 2) / inputs.config_file_path",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:25Z",
+          "completed_at": "2026-06-02T03:53:25Z"
+        },
+        {
+          "job_id": 78996362074,
+          "job_name": "double-node (main, multi-node-deepseek-r1-w8a8-longseq, DeepSeek-R1-W8A8-longseq.yaml, 2) / inputs.config_file_path",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:25Z",
+          "completed_at": "2026-06-02T03:53:25Z"
+        },
+        {
+          "job_id": 78996362080,
+          "job_name": "double-node (main, multi-node-qwen3-dp, Qwen3-235B-A22B.yaml, 2) / inputs.config_file_path",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:25Z",
+          "completed_at": "2026-06-02T03:53:25Z"
+        },
+        {
+          "job_id": 78996362354,
+          "job_name": "double-node (main, multi-node-qwenw8a8-2node-longseq, Qwen3-235B-W8A8-longseq.yaml, 2) / inputs.config_file_path",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:25Z",
+          "completed_at": "2026-06-02T03:53:25Z"
+        },
+        {
+          "job_id": 78996362424,
+          "job_name": "double-node (main, multi-node-dpsk3.2-2node, DeepSeek-V3_2-W8A8-A3-dual-nodes.yaml, 2) / inputs.config_file_path",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:25Z",
+          "completed_at": "2026-06-02T03:53:25Z"
+        },
+        {
+          "job_id": 78996362438,
+          "job_name": "double-node (main, multi-node-qwen3-dp-mooncake-layerwise, Qwen3-235B-A22B-Mooncake-Layerwise.yam... / inputs.config_file_path",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:25Z",
+          "completed_at": "2026-06-02T03:53:25Z"
+        },
+        {
+          "job_id": 78996362567,
+          "job_name": "double-node (main, multi-node-qwen-vl-disagg-pd, Qwen3-VL-235B-disagg-pd.yaml, 2) / inputs.config_file_path",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:25Z",
+          "completed_at": "2026-06-02T03:53:25Z"
+        },
+        {
+          "job_id": 78996362612,
+          "job_name": "double-node (main, multi-node-qwen-disagg-pd, Qwen3-235B-disagg-pd.yaml, 2) / inputs.config_file_path",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:25Z",
+          "completed_at": "2026-06-02T03:53:25Z"
+        },
+        {
+          "job_id": 78996362759,
+          "job_name": "double-node (main, multi-node-deepseek-v3.1, DeepSeek-V3.1-BF16.yaml, 2) / inputs.config_file_path",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:25Z",
+          "completed_at": "2026-06-02T03:53:25Z"
+        },
+        {
+          "job_id": 78996362851,
+          "job_name": "double-node (main, multi-node-GLM-5.1-w8a8-A3, GLM5_1-W8A8-A3-dual-nodes.yaml, 2) / inputs.config_file_path",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:25Z",
+          "completed_at": "2026-06-02T03:53:25Z"
+        },
+        {
+          "job_id": 78996363000,
+          "job_name": "clear-pre-logs",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:25Z",
+          "completed_at": "2026-06-02T03:53:25Z"
+        },
+        {
+          "job_id": 78996363108,
+          "job_name": "single-node (main, deepseek-r1-0528-w8a8-prefix-cache, linux-aarch64-a3-16, Prefix-Cache-DeepSeek... / inputs.name || inputs.config_file_path || inputs.tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:26Z",
+          "completed_at": "2026-06-02T03:53:25Z"
+        },
+        {
+          "job_id": 78996363135,
+          "job_name": "single-node (main, kimi-k2-thinking, linux-aarch64-a3-16, Kimi-K2-Thinking.yaml) / inputs.name || inputs.config_file_path || inputs.tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:26Z",
+          "completed_at": "2026-06-02T03:53:25Z"
+        },
+        {
+          "job_id": 78996363144,
+          "job_name": "single-node (main, mtpx-deepseek-r1-0528-w8a8, linux-aarch64-a3-16, MTPX-DeepSeek-R1-0528-W8A8.yaml) / inputs.name || inputs.config_file_path || inputs.tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:26Z",
+          "completed_at": "2026-06-02T03:53:25Z"
+        },
+        {
+          "job_id": 78996363209,
+          "job_name": "single-node (main, deepseek-r1-0528-w8a8, linux-aarch64-a3-16, DeepSeek-R1-0528-W8A8.yaml) / inputs.name || inputs.config_file_path || inputs.tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:26Z",
+          "completed_at": "2026-06-02T03:53:25Z"
+        },
+        {
+          "job_id": 78996363233,
+          "job_name": "single-node (main, glm-4.7-w8a8, linux-aarch64-a3-16, GLM-4.7.yaml) / inputs.name || inputs.config_file_path || inputs.tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:26Z",
+          "completed_at": "2026-06-02T03:53:25Z"
+        },
+        {
+          "job_id": 78996363265,
+          "job_name": "single-node (main, qwen3-vl-235b-a22b-instruct-w8a8, linux-aarch64-a3-16, Qwen3-VL-235B-A22B-Inst... / inputs.name || inputs.config_file_path || inputs.tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:26Z",
+          "completed_at": "2026-06-02T03:53:25Z"
+        },
+        {
+          "job_id": 78996363273,
+          "job_name": "single-node (main, deepseek-v3-2-w8a8, linux-aarch64-a3-16, DeepSeek-V3.2-W8A8.yaml) / inputs.name || inputs.config_file_path || inputs.tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:26Z",
+          "completed_at": "2026-06-02T03:53:25Z"
+        },
+        {
+          "job_id": 78996363364,
+          "job_name": "single-node (main, kimi-k2.5, linux-aarch64-a3-16, Kimi-K2.5.yaml) / inputs.name || inputs.config_file_path || inputs.tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:26Z",
+          "completed_at": "2026-06-02T03:53:26Z"
+        },
+        {
+          "job_id": 78996363391,
+          "job_name": "single-node (main, Qwen3.5-27B-w8a8-A3, linux-aarch64-a3-2, Qwen3.5-27B-w8a8-A3.yaml) / inputs.name || inputs.config_file_path || inputs.tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:26Z",
+          "completed_at": "2026-06-02T03:53:26Z"
+        },
+        {
+          "job_id": 78996363400,
+          "job_name": "single-node (main, Qwen3.5-397B-A17B-w8a8-mtp, linux-aarch64-a3-16, Qwen3.5-397B-A17B-W8A8-mtp-A3... / inputs.name || inputs.config_file_path || inputs.tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:26Z",
+          "completed_at": "2026-06-02T03:53:26Z"
+        },
+        {
+          "job_id": 78996363449,
+          "job_name": "single-node (main, qwen3-235b-a22b-w8a8, linux-aarch64-a3-16, Qwen3-235B-A22B-W8A8.yaml) / inputs.name || inputs.config_file_path || inputs.tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:26Z",
+          "completed_at": "2026-06-02T03:53:26Z"
+        },
+        {
+          "job_id": 78996363570,
+          "job_name": "single-node (main, DeepSeek-V4-Flash-W8A8-A3, linux-aarch64-a3-16, DeepSeek-V4-Flash-W8A8-A3.yaml) / inputs.name || inputs.config_file_path || inputs.tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:26Z",
+          "completed_at": "2026-06-02T03:53:26Z"
+        },
+        {
+          "job_id": 78996363586,
+          "job_name": "single-node (main, MiniMax-M2.5-w8a8-QuaRot-A3, linux-aarch64-a3-16, MiniMax-M2.5-w8a8-QuaRot-A3.... / inputs.name || inputs.config_file_path || inputs.tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:26Z",
+          "completed_at": "2026-06-02T03:53:26Z"
+        },
+        {
+          "job_id": 78996363609,
+          "job_name": "single-node (main, Qwen3.5-122B-A10B-W8A8-A3, linux-aarch64-a3-16, Qwen3.5-122B-A10B-W8A8-A3.yaml) / inputs.name || inputs.config_file_path || inputs.tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:26Z",
+          "completed_at": "2026-06-02T03:53:26Z"
+        },
+        {
+          "job_id": 78996363643,
+          "job_name": "single-node (main, custom-multi-ops, linux-aarch64-a3-16, tests/e2e/nightly/single_node/ops/multi... / inputs.name || inputs.config_file_path || inputs.tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:26Z",
+          "completed_at": "2026-06-02T03:53:26Z"
+        },
+        {
+          "job_id": 78996363676,
+          "job_name": "single-node (main, hy3-preview, linux-aarch64-a3-16, Hy3-preview.yaml) / inputs.name || inputs.config_file_path || inputs.tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:26Z",
+          "completed_at": "2026-06-02T03:53:26Z"
+        },
+        {
+          "job_id": 78996363914,
+          "job_name": "Merge benchmark artifacts into nightly-a3.zip",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:26Z",
+          "completed_at": "2026-06-02T03:53:26Z"
+        },
+        {
+          "job_id": 78996364180,
+          "job_name": "single-node (main, Qwen3-32B-QuaRot, linux-aarch64-a3-2, Qwen3-32B-QuaRot-eagle3.yaml) / inputs.name || inputs.config_file_path || inputs.tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:26Z",
+          "completed_at": "2026-06-02T03:53:26Z"
+        },
+        {
+          "job_id": 78996364194,
+          "job_name": "single-node (main, qwen3-30b-a3b-w8a8, linux-aarch64-a3-4, Qwen3-30B-A3B-W8A8.yaml) / inputs.name || inputs.config_file_path || inputs.tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:26Z",
+          "completed_at": "2026-06-02T03:53:26Z"
+        },
+        {
+          "job_id": 78996364237,
+          "job_name": "single-node (main, qwen3-32b-int8, linux-aarch64-a3-4, Qwen3-32B-Int8.yaml) / inputs.name || inputs.config_file_path || inputs.tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:26Z",
+          "completed_at": "2026-06-02T03:53:26Z"
+        },
+        {
+          "job_id": 78996364406,
+          "job_name": "single-node (main, Qwen3.5-27B-w8a8-A3, linux-aarch64-a3-2, Qwen3.5-27B-w8a8-A3.yaml) / inputs.name || inputs.config_file_path || inputs.tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:26Z",
+          "completed_at": "2026-06-02T03:53:26Z"
+        },
+        {
+          "job_id": 78996364438,
+          "job_name": "single-node (main, Qwen3-30B-A3B-W4A8-llm-compressor, linux-aarch64-a3-2, Qwen3-30B-A3B-W4A8-llm-... / inputs.name || inputs.config_file_path || inputs.tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:26Z",
+          "completed_at": "2026-06-02T03:53:26Z"
+        },
+        {
+          "job_id": 78996364444,
+          "job_name": "single-node (main, qwen3-32b-int8-prefix-cache, linux-aarch64-a3-4, Prefix-Cache-Qwen3-32B-Int8.y... / inputs.name || inputs.config_file_path || inputs.tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:26Z",
+          "completed_at": "2026-06-02T03:53:26Z"
+        },
+        {
+          "job_id": 78996364465,
+          "job_name": "single-node (main, qwen3-30b-acc, linux-aarch64-a3-4, tests/e2e/weekly/single_node/models/test_qw... / inputs.name || inputs.config_file_path || inputs.tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:26Z",
+          "completed_at": "2026-06-02T03:53:26Z"
+        },
+        {
+          "job_id": 78996364480,
+          "job_name": "single-node (main, Qwen3-30B-QuaRot, linux-aarch64-a3-2, Qwen3-30B-QuaRot-eagle3.yaml) / inputs.name || inputs.config_file_path || inputs.tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-02T03:53:26Z",
+          "completed_at": "2026-06-02T03:53:26Z"
         }
       ]
     }

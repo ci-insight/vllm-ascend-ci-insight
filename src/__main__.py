@@ -37,6 +37,12 @@ def main():
     parser.add_argument("--health", action="store_true", help="Only compute health/alert/interference")
     parser.add_argument("--refresh-ci-metrics", action="store_true", help="Collect full lightweight CI run/job metadata for health metrics")
     parser.add_argument("--metrics-limit", type=int, default=200, help="Max workflow runs to fetch for CI metrics")
+    parser.add_argument(
+        "--metrics-min-measured-per-pipeline",
+        type=int,
+        default=0,
+        help="Stop CI metadata collection after each core pipeline has at least N success/failure jobs (0 disables)",
+    )
     parser.add_argument("--no-notify", action="store_true", help="Skip notification sending")
     parser.add_argument("--lang", choices=["zh", "en"], default="en", help="Analysis output language (default: en)")
     args = parser.parse_args()
@@ -52,8 +58,16 @@ def main():
         print("  Health-only mode: computing from existing reports")
         reports = _load_existing_reports()
         if args.refresh_ci_metrics:
-            print(f"  Refreshing full CI metadata: days={args.days}, limit={args.metrics_limit}")
-            ci_metadata = collect_ci_metadata(days=args.days, limit=args.metrics_limit)
+            print(
+                "  Refreshing full CI metadata: "
+                f"days={args.days}, limit={args.metrics_limit}, "
+                f"min_measured={args.metrics_min_measured_per_pipeline}"
+            )
+            ci_metadata = collect_ci_metadata(
+                days=args.days,
+                limit=args.metrics_limit,
+                min_measured_per_pipeline=args.metrics_min_measured_per_pipeline,
+            )
             save_ci_metadata(ci_metadata)
         if not reports and not load_ci_metadata():
             print("No existing reports or CI metadata found. Run with --refresh-ci-metrics first.")
@@ -63,7 +77,11 @@ def main():
         print()
         if args.refresh_ci_metrics:
             print("[0/4] Collecting full CI metadata...")
-            ci_metadata = collect_ci_metadata(days=args.days, limit=args.metrics_limit)
+            ci_metadata = collect_ci_metadata(
+                days=args.days,
+                limit=args.metrics_limit,
+                min_measured_per_pipeline=args.metrics_min_measured_per_pipeline,
+            )
             save_ci_metadata(ci_metadata)
 
         # Phase 1: Collect
@@ -147,7 +165,7 @@ def main():
         rating = pdata["rating"]
         measured_total = pdata.get("measured_total", pdata.get("total", 0))
         score_text = "n/a" if score is None else f"{score:3d}"
-        sr_text = "no completed jobs" if measured_total == 0 else f"SR={pdata['success_rate']}% ({pdata['success']}/{measured_total} measured)"
+        sr_text = "no measured success/failure jobs" if measured_total == 0 else f"SR={pdata['success_rate']}% ({pdata['success']}/{measured_total} measured)"
         print(f"  {ptype:12s}: score={score_text} ({rating})  {sr_text}, {pdata['total']} total")
     if alerts:
         print(f"  Alerts: {len(alerts)} active")

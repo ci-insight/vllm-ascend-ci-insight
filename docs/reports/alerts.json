@@ -1,18 +1,45 @@
 {
-  "generated_at": "2026-06-02T03:35:37.742069+00:00",
+  "generated_at": "2026-06-02T05:32:57.187252+00:00",
   "alerts": [
     {
       "rule_id": "R002",
       "rule_name": "Low Health Score",
       "severity": "warning",
-      "message": "pr_e2e pipeline health score is 65/100 (below 70)",
+      "message": "nightly pipeline health score is 58/100 (below 70)",
+      "details": {
+        "pipeline_type": "nightly",
+        "score": 58,
+        "rating": "danger"
+      },
+      "triggered_at": "2026-06-02T05:32:57.187252+00:00",
+      "notification_suppressed": false
+    },
+    {
+      "rule_id": "R002",
+      "rule_name": "Low Health Score",
+      "severity": "warning",
+      "message": "pr_e2e pipeline health score is 66/100 (below 70)",
       "details": {
         "pipeline_type": "pr_e2e",
-        "score": 65,
+        "score": 66,
         "rating": "fair"
       },
-      "triggered_at": "2026-06-02T03:35:37.737030+00:00",
-      "notification_suppressed": true
+      "triggered_at": "2026-06-02T05:32:57.187252+00:00",
+      "notification_suppressed": false
+    },
+    {
+      "rule_id": "R004",
+      "rule_name": "Nightly Failure",
+      "severity": "critical",
+      "message": "Nightly pipeline has 1 failed measured job(s) out of 5",
+      "details": {
+        "pipeline_type": "nightly",
+        "failures": 1,
+        "measured_total": 5,
+        "total": 224
+      },
+      "triggered_at": "2026-06-02T05:32:57.187252+00:00",
+      "notification_suppressed": false
     }
   ]
 }

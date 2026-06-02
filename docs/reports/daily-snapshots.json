@@ -1,19 +1,36 @@
 {
-  "generated_at": "2026-06-02T03:35:37.750639+00:00",
+  "generated_at": "2026-06-02T05:32:57.210523+00:00",
   "pipeline_types": {
     "nightly": [
       {
         "date": "2026-06-02",
-        "total": 69,
-        "success": 0,
-        "failure": 0,
-        "success_rate": 0.0,
-        "health_score": null,
-        "avg_duration_sec": -0.6,
-        "rating": "insufficient_data",
+        "total": 224,
+        "success": 4,
+        "failure": 1,
+        "success_rate": 80.0,
+        "health_score": 58.0,
+        "avg_duration_sec": 6.3,
+        "rating": "danger",
         "trend": "flat",
-        "measured_total": 0,
-        "skipped": 69,
+        "measured_total": 5,
+        "skipped": 219,
+        "cancelled": 0,
+        "other": 0
+      }
+    ],
+    "other": [
+      {
+        "date": "2026-06-02",
+        "total": 2,
+        "success": 2,
+        "failure": 0,
+        "success_rate": 100.0,
+        "health_score": 90.0,
+        "avg_duration_sec": 3.5,
+        "rating": "good",
+        "trend": "flat",
+        "measured_total": 2,
+        "skipped": 0,
         "cancelled": 0,
         "other": 0
       }
@@ -21,18 +38,18 @@
     "pr_e2e": [
       {
         "date": "2026-06-02",
-        "total": 105,
-        "success": 20,
-        "failure": 2,
-        "success_rate": 91.0,
-        "health_score": 65.0,
-        "avg_duration_sec": 46.6,
+        "total": 214,
+        "success": 67,
+        "failure": 5,
+        "success_rate": 93.0,
+        "health_score": 66.0,
+        "avg_duration_sec": 88.8,
         "rating": "fair",
         "trend": "flat",
-        "measured_total": 22,
-        "skipped": 53,
-        "cancelled": 16,
-        "other": 14
+        "measured_total": 72,
+        "skipped": 98,
+        "cancelled": 3,
+        "other": 41
       }
     ]
   }
