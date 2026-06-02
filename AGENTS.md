@@ -23,7 +23,7 @@ ascend
 - `config/rules.json`: source of truth for pipeline/category classification rules.
 - `docs/`: static dashboard assets plus generated JSON reports.
 - `docs/rules.json`: dashboard copy of `config/rules.json`; keep it in sync.
-- `docs/specs/`: design notes and behavioral specs.
+- `specs/`: design notes and behavioral specs for agents and maintainers.
 - `scripts/run.sh`: authenticated end-to-end run wrapper.
 - `scripts/verify.sh`: pre-commit verification checklist.
 
