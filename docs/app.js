@@ -1,7 +1,12 @@
 const INDEX_URL = "reports/index.json";
+const CI_RUNS_URL = "reports/ci-runs.json";
 let allReports = [];
 let allAnalyses = [];
-let allJobs = []; // ALL jobs (including success) for CI stats
+let allJobs = []; // Current CI jobs when ci-runs.json exists, otherwise historical report jobs.
+let historicalJobs = [];
+let ciMetadata = null;
+let ciMetadataLoaded = false;
+let ciWorkflowRuns = [];
 let charts = {};
 
 // ---- Loaded from config/rules.json (single source of truth) ----
@@ -153,10 +158,12 @@ async function loadReports() {
   document.getElementById("reportList").innerHTML = `<div class="loading">${t("loading")}</div>`;
 
   try {
+    await loadCiMetadata();
     const resp = await fetch(INDEX_URL);
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     const data = await resp.json();
     allReports = data.reports || [];
+    renderDataSourceBanner(data);
     renderMetrics();
     renderReports();
     loadAnalysesData();
@@ -166,10 +173,95 @@ async function loadReports() {
   }
 }
 
+async function loadCiMetadata() {
+  if (ciMetadataLoaded) return ciMetadata;
+  ciMetadataLoaded = true;
+  try {
+    const resp = await fetch(CI_RUNS_URL);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    ciMetadata = await resp.json();
+    const seenJobs = new Set();
+    const jobs = [];
+    ciWorkflowRuns = (ciMetadata.runs || []).map(run => {
+      const runJobs = [];
+      for (const job of run.jobs || []) {
+        const jobId = job.job_id || `${run.run_id}:${job.job_name}:${job.started_at || ""}`;
+        if (seenJobs.has(jobId)) continue;
+        seenJobs.add(jobId);
+
+        const started = job.started_at ? new Date(job.started_at) : null;
+        const completed = job.completed_at ? new Date(job.completed_at) : null;
+        const created = run.created_at ? new Date(run.created_at) : started;
+        const item = {
+          job_name: job.job_name,
+          job_id: jobId,
+          conclusion: normalizeConclusion(job.conclusion || run.conclusion),
+          workflow_name: run.workflow_name,
+          pipeline_type: run.pipeline_type || classifyPipeline(run.workflow_name),
+          run_id: run.run_id,
+          branch: run.branch,
+          started_at: job.started_at,
+          completed_at: job.completed_at,
+          duration: started && completed ? Math.max(0, (completed - started) / 1000) : null,
+          queue_time: started && created ? Math.max(0, (started - created) / 1000) : null,
+          url: run.url,
+          source: "ci_metadata",
+        };
+        jobs.push(item);
+        runJobs.push(item);
+      }
+      return { ...run, jobs: runJobs };
+    });
+    allJobs = jobs;
+  } catch (e) {
+    ciMetadata = null;
+    ciWorkflowRuns = [];
+  }
+  return ciMetadata;
+}
+
+function normalizeConclusion(value) {
+  if (!value) return "other";
+  if (value === "completed") return "success";
+  return value;
+}
+
+function formatTimestamp(value) {
+  if (!value) return "unknown";
+  return new Date(value).toLocaleString(currentLang === "zh" ? "zh-CN" : "en-US", {
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+function renderDataSourceBanner(indexData) {
+  const el = document.getElementById("dataSourceBanner");
+  if (!el) return;
+  const reportCount = allReports.length;
+  const historicalTime = indexData?.generated_at ? formatTimestamp(indexData.generated_at) : "unknown";
+
+  let ciText = "Current CI metadata unavailable; CI Execution falls back to historical failure reports.";
+  if (ciMetadata) {
+    const jobs = allJobs || [];
+    const measured = jobs.filter(j => j.conclusion === "success" || j.conclusion === "failure").length;
+    const skipped = jobs.filter(j => j.conclusion === "skipped").length;
+    const pending = jobs.filter(j => ["queued", "in_progress", "pending"].includes(j.conclusion)).length;
+    ciText = `Current CI metadata: ${formatTimestamp(ciMetadata.generated_at)} · ${ciMetadata.runs?.length || 0}/${ciMetadata.limit || "?"} runs · ${measured}/${jobs.length} measured jobs · ${skipped} skipped · ${pending} pending`;
+  }
+
+  el.innerHTML = `
+    <div><strong>CI Execution / Health:</strong> ${escapeHtml(ciText)}</div>
+    <div><strong>Problem Analysis:</strong> historical failure reports · ${reportCount} reports · generated ${escapeHtml(historicalTime)}</div>
+    <div><strong>Refresh:</strong> reloads static JSON artifacts only; dynamic collection must update reports separately.</div>
+  `;
+}
+
 async function loadAnalysesData() {
   await loadRules(); // ensure classification rules are loaded
   allAnalyses = [];
-  allJobs = [];
+  historicalJobs = [];
   const seenJobIds = new Set();
   for (const r of allReports) {
     let data = null;
@@ -198,7 +290,7 @@ async function loadAnalysesData() {
             const started = new Date(job.started_at);
             const completed = new Date(job.completed_at);
             const created = new Date(run.created_at || job.started_at);
-            allJobs.push({
+          historicalJobs.push({
               job_name: job.job_name,
               job_id: job.job_id,
               conclusion: job.conclusion,
@@ -229,7 +321,7 @@ async function loadAnalysesData() {
           a._category = classifyJob(a, a.job_name);
           const parts = a.job_name.split(" / ");
           a._workflow = parts[0] || "unknown";
-          const matchedJob = allJobs.find(j => j.job_id === a.job_id);
+          const matchedJob = historicalJobs.find(j => j.job_id === a.job_id);
           a._pipeline_type = matchedJob ? matchedJob.pipeline_type : classifyPipeline(a.job_name);
           allAnalyses.push(a);
         }
@@ -242,6 +334,7 @@ async function loadAnalysesData() {
     renderCharts();
     renderReports();
   }
+  if (!ciMetadata) allJobs = historicalJobs;
   if (allJobs.length && activeTab === "ci-stats") renderCIStats();
 }
 
@@ -274,7 +367,7 @@ function renderMetrics() {
 
   // ── Pipeline-level stats from allJobs ──
   const ptStats = {};
-  const jobPool = allJobs.length ? allJobs : [];
+  const jobPool = historicalJobs.length ? historicalJobs : [];
   jobPool.forEach(j => {
     const pt = j.pipeline_type || "other";
     if (!ptStats[pt]) ptStats[pt] = { workflows: new Set(), runs: new Set(), total: 0, failed: 0 };
@@ -412,12 +505,17 @@ function percentile(arr, p) {
 }
 
 function fmtDuration(seconds) {
+  if (seconds === null || seconds === undefined || !Number.isFinite(seconds)) return "N/A";
   if (seconds < 60) return `${Math.round(seconds)}${t("ciSeconds")}`;
   if (seconds < 3600) return `${Math.round(seconds / 60)}${t("ciMinutes")}`;
   return `${(seconds / 3600).toFixed(1)}h`;
 }
 
 function renderCIStats() {
+  return renderCIStatsV2();
+}
+
+function renderCIStatsV2() {
   if (!allJobs.length) return;
   destroyCICharts();
 
@@ -426,11 +524,14 @@ function renderCIStats() {
   const jobs = ptFilter ? allJobs.filter(j => j.pipeline_type === ptFilter) : allJobs;
 
   // ── Job-level metrics ──
-  const durations = jobs.map(j => j.duration).filter(d => d > 0);
-  const queueTimes = jobs.map(j => j.queue_time).filter(q => q >= 0);
+  const timedJobs = jobs.filter(j => j.duration !== null && j.duration !== undefined);
+  const durations = timedJobs.map(j => j.duration).filter(d => d > 0);
+  const queueTimes = jobs.map(j => j.queue_time).filter(q => q !== null && q !== undefined && q >= 0);
   const avgDur = durations.reduce((s, d) => s + d, 0) / (durations.length || 1);
   const totalJobs = jobs.length;
   const success = jobs.filter(j => j.conclusion === "success").length;
+  const failure = jobs.filter(j => j.conclusion === "failure").length;
+  const measured = success + failure;
 
   // ── Workflow-run-level metrics ──
   const wfKey = j => `${j.workflow_name}::${j.run_id}`;
@@ -438,15 +539,16 @@ function renderCIStats() {
   jobs.forEach(j => { (wfGroups[wfKey(j)] ||= []).push(j); });
 
   _wfRuns = Object.values(wfGroups).map(jobs => {
-    const starts = jobs.map(j => new Date(j.started_at));
-    const ends = jobs.map(j => new Date(j.completed_at));
-    const firstStart = new Date(Math.min(...starts));
-    const lastEnd = new Date(Math.max(...ends));
-    const wallClock = (lastEnd - firstStart) / 1000;
-    const sumDur = jobs.reduce((s, j) => s + j.duration, 0);
+    const starts = jobs.map(j => j.started_at ? new Date(j.started_at) : null).filter(Boolean);
+    const ends = jobs.map(j => j.completed_at ? new Date(j.completed_at) : null).filter(Boolean);
+    const firstStart = starts.length ? new Date(Math.min(...starts)) : null;
+    const lastEnd = ends.length ? new Date(Math.max(...ends)) : firstStart;
+    const wallClock = firstStart && lastEnd ? Math.max(0, (lastEnd - firstStart) / 1000) : null;
+    const sumDur = jobs.reduce((s, j) => s + (j.duration || 0), 0);
     // Compute max concurrency: count overlapping jobs
     const events = [];
     jobs.forEach(j => {
+      if (!j.started_at || !j.completed_at) return;
       events.push({ t: new Date(j.started_at), d: 1 });
       events.push({ t: new Date(j.completed_at), d: -1 });
     });
@@ -456,32 +558,35 @@ function renderCIStats() {
     return {
       workflow_name: jobs[0].workflow_name,
       run_id: jobs[0].run_id,
+      jobs,
       wallClock,
       sumDur,
       jobCount: jobs.length,
       maxConcurrency: maxConc,
-      parallelEfficiency: sumDur / wallClock, // >1 means parallel
+      parallelEfficiency: wallClock ? sumDur / wallClock : 0, // >1 means parallel
       success: jobs.filter(j => j.conclusion === "success").length,
+      failure: jobs.filter(j => j.conclusion === "failure").length,
       total: jobs.length,
     };
   });
 
-  const wcDurations = _wfRuns.map(w => w.wallClock);
+  const wcDurations = _wfRuns.map(w => w.wallClock).filter(d => d !== null && d !== undefined);
   const wfTotal = _wfRuns.length;
-  const wfAvgWC = wcDurations.reduce((s, d) => s + d, 0) / wfTotal;
-  const wfAvgJobs = _wfRuns.reduce((s, w) => s + w.jobCount, 0) / wfTotal;
-  const wfAvgEfficiency = _wfRuns.reduce((s, w) => s + w.parallelEfficiency, 0) / wfTotal;
+  const wfAvgWC = wcDurations.reduce((s, d) => s + d, 0) / (wcDurations.length || 1);
+  const wfAvgJobs = _wfRuns.reduce((s, w) => s + w.jobCount, 0) / (wfTotal || 1);
+  const wfAvgEfficiency = _wfRuns.reduce((s, w) => s + w.parallelEfficiency, 0) / (wfTotal || 1);
 
   // ── Metric cards: Job row + Workflow row ──
   document.getElementById("ciMetrics").innerHTML = `
-    <div style="grid-column:1/-1;font-size:12px;color:var(--text-dim);margin-bottom:-8px">Job 维度</div>
+    <div style="grid-column:1/-1;font-size:12px;color:var(--text-dim);margin-bottom:-8px">Job metrics ${ciMetadata ? "(current CI metadata)" : "(historical failure reports)"}</div>
     <div class="metric-card"><div class="metric-value">${totalJobs}</div><div class="metric-label">${t("ciTotalJobs")}</div></div>
+    <div class="metric-card"><div class="metric-value">${measured}</div><div class="metric-label">Measured Jobs</div></div>
     <div class="metric-card"><div class="metric-value">${fmtDuration(avgDur)}</div><div class="metric-label">${t("ciAvgDuration")}</div></div>
     <div class="metric-card"><div class="metric-value">${fmtDuration(percentile(durations, 50))}</div><div class="metric-label">${t("ciJobP50")}</div></div>
     <div class="metric-card"><div class="metric-value">${fmtDuration(percentile(durations, 90))}</div><div class="metric-label">${t("ciJobP90")}</div></div>
     <div class="metric-card"><div class="metric-value">${fmtDuration(percentile(durations, 20))}</div><div class="metric-label">${t("ciJobP20")}</div></div>
     <div class="metric-card clickable" onclick="showQueueDetail()"><div class="metric-value">${fmtDuration(percentile(queueTimes, 50))}</div><div class="metric-label">${t("ciQueueTime")}</div></div>
-    <div class="metric-card"><div class="metric-value">${totalJobs ? Math.round(success / totalJobs * 100) : 0}%</div><div class="metric-label">${t("ciSuccessRate")}</div></div>
+    <div class="metric-card"><div class="metric-value">${measured ? Math.round(success / measured * 100) + "%" : "N/A"}</div><div class="metric-label">Measured Success Rate</div></div>
     <div style="grid-column:1/-1;font-size:12px;color:var(--text-dim);margin-bottom:-8px;margin-top:8px">Workflow 维度 <span style="color:var(--text-dim);font-weight:400">(wall-clock)</span></div>
     <div class="metric-card"><div class="metric-value">${wfTotal}</div><div class="metric-label">${t("ciWfTotal")}</div></div>
     <div class="metric-card"><div class="metric-value">${fmtDuration(wfAvgWC)}</div><div class="metric-label">${t("ciWfAvgWC")}</div></div>
@@ -529,9 +634,13 @@ function renderCIStats() {
   const wfQueue = {};
   jobs.forEach(j => {
     if (!wfQueue[j.workflow_name]) wfQueue[j.workflow_name] = [];
-    wfQueue[j.workflow_name].push(j.queue_time);
+    if (j.queue_time !== null && j.queue_time !== undefined) wfQueue[j.workflow_name].push(j.queue_time);
   });
-  const wfSorted = Object.entries(wfQueue).map(([k, v]) => [k, v.reduce((s, d) => s + d, 0) / v.length]).sort((a, b) => b[1] - a[1]).slice(0, 8);
+  const wfSorted = Object.entries(wfQueue)
+    .filter(([, v]) => v.length)
+    .map(([k, v]) => [k, v.reduce((s, d) => s + d, 0) / v.length])
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 8);
 
   ciCharts.queue = new Chart(document.getElementById("chartQueue"), {
     type: "bar",
@@ -552,11 +661,15 @@ function renderCIStats() {
   // Success rate by workflow (with actual success/fail counts)
   const wfResults = {};
   jobs.forEach(j => {
-    if (!wfResults[j.workflow_name]) wfResults[j.workflow_name] = { success: 0, failure: 0, skipped: 0 };
+    if (!wfResults[j.workflow_name]) wfResults[j.workflow_name] = { success: 0, failure: 0, skipped: 0, pending: 0 };
     const c = j.conclusion || "skipped";
-    wfResults[j.workflow_name][c] = (wfResults[j.workflow_name][c] || 0) + 1;
+    if (["queued", "in_progress", "pending"].includes(c)) wfResults[j.workflow_name].pending++;
+    else wfResults[j.workflow_name][c] = (wfResults[j.workflow_name][c] || 0) + 1;
   });
-  const wfRates = Object.entries(wfResults).map(([k, v]) => ({ name: k, rate: (v.success || 0) / ((v.success || 0) + (v.failure || 0) + (v.skipped || 0)) * 100, ...v })).sort((a, b) => a.rate - b.rate).reverse().slice(0, 10);
+  const wfRates = Object.entries(wfResults)
+    .map(([k, v]) => ({ name: k, measured: (v.success || 0) + (v.failure || 0), ...v }))
+    .sort((a, b) => b.measured - a.measured || (b.failure || 0) - (a.failure || 0))
+    .slice(0, 10);
 
   ciCharts.success = new Chart(document.getElementById("chartSuccess"), {
     type: "bar",
@@ -566,6 +679,7 @@ function renderCIStats() {
         { label: t("ciSuccess"), data: wfRates.map(w => w.success), backgroundColor: "#16a34a" },
         { label: t("ciFailed"), data: wfRates.map(w => w.failure), backgroundColor: "#dc2626" },
         { label: t("ciSkipped"), data: wfRates.map(w => w.skipped), backgroundColor: "#8b949e" },
+        { label: "pending", data: wfRates.map(w => w.pending), backgroundColor: "#ca8a04" },
       ],
     },
     options: {
@@ -579,7 +693,7 @@ function renderCIStats() {
   });
 
   // Slowest jobs
-  const slowest = [...jobs].sort((a, b) => b.duration - a.duration).slice(0, 10);
+  const slowest = [...timedJobs].sort((a, b) => b.duration - a.duration).slice(0, 10);
   ciCharts.slowest = new Chart(document.getElementById("chartSlowest"), {
     type: "bar",
     data: {
@@ -600,13 +714,18 @@ function renderCIStats() {
   const tbody = document.getElementById("ciTableBody");
   if (!tbody) return;
 
-  const rows = _wfRuns.sort((a, b) => b.wallClock - a.wallClock);
+  const rows = _wfRuns.sort((a, b) => (b.wallClock || 0) - (a.wallClock || 0));
   tbody.innerHTML = rows.map((w, i) => {
-    const statusBadge = w.success === w.total
-      ? `<span class="badge badge-low">PASS</span>`
-      : w.success === 0
-        ? `<span class="badge badge-critical">FAIL</span>`
-        : `<span class="badge badge-high">${w.success}/${w.total}</span>`;
+    const conclusions = new Set(w.jobs.map(j => j.conclusion));
+    const statusBadge = w.failure > 0
+      ? `<span class="badge badge-critical">FAIL</span>`
+      : w.success === w.total
+        ? `<span class="badge badge-low">PASS</span>`
+        : conclusions.has("queued") || conclusions.has("in_progress") || conclusions.has("pending")
+          ? `<span class="badge badge-medium">RUNNING</span>`
+          : conclusions.has("skipped") && w.success === 0
+            ? `<span class="badge badge-other">SKIPPED</span>`
+            : `<span class="badge badge-high">${w.success}/${w.total}</span>`;
     const concBar = w.total > 0
       ? `<span style="display:inline-block;width:60px;height:6px;border-radius:3px;background:var(--border);vertical-align:middle;overflow:hidden"><span style="display:block;height:100%;width:${w.maxConcurrency/w.total*100}%;background:var(--accent);border-radius:3px"></span></span>`
       : "";
@@ -618,7 +737,7 @@ function renderCIStats() {
       <td>${statusBadge}</td>
       <td>${w.jobCount}</td>
       <td>${fmtDuration(w.wallClock)}</td>
-      <td>${fmtDuration(w.sumDur / w.jobCount)}</td>
+      <td>${fmtDuration(w.sumDur / Math.max(1, w.jobCount))}</td>
       <td>${w.maxConcurrency} ${concBar}</td>
       <td style="color:${effColor}">${w.parallelEfficiency.toFixed(1)}x</td>
     </tr>`;

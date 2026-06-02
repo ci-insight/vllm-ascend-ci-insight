@@ -9,6 +9,7 @@ let healthCharts = {};
 
 async function loadHealthTab() {
   try {
+    if (typeof loadCiMetadata === "function") await loadCiMetadata();
     const [hResp, aResp, sResp] = await Promise.all([
       fetch(HEALTH_URL),
       fetch(ALERTS_URL),
@@ -47,7 +48,7 @@ function renderHealthUI() {
     </div>`;
   }
   if (alerts.length) {
-    alertHtml = alerts.map(a => {
+    alertHtml += alerts.map(a => {
       const bg = a.severity === "critical" ? "var(--critical)" : "var(--medium)";
       return `<div class="alert-banner" style="border-left: 3px solid ${bg}; background: rgba(${a.severity==='critical'?'220,38,38':'202,138,4'}, 0.1)">
         <strong>[${a.severity.toUpperCase()}]</strong> ${a.message}
@@ -69,15 +70,16 @@ function renderHealthUI() {
     cardsHtml += `<div class="metric-card clickable" onclick="showPipelineDetail('${pt}')" style="border-left:3px solid ${p.rating_color}">
       <div class="metric-value" style="color:${p.rating_color}">${scoreText}</div>
       <div class="metric-label">${label}</div>
-      <div style="font-size:11px;color:var(--text-dim);margin-top:4px">${sampleText}</div>
+      <div style="font-size:11px;color:var(--text-dim);margin-top:4px">${(p.measured_total || 0) === 0 ? `no measured success/failure jobs · ${p.total || 0} total` : `${completeSample ? `${p.success_rate}% SR` : `${p.success_rate}% observed`} · ${p.measured_total || 0}/${p.total || 0} measured`}</div>
     </div>`;
   }
 
   // Worst workflows
   const wfHealth = {};
-  if (allJobs.length && allAnalyses.length) {
+  if (allJobs.length) {
     allJobs.forEach(j => {
       if (!wfHealth[j.workflow_name]) wfHealth[j.workflow_name] = { total: 0, success: 0 };
+      if (j.conclusion !== "success" && j.conclusion !== "failure") return;
       wfHealth[j.workflow_name].total++;
       if (j.conclusion === "success") wfHealth[j.workflow_name].success++;
     });

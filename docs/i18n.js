@@ -21,7 +21,7 @@ const I18N = {
       perf: "Performance",
       other: "Other",
     },
-    refresh: "Refresh",
+    refresh: "Reload Data",
     loading: "Loading...",
     loadFailed: "Failed to load reports.",
     noReports: "No reports found.",
