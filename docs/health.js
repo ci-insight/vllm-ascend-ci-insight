@@ -150,7 +150,7 @@ function renderHealthCharts(pipelines, worst) {
     type: "line",
     data: { labels: executionDates, datasets: srDatasets },
     options: {
-      responsive: true, maintainAspectRatio: true,
+      responsive: true, maintainAspectRatio: false,
       plugins: { legend: { position: "bottom", labels: { color: "#8b949e", font: { size: 11 } } } },
       scales: {
         x: { grid: { display: false }, ticks: { color: "#8b949e", font: { size: 10 } } },
@@ -175,7 +175,7 @@ function renderHealthCharts(pipelines, worst) {
     type: "line",
     data: { labels: executionDates, datasets: failDatasets },
     options: {
-      responsive: true, maintainAspectRatio: true,
+      responsive: true, maintainAspectRatio: false,
       plugins: { legend: { position: "bottom", labels: { color: "#8b949e", font: { size: 11 } } } },
       scales: {
         x: { grid: { display: false }, ticks: { color: "#8b949e", font: { size: 10 } } },
@@ -200,7 +200,7 @@ function renderHealthCharts(pipelines, worst) {
     type: "line",
     data: { labels: snapshotDates, datasets: hDatasets },
     options: {
-      responsive: true, maintainAspectRatio: true,
+      responsive: true, maintainAspectRatio: false,
       plugins: { legend: { position: "bottom", labels: { color: "#8b949e", font: { size: 11 } } } },
       scales: {
         x: { grid: { display: false }, ticks: { color: "#8b949e", font: { size: 10 } } },
@@ -218,7 +218,7 @@ function renderHealthCharts(pipelines, worst) {
       datasets: [{ data: worst.map(w => w.rate), backgroundColor: worst.map(w => w.rate < 50 ? "#dc2626" : w.rate < 75 ? "#ca8a04" : "#16a34a"), borderRadius: 4 }],
     },
     options: {
-      indexAxis: "y", responsive: true, maintainAspectRatio: true,
+      indexAxis: "y", responsive: true, maintainAspectRatio: false,
       onClick: (e, els) => { if (els.length) showWorkflowHealthDetail(worstNames[els[0].index]); },
       plugins: { legend: { display: false } },
       scales: {

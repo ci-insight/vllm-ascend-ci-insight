@@ -449,7 +449,7 @@ function renderSeverityChart(filtered) {
     type: "doughnut",
     data: { labels, datasets: [{ data, backgroundColor: colors, borderColor: "#161b22", borderWidth: 2 }] },
     options: {
-      responsive: true, maintainAspectRatio: true,
+      responsive: true, maintainAspectRatio: false,
       onClick: (e, els) => { if (els.length) showDrillDown("severity", sevKeys[els[0].index], tSeverity(sevKeys[els[0].index])); },
       plugins: { legend: { position: "bottom", labels: { color: "#8b949e", padding: 16, font: { size: 12 } } } },
     },
@@ -466,7 +466,7 @@ function renderWorkflowChart(filtered) {
     type: "bar",
     data: { labels: wfKeys, datasets: [{ data: sorted.map(([, v]) => v), backgroundColor: "#1f6feb", borderRadius: 4 }] },
     options: {
-      indexAxis: "y", responsive: true, maintainAspectRatio: true,
+      indexAxis: "y", responsive: true, maintainAspectRatio: false,
       onClick: (e, els) => { if (els.length) showDrillDown("workflow", wfKeys[els[0].index], wfKeys[els[0].index]); },
       plugins: { legend: { display: false } },
       scales: {
@@ -491,7 +491,7 @@ function renderCategoryChart(filtered) {
     type: "bar",
     data: { labels, datasets: [{ data, backgroundColor: bgColors, borderRadius: 4 }] },
     options: {
-      responsive: true, maintainAspectRatio: true,
+      responsive: true, maintainAspectRatio: false,
       onClick: (e, els) => { if (els.length) showDrillDown("category", catKeys[els[0].index], tCategory(catKeys[els[0].index])); },
       plugins: { legend: { display: false } },
       scales: {
@@ -629,7 +629,7 @@ function renderCIStatsV2() {
       datasets: [{ data: hist, backgroundColor: "#1f6feb", borderRadius: 2, barPercentage: 1, categoryPercentage: 1 }],
     },
     options: {
-      responsive: true, maintainAspectRatio: true,
+      responsive: true, maintainAspectRatio: false,
       plugins: {
         legend: { display: false },
         annotation: false,
@@ -660,7 +660,7 @@ function renderCIStatsV2() {
       datasets: [{ data: wfSorted.map(([, v]) => v), backgroundColor: "#d29922", borderRadius: 4 }],
     },
     options: {
-      indexAxis: "y", responsive: true, maintainAspectRatio: true,
+      indexAxis: "y", responsive: true, maintainAspectRatio: false,
       plugins: { legend: { display: false } },
       scales: {
         x: { grid: { color: "#21262d" }, ticks: { color: "#8b949e", font: { size: 11 }, callback: v => fmtDuration(v) } },
@@ -694,7 +694,7 @@ function renderCIStatsV2() {
       ],
     },
     options: {
-      responsive: true, maintainAspectRatio: true,
+      responsive: true, maintainAspectRatio: false,
       plugins: { legend: { position: "bottom", labels: { color: "#8b949e", font: { size: 11 } } } },
       scales: {
         x: { stacked: true, grid: { display: false }, ticks: { color: "#c9d1d9", font: { size: 10 }, maxRotation: 45 } },
@@ -712,7 +712,7 @@ function renderCIStatsV2() {
       datasets: [{ data: slowest.map(j => j.duration), backgroundColor: slowest.map(j => j.conclusion === "failure" ? "#dc2626" : j.conclusion === "success" ? "#16a34a" : "#8b949e"), borderRadius: 4 }],
     },
     options: {
-      indexAxis: "y", responsive: true, maintainAspectRatio: true,
+      indexAxis: "y", responsive: true, maintainAspectRatio: false,
       plugins: { legend: { display: false } },
       scales: {
         x: { grid: { color: "#21262d" }, ticks: { color: "#8b949e", font: { size: 11 }, callback: v => fmtDuration(v) } },
