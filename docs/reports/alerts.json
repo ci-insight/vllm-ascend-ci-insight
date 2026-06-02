@@ -1,69 +1,56 @@
 {
-  "generated_at": "2026-06-02T08:02:11.950322+00:00",
+  "generated_at": "2026-06-02T09:39:37.757529+00:00",
   "alerts": [
     {
-      "rule_id": "R001",
-      "rule_name": "Consecutive Failure",
-      "severity": "critical",
-      "message": "Workflow 'Cache csrc Build Artifacts' has 3 consecutive failures",
-      "details": {
-        "workflow": "Cache csrc Build Artifacts",
-        "streak": 3
-      },
-      "triggered_at": "2026-06-02T08:02:11.950322+00:00",
-      "notification_suppressed": false
-    },
-    {
       "rule_id": "R002",
       "rule_name": "Low Health Score",
       "severity": "warning",
-      "message": "build pipeline health score is 55/100 (below 70)",
-      "details": {
-        "pipeline_type": "build",
-        "score": 55,
-        "rating": "danger"
-      },
-      "triggered_at": "2026-06-02T08:02:11.950322+00:00",
-      "notification_suppressed": false
-    },
-    {
-      "rule_id": "R002",
-      "rule_name": "Low Health Score",
-      "severity": "warning",
-      "message": "nightly pipeline health score is 55/100 (below 70)",
+      "message": "nightly pipeline health score is 46/100 (below 70)",
       "details": {
         "pipeline_type": "nightly",
-        "score": 55,
+        "score": 46,
         "rating": "danger"
       },
-      "triggered_at": "2026-06-02T08:02:11.950322+00:00",
+      "triggered_at": "2026-06-02T09:39:37.756910+00:00",
       "notification_suppressed": false
     },
     {
       "rule_id": "R002",
       "rule_name": "Low Health Score",
       "severity": "warning",
-      "message": "pr_e2e pipeline health score is 32/100 (below 70)",
+      "message": "pr_e2e pipeline health score is 64/100 (below 70)",
       "details": {
         "pipeline_type": "pr_e2e",
-        "score": 32,
-        "rating": "danger"
+        "score": 64,
+        "rating": "fair"
       },
-      "triggered_at": "2026-06-02T08:02:11.950322+00:00",
+      "triggered_at": "2026-06-02T09:39:37.756910+00:00",
+      "notification_suppressed": false
+    },
+    {
+      "rule_id": "R003",
+      "rule_name": "Success Rate Drop",
+      "severity": "warning",
+      "message": "nightly success rate dropped from 61% to 0% (61% drop)",
+      "details": {
+        "pipeline_type": "nightly",
+        "drop": 61
+      },
+      "triggered_at": "2026-06-02T09:39:37.756910+00:00",
       "notification_suppressed": false
     },
     {
       "rule_id": "R004",
       "rule_name": "Nightly Failure",
       "severity": "critical",
-      "message": "Nightly pipeline has 2 failed measured job(s) out of 8",
+      "message": "Nightly pipeline has 11 failed measured job(s) out of 28",
       "details": {
         "pipeline_type": "nightly",
-        "failures": 2,
-        "measured_total": 8,
-        "total": 1428
+        "failures": 11,
+        "measured_total": 28,
+        "total": 216
       },
-      "triggered_at": "2026-06-02T08:02:11.950322+00:00",
+      "triggered_at": "2026-06-02T09:39:37.756910+00:00",
       "notification_suppressed": false
     }
   ]

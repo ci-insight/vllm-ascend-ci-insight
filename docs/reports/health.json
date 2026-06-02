@@ -1,89 +1,69 @@
 {
-  "generated_at": "2026-06-02T08:02:11.932780+00:00",
+  "generated_at": "2026-06-02T09:39:37.753610+00:00",
   "data_quality": {
     "complete_success_sample": true,
     "sample_kind": "complete_ci_runs",
     "warning": ""
   },
   "overall": {
-    "total": 3406,
-    "measured_total": 791,
-    "success": 683,
-    "success_rate": 86,
-    "health_score": 58
+    "total": 441,
+    "measured_total": 80,
+    "success": 64,
+    "success_rate": 80,
+    "health_score": 67
   },
   "pipelines": {
-    "build": {
-      "type": "build",
-      "total": 13,
-      "measured_total": 4,
-      "success": 3,
-      "failure": 1,
-      "skipped": 0,
-      "cancelled": 3,
-      "other": 6,
-      "success_rate": 75,
-      "health_score": 55,
-      "rating": "danger",
-      "rating_color": "#dc2626",
-      "trend": "flat",
-      "consecutive_details": [],
-      "recent_24h_total": 13,
-      "recent_24h_failures": 1,
-      "daily_trend": [
-        {
-          "date": "2026-06-02",
-          "total": 13,
-          "measured_total": 4,
-          "success": 3,
-          "failure": 1,
-          "skipped": 0,
-          "cancelled": 3,
-          "other": 6,
-          "success_rate": 75,
-          "health": 48
-        }
-      ]
-    },
     "nightly": {
       "type": "nightly",
-      "total": 1428,
-      "measured_total": 8,
-      "success": 6,
-      "failure": 2,
-      "skipped": 1405,
-      "cancelled": 11,
-      "other": 4,
-      "success_rate": 75,
-      "health_score": 55,
+      "total": 216,
+      "measured_total": 28,
+      "success": 17,
+      "failure": 11,
+      "skipped": 188,
+      "cancelled": 0,
+      "other": 0,
+      "success_rate": 61,
+      "health_score": 46,
       "rating": "danger",
       "rating_color": "#dc2626",
       "trend": "flat",
       "consecutive_details": [],
-      "recent_24h_total": 1428,
-      "recent_24h_failures": 2,
+      "recent_24h_total": 216,
+      "recent_24h_failures": 11,
       "daily_trend": [
         {
+          "date": "2026-06-01",
+          "total": 36,
+          "measured_total": 28,
+          "success": 17,
+          "failure": 11,
+          "skipped": 8,
+          "cancelled": 0,
+          "other": 0,
+          "success_rate": 61,
+          "health": 39
+        },
+        {
           "date": "2026-06-02",
-          "total": 1428,
-          "measured_total": 8,
-          "success": 6,
-          "failure": 2,
-          "skipped": 1405,
-          "cancelled": 11,
-          "other": 4,
-          "success_rate": 75,
-          "health": 48
+          "total": 180,
+          "measured_total": 0,
+          "success": 0,
+          "failure": 0,
+          "skipped": 180,
+          "cancelled": 0,
+          "other": 0,
+          "success_rate": 0,
+          "health": 3
         }
       ]
     },
     "other": {
       "type": "other",
-      "total": 32,
-      "measured_total": 29,
-      "success": 29,
+      "total": 2,
+      "measured_total": 2,
+      "success": 2,
       "failure": 0,
-      "skipped": 3,
+      "skipped": 0,
       "cancelled": 0,
       "other": 0,
       "success_rate": 100,
@@ -92,16 +72,28 @@
       "rating_color": "#16a34a",
       "trend": "flat",
       "consecutive_details": [],
-      "recent_24h_total": 32,
+      "recent_24h_total": 2,
       "recent_24h_failures": 0,
       "daily_trend": [
         {
-          "date": "2026-06-02",
-          "total": 32,
-          "measured_total": 29,
-          "success": 29,
+          "date": "2026-06-01",
+          "total": 1,
+          "measured_total": 1,
+          "success": 1,
           "failure": 0,
-          "skipped": 3,
+          "skipped": 0,
+          "cancelled": 0,
+          "other": 0,
+          "success_rate": 100,
+          "health": 63
+        },
+        {
+          "date": "2026-06-02",
+          "total": 1,
+          "measured_total": 1,
+          "success": 1,
+          "failure": 0,
+          "skipped": 0,
           "cancelled": 0,
           "other": 0,
           "success_rate": 100,
@@ -111,44 +103,36 @@
     },
     "pr_e2e": {
       "type": "pr_e2e",
-      "total": 1933,
-      "measured_total": 750,
-      "success": 645,
-      "failure": 105,
-      "skipped": 918,
-      "cancelled": 153,
-      "other": 112,
-      "success_rate": 86,
-      "health_score": 32,
-      "rating": "danger",
-      "rating_color": "#dc2626",
+      "total": 223,
+      "measured_total": 50,
+      "success": 45,
+      "failure": 5,
+      "skipped": 107,
+      "cancelled": 3,
+      "other": 63,
+      "success_rate": 90,
+      "health_score": 64,
+      "rating": "fair",
+      "rating_color": "#ca8a04",
       "trend": "flat",
-      "consecutive_details": [
-        {
-          "workflow": "Cache csrc Build Artifacts",
-          "streak": 3,
-          "penalty": 30
-        }
-      ],
-      "recent_24h_total": 1933,
-      "recent_24h_failures": 105,
+      "consecutive_details": [],
+      "recent_24h_total": 223,
+      "recent_24h_failures": 5,
       "daily_trend": [
         {
           "date": "2026-06-02",
-          "total": 1933,
-          "measured_total": 750,
-          "success": 645,
-          "failure": 105,
-          "skipped": 918,
-          "cancelled": 153,
-          "other": 112,
-          "success_rate": 86,
-          "health": 55
+          "total": 223,
+          "measured_total": 50,
+          "success": 45,
+          "failure": 5,
+          "skipped": 107,
+          "cancelled": 3,
+          "other": 63,
+          "success_rate": 90,
+          "health": 57
         }
       ]
     }
   },
-  "consecutive_failures": {
-    "Cache csrc Build Artifacts": 3
-  }
+  "consecutive_failures": {}
 }
