@@ -392,6 +392,24 @@ Rules:
 - Health score uses measured success/failure jobs.
 - skipped, queued, pending, in-progress jobs must not reduce success rate.
 - insufficient samples must display as insufficient, not as zero health.
+- Success-rate and failure-count trend charts must use CI execution dates from
+  workflow/job timestamps, not dashboard collection dates.
+- Snapshot dates may be used only for explicitly labeled snapshot charts, such
+  as health score snapshots over time.
+
+Trend data products:
+
+```text
+execution_trends
+  X axis: CI execution date, derived from job.completed_at or run.created_at
+  Use for: success rate trend, failure count trend
+
+pipeline_types / daily_snapshots
+  X axis: dashboard snapshot date, derived from collection/export date
+  Use for: health score snapshot trend
+```
+
+Do not label a snapshot-date chart as a CI execution trend.
 
 ### Failure Analysis
 

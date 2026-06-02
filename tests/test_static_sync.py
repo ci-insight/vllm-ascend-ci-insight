@@ -77,3 +77,9 @@ def test_import_static_reports_rebuilds_local_sqlite(tmp_path, monkeypatch):
     assert len(jobs) == 2
     assert jobs[0][:4] == (100, "lint", "success", 120)
     assert jobs[0][4] == 60
+
+    exported = json.loads((reports_dir / "daily-snapshots.json").read_text(encoding="utf-8"))
+    assert exported["trend_axes"]["execution_trends"].startswith("CI execution date")
+    assert exported["execution_trends"]["pr_e2e"][0]["date"] == "2026-06-02"
+    assert exported["execution_trends"]["pr_e2e"][0]["measured_total"] == 2
+    assert exported["execution_trends"]["pr_e2e"][0]["success_rate"] == 50

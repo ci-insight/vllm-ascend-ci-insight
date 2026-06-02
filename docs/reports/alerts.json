@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-02T05:32:57.187252+00:00",
+  "generated_at": "2026-06-02T06:07:22.983003+00:00",
   "alerts": [
     {
       "rule_id": "R002",
@@ -11,7 +11,7 @@
         "score": 58,
         "rating": "danger"
       },
-      "triggered_at": "2026-06-02T05:32:57.187252+00:00",
+      "triggered_at": "2026-06-02T06:07:22.983003+00:00",
       "notification_suppressed": false
     },
     {
@@ -24,7 +24,7 @@
         "score": 66,
         "rating": "fair"
       },
-      "triggered_at": "2026-06-02T05:32:57.187252+00:00",
+      "triggered_at": "2026-06-02T06:07:22.983003+00:00",
       "notification_suppressed": false
     },
     {
@@ -38,7 +38,7 @@
         "measured_total": 5,
         "total": 224
       },
-      "triggered_at": "2026-06-02T05:32:57.187252+00:00",
+      "triggered_at": "2026-06-02T06:07:22.983003+00:00",
       "notification_suppressed": false
     }
   ]

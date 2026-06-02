@@ -96,15 +96,15 @@ function renderHealthUI() {
     </section>
     <section class="charts">
       <div class="chart-box">
-        <h3>${t("ciSuccessRate")} Trend (7d)</h3>
+        <h3>${t("ciSuccessRate")} by CI Execution Date (7d)</h3>
         <canvas id="chartHSuccess"></canvas>
       </div>
       <div class="chart-box">
-        <h3>Failure Count Trend (7d)</h3>
+        <h3>Failure Count by CI Execution Date (7d)</h3>
         <canvas id="chartHFailure"></canvas>
       </div>
       <div class="chart-box">
-        <h3>Health Score Trend (7d)</h3>
+        <h3>Health Score Snapshot Trend (7d)</h3>
         <canvas id="chartHHealth"></canvas>
       </div>
       <div class="chart-box">
@@ -124,30 +124,19 @@ function renderHealthCharts(pipelines, worst) {
   const colors = { pr_e2e: "#58a6ff", nightly: "#3fb950", weekly: "#ca8a04", other: "#8b949e" };
   const labels = { pr_e2e: "PR CI", nightly: "Nightly", weekly: "Weekly", other: "Other" };
 
-  // Use snapshot data for long-term trends, fallback to health.json daily_trend
-  let trendSource = {};
-  if (snapshotsData && snapshotsData.pipeline_types) {
-    trendSource = snapshotsData.pipeline_types; // long-term from SQLite aggregator
-  } else {
-    // Fallback: convert health.json daily_trend to snapshot format
-    Object.entries(pipelines).forEach(([pt, p]) => {
-      if (p.daily_trend && p.daily_trend.length) {
-        trendSource[pt] = p.daily_trend;
-      }
-    });
-  }
+  const executionTrendSource = getExecutionTrendSource(pipelines);
+  const snapshotTrendSource = getSnapshotTrendSource(pipelines);
 
   // Merge all dates across pipeline types
-  const allDates = new Set();
-  Object.values(trendSource).forEach(entries => entries.forEach(d => allDates.add(d.date)));
-  const dates = [...allDates].sort();
+  const executionDates = collectTrendDates(executionTrendSource);
+  const snapshotDates = collectTrendDates(snapshotTrendSource);
 
   // Success rate trend
-  const srDatasets = Object.entries(trendSource)
+  const srDatasets = Object.entries(executionTrendSource)
     .filter(([, entries]) => entries && entries.length)
     .map(([pt, entries]) => ({
       label: labels[pt] || pt,
-      data: dates.map(d => {
+      data: executionDates.map(d => {
         const found = entries.find(t => t.date === d);
         return found ? found.success_rate : null;
       }),
@@ -159,7 +148,7 @@ function renderHealthCharts(pipelines, worst) {
 
   healthCharts.success = new Chart(document.getElementById("chartHSuccess"), {
     type: "line",
-    data: { labels: dates, datasets: srDatasets },
+    data: { labels: executionDates, datasets: srDatasets },
     options: {
       responsive: true, maintainAspectRatio: true,
       plugins: { legend: { position: "bottom", labels: { color: "#8b949e", font: { size: 11 } } } },
@@ -171,11 +160,11 @@ function renderHealthCharts(pipelines, worst) {
   });
 
   // Failure count trend
-  const failDatasets = Object.entries(trendSource)
+  const failDatasets = Object.entries(executionTrendSource)
     .filter(([, entries]) => entries && entries.length)
     .map(([pt, entries]) => ({
       label: labels[pt] || pt,
-      data: dates.map(d => { const found = entries.find(t => t.date === d); return found ? (found.failure || 0) : null; }),
+      data: executionDates.map(d => { const found = entries.find(t => t.date === d); return found ? (found.failure || 0) : null; }),
       borderColor: colors[pt] || "#8b949e",
       backgroundColor: "transparent",
       tension: 0.3,
@@ -184,7 +173,7 @@ function renderHealthCharts(pipelines, worst) {
 
   healthCharts.failure = new Chart(document.getElementById("chartHFailure"), {
     type: "line",
-    data: { labels: dates, datasets: failDatasets },
+    data: { labels: executionDates, datasets: failDatasets },
     options: {
       responsive: true, maintainAspectRatio: true,
       plugins: { legend: { position: "bottom", labels: { color: "#8b949e", font: { size: 11 } } } },
@@ -196,11 +185,11 @@ function renderHealthCharts(pipelines, worst) {
   });
 
   // Health score trend
-  const hDatasets = Object.entries(trendSource)
+  const hDatasets = Object.entries(snapshotTrendSource)
     .filter(([, entries]) => entries && entries.length)
     .map(([pt, entries]) => ({
       label: labels[pt] || pt,
-      data: dates.map(d => { const found = entries.find(t => t.date === d); return found ? found.health_score : null; }),
+      data: snapshotDates.map(d => { const found = entries.find(t => t.date === d); return found ? found.health_score : null; }),
       borderColor: colors[pt] || "#8b949e",
       backgroundColor: "transparent",
       tension: 0.3,
@@ -209,7 +198,7 @@ function renderHealthCharts(pipelines, worst) {
 
   healthCharts.health = new Chart(document.getElementById("chartHHealth"), {
     type: "line",
-    data: { labels: dates, datasets: hDatasets },
+    data: { labels: snapshotDates, datasets: hDatasets },
     options: {
       responsive: true, maintainAspectRatio: true,
       plugins: { legend: { position: "bottom", labels: { color: "#8b949e", font: { size: 11 } } } },
@@ -247,6 +236,35 @@ function renderHealthCharts(pipelines, worst) {
 }
 
 // ── Pipeline Detail Drill-Down ──
+
+function getExecutionTrendSource(pipelines) {
+  if (snapshotsData?.execution_trends) return snapshotsData.execution_trends;
+  const trendSource = {};
+  Object.entries(pipelines).forEach(([pt, p]) => {
+    if (p.daily_trend && p.daily_trend.length) trendSource[pt] = p.daily_trend;
+  });
+  return trendSource;
+}
+
+function getSnapshotTrendSource(pipelines) {
+  if (snapshotsData?.pipeline_types) return snapshotsData.pipeline_types;
+  const trendSource = {};
+  Object.entries(pipelines).forEach(([pt, p]) => {
+    if (p.daily_trend && p.daily_trend.length) {
+      trendSource[pt] = p.daily_trend.map(d => ({
+        ...d,
+        health_score: d.health_score ?? d.health ?? null,
+      }));
+    }
+  });
+  return trendSource;
+}
+
+function collectTrendDates(trendSource) {
+  const dates = new Set();
+  Object.values(trendSource).forEach(entries => entries.forEach(d => dates.add(d.date)));
+  return [...dates].sort();
+}
 
 function showPipelineDetail(ptype) {
   const pipelines = healthData?.pipelines || {};

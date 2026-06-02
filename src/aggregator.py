@@ -161,6 +161,20 @@ def write_snapshot_json():
            FROM daily_snapshots
            ORDER BY date ASC, pipeline_type ASC"""
     ).fetchall()
+    execution_rows = db.execute(
+        """SELECT
+              substr(COALESCE(NULLIF(completed_at, ''), NULLIF(started_at, ''), created_at), 1, 10) AS execution_date,
+              pipeline_type,
+              COUNT(*) AS total,
+              SUM(CASE WHEN conclusion = 'success' THEN 1 ELSE 0 END) AS success,
+              SUM(CASE WHEN conclusion IN ('failure', 'timed_out') THEN 1 ELSE 0 END) AS failure,
+              SUM(CASE WHEN conclusion = 'skipped' THEN 1 ELSE 0 END) AS skipped,
+              SUM(CASE WHEN conclusion = 'cancelled' THEN 1 ELSE 0 END) AS cancelled
+           FROM job_records
+           WHERE execution_date IS NOT NULL AND execution_date != ''
+           GROUP BY execution_date, pipeline_type
+           ORDER BY execution_date ASC, pipeline_type ASC"""
+    ).fetchall()
     db.close()
 
     # Group by pipeline type for chart-friendly format
@@ -182,9 +196,31 @@ def write_snapshot_json():
             pass
         by_type.setdefault(pt, []).append(entry)
 
+    execution_by_type: dict[str, list[dict]] = {}
+    for r in execution_rows:
+        date, pt, total, success, failure, skipped, cancelled = r
+        measured_total = (success or 0) + (failure or 0)
+        other = (total or 0) - (success or 0) - (failure or 0) - (skipped or 0) - (cancelled or 0)
+        execution_by_type.setdefault(pt, []).append({
+            "date": date,
+            "total": total or 0,
+            "measured_total": measured_total,
+            "success": success or 0,
+            "failure": failure or 0,
+            "skipped": skipped or 0,
+            "cancelled": cancelled or 0,
+            "other": other,
+            "success_rate": round((success or 0) / measured_total * 100, 1) if measured_total else 0,
+        })
+
     data = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
+        "trend_axes": {
+            "execution_trends": "CI execution date from job completed_at/started_at",
+            "pipeline_types": "dashboard snapshot date from collection/export time",
+        },
         "pipeline_types": by_type,
+        "execution_trends": execution_by_type,
     }
 
     write_json(SNAPSHOT_JSON, data)

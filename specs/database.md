@@ -98,3 +98,15 @@ ORDER BY workflow_name, started_at DESC;
 ```
 
 Dashboard 的健康概览页签加载此文件渲染趋势折线图。
+## Trend Axis Correction
+
+`docs/reports/daily-snapshots.json` must distinguish two axes:
+
+- `execution_trends`: CI execution date, derived from `job.completed_at`,
+  `job.started_at`, or run timestamps. Use this for success-rate and
+  failure-count trend charts.
+- `pipeline_types`: dashboard snapshot date, derived from collection/export
+  time. Use this only for explicitly labeled snapshot charts, such as health
+  score snapshot trend.
+
+Do not use snapshot dates for charts labeled as CI execution trends.

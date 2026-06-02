@@ -1,5 +1,9 @@
 {
-  "generated_at": "2026-06-02T05:32:57.210523+00:00",
+  "generated_at": "2026-06-02T06:07:22.996340+00:00",
+  "trend_axes": {
+    "execution_trends": "CI execution date from job completed_at/started_at",
+    "pipeline_types": "dashboard snapshot date from collection/export time"
+  },
   "pipeline_types": {
     "nightly": [
       {
@@ -50,6 +54,47 @@
         "skipped": 98,
         "cancelled": 3,
         "other": 41
+      }
+    ]
+  },
+  "execution_trends": {
+    "nightly": [
+      {
+        "date": "2026-06-02",
+        "total": 224,
+        "measured_total": 5,
+        "success": 4,
+        "failure": 1,
+        "skipped": 219,
+        "cancelled": 0,
+        "other": 0,
+        "success_rate": 80.0
+      }
+    ],
+    "other": [
+      {
+        "date": "2026-06-02",
+        "total": 2,
+        "measured_total": 2,
+        "success": 2,
+        "failure": 0,
+        "skipped": 0,
+        "cancelled": 0,
+        "other": 0,
+        "success_rate": 100.0
+      }
+    ],
+    "pr_e2e": [
+      {
+        "date": "2026-06-02",
+        "total": 173,
+        "measured_total": 72,
+        "success": 67,
+        "failure": 5,
+        "skipped": 98,
+        "cancelled": 3,
+        "other": 0,
+        "success_rate": 93.1
       }
     ]
   }
