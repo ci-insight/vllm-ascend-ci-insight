@@ -387,6 +387,13 @@ Source:
 - Local: SQLite health query.
 - Static: `health.json` and `daily-snapshots.json`.
 
+Metric definitions:
+
+- See `specs/dashboard-metrics.md` for dashboard-wide metric semantics,
+  including workflow-run counts versus job counts.
+- See `specs/health-score.md` for the exact health score formula.
+- See `specs/alert-rules.md` for alert trigger rules and cooldown behavior.
+
 Rules:
 
 - Health score uses measured success/failure jobs.
