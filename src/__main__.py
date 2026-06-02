@@ -21,6 +21,8 @@ from .alert import evaluate, save_alerts
 from .notify import notify_alerts
 from .interference import detect as detect_interference, save_interference
 from .aggregator import save_snapshot
+from .storage import load_reports
+from .ci_metadata import collect_ci_metadata, save_ci_metadata, load_ci_metadata, metadata_to_reports
 
 
 def main():
@@ -33,6 +35,8 @@ def main():
     parser.add_argument("--analyze-only", action="store_true", help="Re-analyze cached raw data")
     parser.add_argument("--no-analyze", action="store_true", help="Only collect data, skip analysis")
     parser.add_argument("--health", action="store_true", help="Only compute health/alert/interference")
+    parser.add_argument("--refresh-ci-metrics", action="store_true", help="Collect full lightweight CI run/job metadata for health metrics")
+    parser.add_argument("--metrics-limit", type=int, default=200, help="Max workflow runs to fetch for CI metrics")
     parser.add_argument("--no-notify", action="store_true", help="Skip notification sending")
     parser.add_argument("--lang", choices=["zh", "en"], default="en", help="Analysis output language (default: en)")
     args = parser.parse_args()
@@ -47,12 +51,20 @@ def main():
         # Health-only mode: reload existing reports and compute metrics
         print("  Health-only mode: computing from existing reports")
         reports = _load_existing_reports()
-        if not reports:
-            print("No existing reports found. Run without --health first.")
+        if args.refresh_ci_metrics:
+            print(f"  Refreshing full CI metadata: days={args.days}, limit={args.metrics_limit}")
+            ci_metadata = collect_ci_metadata(days=args.days, limit=args.metrics_limit)
+            save_ci_metadata(ci_metadata)
+        if not reports and not load_ci_metadata():
+            print("No existing reports or CI metadata found. Run with --refresh-ci-metrics first.")
             return
     else:
         print(f"  Looking back {args.days} days, max {args.limit} runs, lang={args.lang}")
         print()
+        if args.refresh_ci_metrics:
+            print("[0/4] Collecting full CI metadata...")
+            ci_metadata = collect_ci_metadata(days=args.days, limit=args.metrics_limit)
+            save_ci_metadata(ci_metadata)
 
         # Phase 1: Collect
         if not args.analyze_only:
@@ -103,7 +115,13 @@ def main():
     # Phase 4: Health + Alerts + Interference + Notify
     print("\n[4/4] Computing health scores, alerts, interference...")
 
-    health_data = compute_health(reports if reports else [])
+    ci_metadata = load_ci_metadata()
+    if ci_metadata:
+        health_reports = metadata_to_reports(ci_metadata)
+        health_data = compute_health(health_reports, complete_sample=True)
+    else:
+        health_reports = reports if reports else []
+        health_data = compute_health(health_reports, complete_sample=False)
     save_health(health_data)
 
     alerts = evaluate(health_data)
@@ -113,7 +131,7 @@ def main():
     save_interference(interference_data)
 
     # Save to SQLite aggregator + static JSON for long-term trends
-    save_snapshot(health_data, reports if reports else [])
+    save_snapshot(health_data, health_reports)
 
     if alerts and not args.no_notify:
         print(f"\n  Sending notifications for {len(alerts)} alert(s)...")
@@ -127,9 +145,12 @@ def main():
     for ptype, pdata in sorted(pipelines.items()):
         score = pdata["health_score"]
         rating = pdata["rating"]
-        print(f"  {ptype:12s}: score={score:3d} ({rating})  SR={pdata['success_rate']}%  ({pdata['success']}/{pdata['total']})")
+        measured_total = pdata.get("measured_total", pdata.get("total", 0))
+        score_text = "n/a" if score is None else f"{score:3d}"
+        sr_text = "no completed jobs" if measured_total == 0 else f"SR={pdata['success_rate']}% ({pdata['success']}/{measured_total} measured)"
+        print(f"  {ptype:12s}: score={score_text} ({rating})  {sr_text}, {pdata['total']} total")
     if alerts:
-        print(f"  Alerts: {len(alerts)} triggered")
+        print(f"  Alerts: {len(alerts)} active")
     print(f"  Reports: reports/")
     print(f"  Dashboard: open docs/index.html")
     print("=" * 60)
@@ -137,58 +158,7 @@ def main():
 
 def _load_existing_reports():
     """Load reports from existing report files."""
-    from .models import FailureReport
-    from .collector import classify_pipeline
-    import json
-
-    reports: list[FailureReport] = []
-    reports_dir = Path("reports")
-    if not reports_dir.exists():
-        return reports
-
-    for date_dir in sorted(reports_dir.iterdir(), reverse=True):
-        if not date_dir.is_dir():
-            continue
-        for f in sorted(date_dir.glob("pr-*.json")):
-            if f.name == "index.json":
-                continue
-            try:
-                data = json.loads(f.read_text())
-                report = FailureReport(
-                    pr_number=data["pr_number"],
-                    pr_title=data.get("pr_title", ""),
-                    pr_author=data.get("pr_author", ""),
-                    pr_url=data.get("pr_url", ""),
-                    analyzed_at=data.get("analyzed_at", ""),
-                    runs=[],
-                    analyses=[],
-                )
-                # Reconstruct runs
-                from .models import CIRun, CIJob, StepResult
-                for r in data.get("runs", []):
-                    jobs = []
-                    for j in r.get("jobs", []):
-                        jobs.append(CIJob(
-                            job_id=j["job_id"], job_name=j["job_name"],
-                            conclusion=j.get("conclusion", ""),
-                            started_at=j.get("started_at", ""),
-                            completed_at=j.get("completed_at", ""),
-                            steps=[], raw_log="",
-                        ))
-                    wf_name = r.get("workflow_name", "")
-                    pt = r.get("pipeline_type") or classify_pipeline(wf_name)
-                    report.runs.append(CIRun(
-                        run_id=r["run_id"], workflow_name=wf_name,
-                        conclusion=r.get("conclusion", ""), branch=r.get("branch", ""),
-                        pr_number=r.get("pr_number"), created_at=r.get("created_at", ""),
-                        event=r.get("event", ""),
-                        pipeline_type=pt,
-                        jobs=jobs,
-                    ))
-                reports.append(report)
-            except Exception:
-                continue
-    return reports
+    return load_reports()
 
 
 if __name__ == "__main__":

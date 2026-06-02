@@ -69,11 +69,23 @@ def test_success_rate_drop_alert():
     assert any(a["rule_id"] == "R003" for a in alerts)
 
 
+def test_incomplete_sample_suppresses_health_alerts():
+    health = make_health_data(
+        pipelines={"pr_e2e": {"total": 10, "success": 0, "failure": 10, "health_score": None, "rating": "insufficient_data", "daily_trend": []}},
+        consecutive={"E2E-Light": 10},
+    )
+    health["data_quality"] = {"complete_success_sample": False}
+    alerts = evaluate(health)
+    assert alerts == []
+
+
 def test_cooldown_prevents_duplicate():
-    """Running evaluate twice should not produce duplicate alerts (cooldown)."""
+    """Running evaluate twice should suppress duplicate notifications, not dashboard alerts."""
     health = make_health_data(
         pipelines={"nightly": {"total": 5, "success": 4, "failure": 1, "health_score": 80, "rating": "good", "daily_trend": []}},
     )
     alerts1 = evaluate(health)
     alerts2 = evaluate(health)
-    assert len(alerts2) == 0  # cooldown prevents re-fire
+    assert alerts1
+    assert alerts2
+    assert all(a.get("notification_suppressed") for a in alerts2)

@@ -6,8 +6,9 @@ import pytest
 from datetime import datetime
 from pathlib import Path
 
+from src.storage import read_json, resolve_dashboard_path, source_reports_dir
 
-REPORTS_DIR = Path("reports")
+REPORTS_DIR = source_reports_dir()
 REQUIRED_REPORT_FIELDS = ["pr_number", "pr_title", "pr_author", "pr_url", "analyzed_at", "runs"]
 REQUIRED_RUN_FIELDS = ["run_id", "workflow_name", "conclusion", "created_at", "jobs"]
 REQUIRED_JOB_FIELDS = ["job_id", "job_name", "conclusion"]
@@ -35,14 +36,14 @@ def test_reports_exist():
 @pytest.mark.parametrize("path", ALL_REPORTS)
 def test_report_valid_json(path):
     """Every report file must be valid JSON."""
-    data = json.loads(path.read_text())
+    data = read_json(path, default={})
     assert isinstance(data, dict), f"{path.name}: not a dict"
 
 
 @pytest.mark.parametrize("path", ALL_REPORTS)
 def test_report_required_fields(path):
     """Every report must have all required top-level fields."""
-    data = json.loads(path.read_text())
+    data = read_json(path, default={})
     for field in REQUIRED_REPORT_FIELDS:
         assert field in data, f"{path.name}: missing field '{field}'"
     assert isinstance(data["runs"], list), f"{path.name}: runs must be list"
@@ -52,7 +53,7 @@ def test_report_required_fields(path):
 @pytest.mark.parametrize("path", ALL_REPORTS)
 def test_report_run_fields(path):
     """Every run must have required fields."""
-    data = json.loads(path.read_text())
+    data = read_json(path, default={})
     for run in data["runs"]:
         for field in REQUIRED_RUN_FIELDS:
             assert field in run, f"{path.name} run {run.get('run_id','?')}: missing '{field}'"
@@ -61,7 +62,7 @@ def test_report_run_fields(path):
 @pytest.mark.parametrize("path", ALL_REPORTS)
 def test_report_job_fields(path):
     """Every job must have required fields + timing."""
-    data = json.loads(path.read_text())
+    data = read_json(path, default={})
     for run in data["runs"]:
         for job in run["jobs"]:
             for field in REQUIRED_JOB_FIELDS:
@@ -77,7 +78,7 @@ def test_report_job_fields(path):
 @pytest.mark.parametrize("path", ALL_REPORTS)
 def test_report_analysis_fields(path):
     """Every analysis (confidence>0) must have required fields."""
-    data = json.loads(path.read_text())
+    data = read_json(path, default={})
     for a in data.get("analyses", []):
         if a.get("confidence", 0) > 0:
             for field in REQUIRED_ANALYSIS_FIELDS:
@@ -91,7 +92,7 @@ def test_report_analysis_fields(path):
 @pytest.mark.parametrize("path", ALL_REPORTS)
 def test_report_job_analysis_consistency(path):
     """Every analysis job_id must match a job in the runs."""
-    data = json.loads(path.read_text())
+    data = read_json(path, default={})
     job_ids = set()
     for run in data["runs"]:
         for job in run["jobs"]:
@@ -107,7 +108,7 @@ def test_report_job_analysis_consistency(path):
 @pytest.mark.parametrize("path", ALL_REPORTS)
 def test_report_pr_number_consistent(path):
     """Report filename PR number must match pr_number field."""
-    data = json.loads(path.read_text())
+    data = read_json(path, default={})
     expected_pr = int(path.stem.split("-")[1])
     assert data["pr_number"] == expected_pr, f"{path.name}: filename says #{expected_pr}, field says #{data['pr_number']}"
 
@@ -126,7 +127,7 @@ def test_no_duplicate_reports():
 def test_all_reports_have_valid_confidence():
     """Confidence values must be valid integers 0-100."""
     for path in ALL_REPORTS:
-        data = json.loads(path.read_text())
+        data = read_json(path, default={})
         for a in data.get("analyses", []):
             conf = a.get("confidence", 0)
             assert isinstance(conf, (int, float)), f"{path.name}: confidence not a number: {conf}"
@@ -138,16 +139,34 @@ def test_report_index_consistent():
     index_path = REPORTS_DIR / "index.json"
     if not index_path.exists():
         pytest.skip("No index.json")
-    index = json.loads(index_path.read_text())
+    index = read_json(index_path, default={})
     indexed_prs = set()
     for entry in index["reports"]:
         indexed_prs.add(entry["pr_number"])
-        json_path = Path(entry["json_path"])
+        json_path = resolve_dashboard_path(entry["json_path"])
         assert json_path.exists(), f"index references missing file: {json_path}"
 
     # All report files should be in index
     for path in ALL_REPORTS:
-        data = json.loads(path.read_text())
+        data = read_json(path, default={})
         assert data["pr_number"] in indexed_prs, (
             f"{path.name}: PR #{data['pr_number']} on disk but not in index.json"
         )
+
+
+def test_health_counts_are_consistent():
+    """Dashboard health buckets must add up to total jobs."""
+    health_path = REPORTS_DIR / "health.json"
+    if not health_path.exists():
+        pytest.skip("No health.json")
+    data = read_json(health_path, default={})
+    overall_bucket_sum = 0
+    overall_measured = 0
+    for ptype, pdata in data.get("pipelines", {}).items():
+        bucket_sum = sum(pdata.get(key, 0) for key in ("success", "failure", "skipped", "cancelled", "other"))
+        assert pdata.get("total", 0) == bucket_sum, f"{ptype}: total does not match conclusion buckets"
+        assert pdata.get("measured_total", 0) == pdata.get("success", 0) + pdata.get("failure", 0)
+        overall_bucket_sum += bucket_sum
+        overall_measured += pdata.get("measured_total", 0)
+    assert data.get("overall", {}).get("total", 0) == overall_bucket_sum
+    assert data.get("overall", {}).get("measured_total", 0) == overall_measured

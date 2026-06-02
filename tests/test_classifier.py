@@ -1,13 +1,12 @@
 """Test classification rules loaded from config/rules.json."""
 
-import json
 import re
-from pathlib import Path
+from src.storage import load_rules
 
 
 def load_classify_pipeline():
     """Load pipeline classification from shared config."""
-    config = json.loads(Path("config/rules.json").read_text())
+    config = load_rules()
     patterns = {}
     for pt, cfg in config.get("pipeline_types", {}).items():
         pats = cfg.get("patterns", [])
@@ -24,7 +23,7 @@ def load_classify_pipeline():
 
 def load_classify_category():
     """Load category classification from shared config."""
-    config = json.loads(Path("config/rules.json").read_text())
+    config = load_rules()
     rules = []
     for cat in config.get("categories", []):
         combined = "|".join(cat["patterns"])

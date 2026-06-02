@@ -66,6 +66,8 @@ def notify_alerts(alerts: list[dict]) -> int:
 
     sent = 0
     for alert in alerts:
+        if alert.get("notification_suppressed"):
+            continue
         sev = alert["severity"].upper()
         msg = f"[{sev}] {alert['rule_name']}: {alert['message']}"
 

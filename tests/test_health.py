@@ -55,6 +55,7 @@ def test_compute_health_all_success():
     data = compute_health(reports)
     pr = data["pipelines"]["pr_e2e"]
     assert pr["success_rate"] == 100
+    assert pr["measured_total"] == 3
     assert pr["health_score"] >= 60  # good baseline
 
 
@@ -74,6 +75,15 @@ def test_compute_health_consecutive_penalty():
     data = compute_health(reports)
     pr = data["pipelines"]["pr_e2e"]
     assert len(pr.get("consecutive_details", [])) > 0
+    assert pr["consecutive_details"][0]["streak"] == 2
+
+
+def test_multiple_failed_jobs_in_one_run_are_not_a_streak():
+    reports = [make_report(1, "E2E-Light", "pr_e2e", ["failure", "failure", "failure"])]
+    data = compute_health(reports)
+    pr = data["pipelines"]["pr_e2e"]
+    assert pr.get("consecutive_details", []) == []
+    assert data["consecutive_failures"] == {}
 
 
 def test_compute_health_multi_pipeline():
@@ -92,3 +102,44 @@ def test_health_score_bounds():
     data = compute_health(reports)
     for pt, p in data["pipelines"].items():
         assert 0 <= p["health_score"] <= 100, f"{pt} health score out of bounds: {p['health_score']}"
+
+
+def test_skipped_jobs_do_not_lower_success_rate():
+    reports = [make_report(1, "E2E-Light", "pr_e2e", ["success", "skipped", "cancelled"])]
+    data = compute_health(reports)
+    pr = data["pipelines"]["pr_e2e"]
+    assert pr["total"] == 3
+    assert pr["measured_total"] == 1
+    assert pr["skipped"] == 1
+    assert pr["cancelled"] == 1
+    assert pr["success_rate"] == 100
+
+
+def test_no_measured_jobs_has_no_health_score():
+    reports = [make_report(1, "Nightly-A2", "nightly", ["skipped", "cancelled"])]
+    data = compute_health(reports, complete_sample=True)
+    nightly = data["pipelines"]["nightly"]
+    assert nightly["measured_total"] == 0
+    assert nightly["health_score"] is None
+    assert nightly["rating"] == "insufficient_data"
+
+
+def test_trend_windows_do_not_double_count_recent_jobs():
+    reports = [
+        make_report(1, "E2E-Light", "pr_e2e", ["success"], days_ago=0),
+        make_report(2, "E2E-Light", "pr_e2e", ["failure"], days_ago=2),
+        make_report(3, "E2E-Light", "pr_e2e", ["failure"], days_ago=5),
+    ]
+    data = compute_health(reports)
+    pr = data["pipelines"]["pr_e2e"]
+    assert sum(day["measured_total"] for day in pr["daily_trend"]) == 3
+
+
+def test_duplicate_run_jobs_are_counted_once():
+    report = make_report(1, "E2E-Light", "pr_e2e", ["failure", "success"])
+    duplicate = make_report(2, "E2E-Light", "pr_e2e", [])
+    duplicate.runs = report.runs
+    data = compute_health([report, duplicate])
+    pr = data["pipelines"]["pr_e2e"]
+    assert pr["total"] == 2
+    assert pr["measured_total"] == 2

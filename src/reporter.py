@@ -6,9 +6,18 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from .models import FailureReport, ReportIndex, ReportEntry
+from .storage import (
+    DOCS_REPORTS_DIR,
+    LOCAL_REPORTS_DIR,
+    current_date_str,
+    dashboard_json_path_for,
+    dashboard_md_path_for,
+    read_json,
+    write_json,
+)
 
-OUTPUT_DIR = Path("reports")
-DOCS_DIR = Path("docs/reports")
+OUTPUT_DIR = LOCAL_REPORTS_DIR
+DOCS_DIR = DOCS_REPORTS_DIR
 INDEX_FILE = OUTPUT_DIR / "index.json"
 
 
@@ -169,7 +178,7 @@ def generate_report(report: FailureReport) -> tuple[Path, Path]:
 
     Writes to both reports/ (local) and docs/reports/ (GitHub Pages).
     """
-    date_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    date_str = current_date_str()
     report_dir = OUTPUT_DIR / date_str
     report_dir.mkdir(parents=True, exist_ok=True)
 
@@ -184,7 +193,7 @@ def generate_report(report: FailureReport) -> tuple[Path, Path]:
     print(f"  -> {md_path}")
 
     # Also write JSON to docs/reports/ for GitHub Pages
-    docs_report_dir = Path("docs/reports") / date_str
+    docs_report_dir = DOCS_DIR / date_str
     docs_report_dir.mkdir(parents=True, exist_ok=True)
     docs_json = docs_report_dir / f"pr-{report.pr_number}.json"
     docs_json.write_text(json_content, encoding="utf-8")
@@ -196,7 +205,7 @@ def generate_report(report: FailureReport) -> tuple[Path, Path]:
 def update_index(reports: list[FailureReport]) -> Path:
     """Regenerate the report index file for the dashboard."""
     entries: list[ReportEntry] = []
-    date_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    date_str = current_date_str()
 
     for report in reports:
         top_severity = "low"
@@ -208,8 +217,8 @@ def update_index(reports: list[FailureReport]) -> Path:
         entries.append(ReportEntry(
             pr_number=report.pr_number,
             pr_title=report.pr_title,
-            json_path=f"reports/{date_str}/pr-{report.pr_number}.json",
-            md_path=f"reports/{date_str}/pr-{report.pr_number}.md",
+            json_path=dashboard_json_path_for(report.pr_number, date_str),
+            md_path=dashboard_md_path_for(report.pr_number, date_str),
             analyzed_at=report.analyzed_at,
             failed_job_count=len(report.analyses),
             top_severity=top_severity,
@@ -217,14 +226,12 @@ def update_index(reports: list[FailureReport]) -> Path:
 
     # Merge with existing index entries
     existing: dict[int, ReportEntry] = {}
-    if INDEX_FILE.exists():
+    old_data = read_json(INDEX_FILE, default={}) or read_json(DOCS_DIR / "index.json", default={}) or {}
+    for e in old_data.get("reports", []):
         try:
-            import json
-            old_data = json.loads(INDEX_FILE.read_text())
-            for e in old_data.get("reports", []):
-                existing[e["pr_number"]] = ReportEntry(**e)
-        except Exception:
-            pass
+            existing[e["pr_number"]] = ReportEntry(**e)
+        except TypeError:
+            continue
 
     for e in entries:
         existing[e.pr_number] = e  # Update or add
@@ -242,8 +249,7 @@ def update_index(reports: list[FailureReport]) -> Path:
 
     # Also write to docs/reports/ for GitHub Pages
     docs_index = DOCS_DIR / "index.json"
-    DOCS_DIR.mkdir(parents=True, exist_ok=True)
-    docs_index.write_text(index.to_json(), encoding="utf-8")
+    write_json(docs_index, index.to_dict())
     docs_index.chmod(0o644)
 
     return INDEX_FILE

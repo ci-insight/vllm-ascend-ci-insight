@@ -10,9 +10,11 @@ import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
 
+from .storage import DOCS_REPORTS_DIR, write_json
+
 DATA_DIR = Path("data")
 DB_PATH = DATA_DIR / "metrics.db"
-SNAPSHOT_JSON = Path("docs/reports/daily-snapshots.json")
+SNAPSHOT_JSON = DOCS_REPORTS_DIR / "daily-snapshots.json"
 
 
 def _conn() -> sqlite3.Connection:
@@ -62,6 +64,8 @@ def save_snapshot(health_data: dict, reports: list):
     db = _conn()
 
     pipelines = health_data.get("pipelines", {})
+    db.execute("DELETE FROM daily_snapshots WHERE date = ?", (today,))
+    db.execute("DELETE FROM job_records WHERE date(created_at) = ?", (today,))
 
     for ptype, pdata in pipelines.items():
         db.execute(
@@ -76,11 +80,15 @@ def save_snapshot(health_data: dict, reports: list):
                 pdata.get("success", 0),
                 pdata.get("failure", 0),
                 pdata.get("success_rate", 0),
-                pdata.get("health_score", 0),
+                pdata.get("health_score"),
                 0,  # avg_duration computed below
                 json.dumps({
                     "rating": pdata.get("rating", ""),
                     "trend": pdata.get("trend", ""),
+                    "measured_total": pdata.get("measured_total", 0),
+                    "skipped": pdata.get("skipped", 0),
+                    "cancelled": pdata.get("cancelled", 0),
+                    "other": pdata.get("other", 0),
                 }),
                 now,
             ),
@@ -165,7 +173,7 @@ def write_snapshot_json():
             "success": success,
             "failure": failure,
             "success_rate": round(sr, 1),
-            "health_score": round(health, 1),
+            "health_score": round(health, 1) if health is not None else None,
             "avg_duration_sec": round(avg_dur, 1),
         }
         try:
@@ -179,8 +187,7 @@ def write_snapshot_json():
         "pipeline_types": by_type,
     }
 
-    SNAPSHOT_JSON.parent.mkdir(parents=True, exist_ok=True)
-    SNAPSHOT_JSON.write_text(json.dumps(data, indent=2, ensure_ascii=False))
+    write_json(SNAPSHOT_JSON, data)
 
 
 def query_trends(pipeline_type: str, days: int = 30) -> list[dict]:

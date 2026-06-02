@@ -170,11 +170,13 @@ async function loadAnalysesData() {
   await loadRules(); // ensure classification rules are loaded
   allAnalyses = [];
   allJobs = [];
+  const seenJobIds = new Set();
   for (const r of allReports) {
+    let data = null;
     try {
       const resp = await fetch(r.json_path);
       if (!resp.ok) continue;
-      const data = await resp.json();
+      data = await resp.json();
 
       // Enrich report with CI execution time + pipeline types
       let earliestRun = null;
@@ -190,6 +192,8 @@ async function loadAnalysesData() {
       // Populate allJobs FIRST (needed by analysis enrichment below)
       for (const run of data.runs || []) {
         for (const job of run.jobs || []) {
+          if (seenJobIds.has(job.job_id)) continue;
+          seenJobIds.add(job.job_id);
           if (job.started_at && job.completed_at) {
             const started = new Date(job.started_at);
             const completed = new Date(job.completed_at);
@@ -211,11 +215,13 @@ async function loadAnalysesData() {
           }
         }
       }
-    } catch (e) { /* skip */ }
+    } catch (e) {
+      continue;
+    }
 
     // Now enrich analyses with pipeline type (allJobs is populated)
     try {
-      for (const a of data.analyses || []) {
+      for (const a of data?.analyses || []) {
         if (a.confidence > 0) {
           a._pr_number = r.pr_number;
           a._pr_title = r.pr_title;

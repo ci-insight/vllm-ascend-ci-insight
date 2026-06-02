@@ -36,9 +36,16 @@ function renderHealthUI() {
   const pipelines = healthData.pipelines || {};
   const alerts = alertsData?.alerts || [];
   const overall = healthData.overall || {};
+  const completeSample = healthData.data_quality?.complete_success_sample !== false;
+  const qualityWarning = healthData.data_quality?.warning || "";
 
   // Alert banners
   let alertHtml = "";
+  if (!completeSample) {
+    alertHtml += `<div class="alert-banner" style="border-left: 3px solid var(--medium); background: rgba(202,138,4,0.1)">
+      <strong>[DATA]</strong> ${escapeHtml(qualityWarning || "This view is based on failed reports only.")}
+    </div>`;
+  }
   if (alerts.length) {
     alertHtml = alerts.map(a => {
       const bg = a.severity === "critical" ? "var(--critical)" : "var(--medium)";
@@ -55,10 +62,14 @@ function renderHealthUI() {
     const p = pipelines[pt];
     if (!p) continue;
     const label = { pr_e2e: "PR CI", nightly: "Nightly", weekly: "Weekly", other: "Other" }[pt] || pt;
+    const scoreText = completeSample && p.health_score !== null ? p.health_score : "N/A";
+    const sampleText = (p.measured_total || 0) === 0
+      ? `no completed jobs · ${p.total || 0} total`
+      : `${completeSample ? `${p.success_rate}% SR` : `${p.success_rate}% observed`} · ${p.measured_total || 0}/${p.total || 0} measured`;
     cardsHtml += `<div class="metric-card clickable" onclick="showPipelineDetail('${pt}')" style="border-left:3px solid ${p.rating_color}">
-      <div class="metric-value" style="color:${p.rating_color}">${p.health_score}</div>
+      <div class="metric-value" style="color:${p.rating_color}">${scoreText}</div>
       <div class="metric-label">${label}</div>
-      <div style="font-size:11px;color:var(--text-dim);margin-top:4px">${p.success_rate}% SR · ${p.trend === "up" ? "↗" : p.trend === "down" ? "↘" : "→"}</div>
+      <div style="font-size:11px;color:var(--text-dim);margin-top:4px">${sampleText}</div>
     </div>`;
   }
 
@@ -187,7 +198,7 @@ function renderHealthCharts(pipelines, worst) {
     .filter(([, entries]) => entries && entries.length)
     .map(([pt, entries]) => ({
       label: labels[pt] || pt,
-      data: dates.map(d => { const found = entries.find(t => t.date === d); return found ? (found.health_score || 0) : null; }),
+      data: dates.map(d => { const found = entries.find(t => t.date === d); return found ? found.health_score : null; }),
       borderColor: colors[pt] || "#8b949e",
       backgroundColor: "transparent",
       tension: 0.3,
@@ -251,11 +262,16 @@ function showPipelineDetail(ptype) {
     byWF[j.workflow_name].push(j);
   });
 
-  let html = `<h2>${label} Pipeline <span style="color:${p.rating_color};font-size:18px">${p.health_score}/100</span></h2>`;
+  const completeSample = healthData?.data_quality?.complete_success_sample !== false;
+  const scoreText = completeSample && p.health_score !== null ? `${p.health_score}/100` : "N/A";
+  let html = `<h2>${label} Pipeline <span style="color:${p.rating_color};font-size:18px">${scoreText}</span></h2>`;
   html += `<div style="display:flex;gap:16px;margin:12px 0;flex-wrap:wrap">
     <div class="metric-card"><div class="metric-value">${p.total}</div><div class="metric-label">Total Jobs</div></div>
-    <div class="metric-card"><div class="metric-value">${p.success_rate}%</div><div class="metric-label">Success Rate</div></div>
+    <div class="metric-card"><div class="metric-value">${p.measured_total || 0}</div><div class="metric-label">Measured Jobs</div></div>
+    <div class="metric-card"><div class="metric-value">${p.success_rate}%</div><div class="metric-label">${completeSample ? "Success Rate" : "Observed Success"}</div></div>
     <div class="metric-card"><div class="metric-value">${p.failure}</div><div class="metric-label">Failures</div></div>
+    <div class="metric-card"><div class="metric-value">${p.skipped || 0}</div><div class="metric-label">Skipped</div></div>
+    <div class="metric-card"><div class="metric-value">${p.cancelled || 0}</div><div class="metric-label">Cancelled</div></div>
     <div class="metric-card"><div class="metric-value">${p.recent_24h_failures || 0}</div><div class="metric-label">24h Failures</div></div>
   </div>`;
 

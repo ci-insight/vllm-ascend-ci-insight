@@ -3,6 +3,7 @@
 import json
 import pytest
 from pathlib import Path
+from src.storage import read_json
 
 
 @pytest.fixture
@@ -10,7 +11,7 @@ def rules_config():
     """Load shared classification rules."""
     config_path = Path("config/rules.json")
     if config_path.exists():
-        return json.loads(config_path.read_text())
+        return read_json(config_path, default={})
     return {}
 
 

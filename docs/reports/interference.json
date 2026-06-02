@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-01T09:03:14.779316+00:00",
+  "generated_at": "2026-06-02T03:35:37.742069+00:00",
   "total_failures": 128,
   "total_prs": 21,
   "groups": [
@@ -15,14 +15,14 @@
       "failures": 2,
       "evidence": [
         {
-          "pr": 9460,
-          "workflow": "E2E-Full",
-          "job": "e2e-comment (v0.20.2) / multicard-2-full (0)"
-        },
-        {
           "pr": 9467,
           "workflow": "E2E-Light",
           "job": "lint / validate-pr-title"
+        },
+        {
+          "pr": 9460,
+          "workflow": "E2E-Full",
+          "job": "e2e-comment (v0.20.2) / multicard-2-full (0)"
         }
       ]
     },
@@ -39,9 +39,14 @@
       "failures": 4,
       "evidence": [
         {
-          "pr": 9437,
+          "pr": 9467,
           "workflow": "E2E-Light",
           "job": "lint / pre-commit"
+        },
+        {
+          "pr": 9467,
+          "workflow": "E2E-Light",
+          "job": "lint / validate-pr-title"
         },
         {
           "pr": 9449,
@@ -49,14 +54,9 @@
           "job": "lint / validate-pr-title"
         },
         {
-          "pr": 9467,
+          "pr": 9437,
           "workflow": "E2E-Light",
           "job": "lint / pre-commit"
-        },
-        {
-          "pr": 9467,
-          "workflow": "E2E-Light",
-          "job": "lint / validate-pr-title"
         }
       ]
     },
@@ -72,22 +72,22 @@
       "failures": 4,
       "evidence": [
         {
-          "pr": 9201,
-          "workflow": "E2E-Light",
-          "job": "lint / pre-commit"
-        },
-        {
-          "pr": 9201,
-          "workflow": "E2E-Light",
-          "job": "lint / pre-commit"
-        },
-        {
           "pr": 9497,
           "workflow": "E2E-Light",
           "job": "lint / pre-commit"
         },
         {
           "pr": 9497,
+          "workflow": "E2E-Light",
+          "job": "lint / pre-commit"
+        },
+        {
+          "pr": 9201,
+          "workflow": "E2E-Light",
+          "job": "lint / pre-commit"
+        },
+        {
+          "pr": 9201,
           "workflow": "E2E-Light",
           "job": "lint / pre-commit"
         }
@@ -105,52 +105,52 @@
       "failures": 14,
       "evidence": [
         {
-          "pr": 9201,
+          "pr": 9497,
           "workflow": "vLLM Main Schedule Test",
           "job": "e2e-test / multicard-2-full (0)"
         },
         {
-          "pr": 9201,
+          "pr": 9497,
           "workflow": "vLLM Main Schedule Test",
           "job": "e2e-test / singlecard-full (1)"
         },
         {
-          "pr": 9201,
+          "pr": 9497,
           "workflow": "vLLM Main Schedule Test",
           "job": "e2e-test / multicard-4-full (0)"
         },
         {
-          "pr": 9201,
+          "pr": 9497,
           "workflow": "vLLM Main Schedule Test",
           "job": "e2e-test / singlecard-full (0)"
         },
         {
-          "pr": 9201,
+          "pr": 9497,
           "workflow": "E2E-Full",
           "job": "e2e-full (0d4d334eaa583b9c09aa4eb7538c22db99fd84b3) / singlecard-full (0)"
         },
         {
-          "pr": 9201,
-          "workflow": "E2E-Light",
-          "job": "lint / pre-commit"
-        },
-        {
-          "pr": 9201,
+          "pr": 9497,
           "workflow": "E2E-Light",
           "job": "lint / pre-commit"
         },
         {
           "pr": 9497,
+          "workflow": "E2E-Light",
+          "job": "lint / pre-commit"
+        },
+        {
+          "pr": 9201,
           "workflow": "vLLM Main Schedule Test",
           "job": "e2e-test / multicard-2-full (0)"
         },
         {
-          "pr": 9497,
+          "pr": 9201,
           "workflow": "vLLM Main Schedule Test",
           "job": "e2e-test / singlecard-full (1)"
         },
         {
-          "pr": 9497,
+          "pr": 9201,
           "workflow": "vLLM Main Schedule Test",
           "job": "e2e-test / multicard-4-full (0)"
         }
@@ -168,12 +168,12 @@
       "failures": 2,
       "evidence": [
         {
-          "pr": 9201,
+          "pr": 9497,
           "workflow": "E2E-Light",
           "job": "lint / validate-pr-title"
         },
         {
-          "pr": 9497,
+          "pr": 9201,
           "workflow": "E2E-Light",
           "job": "lint / validate-pr-title"
         }
@@ -191,52 +191,52 @@
       "failures": 22,
       "evidence": [
         {
-          "pr": 9201,
+          "pr": 9497,
           "workflow": "Nightly-A2",
           "job": "doc-test / vLLM Ascend test (nightly-main)"
         },
         {
-          "pr": 9201,
+          "pr": 9497,
           "workflow": "Nightly-A2",
           "job": "doc-test / vLLM Ascend test (nightly-main-openeuler)"
         },
         {
-          "pr": 9201,
+          "pr": 9497,
           "workflow": "Nightly-A2",
           "job": "single-node-accuracy-tests (main, accuracy-group-2, linux-aarch64-a2b3-1, ERNIE-4.5-21B-A3B-PT, I... / [\n  \"ERNIE-4.5-21B-A3B-PT\",\n  \"InternVL3_5-8B-hf\",\n  \"Molmo-7B-D-0924\",\n  \"Llama-3.2-3B-Instruct\",\n  \"llava-onevision-qwen2-0.5b-ov-hf\"\n] accuracy test"
         },
         {
-          "pr": 9201,
+          "pr": 9497,
           "workflow": "Nightly-A2",
           "job": "single-node-accuracy-tests (main, accuracy-group-4, linux-aarch64-a2b3-4, Qwen3-Next-80B-A3B-Inst... / [\n  \"Qwen3-Next-80B-A3B-Instruct\",\n  \"Qwen3-Omni-30B-A3B-Instruct\",\n  \"Hunyuan-A13B-Instruct\",\n  \"Mixtral-8x7B-Instruct-v0.1\"\n] accuracy test"
         },
         {
-          "pr": 9201,
+          "pr": 9497,
           "workflow": "Nightly-A2",
           "job": "single-node-accuracy-tests (main, accuracy-group-1, linux-aarch64-a2b3-1, Qwen3-VL-8B-Instruct-W8... / [\n  \"Qwen3-VL-8B-Instruct-W8A8\",\n  \"Qwen3-8B\",\n  \"Qwen2-Audio-7B-Instruct\",\n  \"Qwen3-8B-W8A8\",\n  \"Qwen3-VL-8B-Instruct\",\n  \"Minitron-8B-Base\"\n] accuracy test"
         },
         {
-          "pr": 9201,
+          "pr": 9497,
           "workflow": "Nightly-A2",
           "job": "single-node (main, test_custom_op, linux-aarch64-a2b3-1, tests/e2e/nightly/single_node/ops/single... / test_custom_op"
         },
         {
-          "pr": 9201,
+          "pr": 9497,
           "workflow": "Nightly-A2",
           "job": "single-node (main, Qwen3.5-397B-A17B-w4a8-mtp, linux-aarch64-a2b3-8, Qwen3.5-397B-A17B-w4a8-mtp-A... / Qwen3.5-397B-A17B-w4a8-mtp"
         },
         {
-          "pr": 9201,
+          "pr": 9497,
           "workflow": "Nightly-A2",
           "job": "single-node (main, Qwen3.5-27B-w8a8-A2, linux-aarch64-a2b3-2, Qwen3.5-27B-w8a8-A2.yaml) / Qwen3.5-27B-w8a8-A2"
         },
         {
-          "pr": 9201,
+          "pr": 9497,
           "workflow": "Nightly-A2",
           "job": "single-node-accuracy-tests (main, accuracy-group-3, linux-aarch64-a2b3-2, Qwen3-30B-A3B, Qwen3-VL... / [\n  \"Qwen3-30B-A3B\",\n  \"Qwen3-VL-30B-A3B-Instruct\",\n  \"Qwen3-30B-A3B-W8A8\"\n] accuracy test"
         },
         {
-          "pr": 9201,
+          "pr": 9497,
           "workflow": "Nightly-A2",
           "job": "single-node (main, MiniMax-M2.5-w8a8-QuaRot-A2, linux-aarch64-a2b3-8, MiniMax-M2.5-w8a8-QuaRot-A2... / MiniMax-M2.5-w8a8-QuaRot-A2"
         }
@@ -254,42 +254,42 @@
       "failures": 8,
       "evidence": [
         {
-          "pr": 9201,
+          "pr": 9497,
           "workflow": "vLLM Main Schedule Test",
           "job": "e2e-test / multicard-2-full (0)"
         },
         {
-          "pr": 9201,
+          "pr": 9497,
           "workflow": "vLLM Main Schedule Test",
           "job": "e2e-test / singlecard-full (0)"
         },
         {
-          "pr": 9201,
+          "pr": 9497,
           "workflow": "vLLM Main Schedule Test",
           "job": "e2e-test / multicard-4-full (0)"
         },
         {
-          "pr": 9201,
+          "pr": 9497,
           "workflow": "vLLM Main Schedule Test",
           "job": "e2e-test / singlecard-full (1)"
         },
         {
-          "pr": 9497,
+          "pr": 9201,
           "workflow": "vLLM Main Schedule Test",
           "job": "e2e-test / multicard-2-full (0)"
         },
         {
-          "pr": 9497,
+          "pr": 9201,
           "workflow": "vLLM Main Schedule Test",
           "job": "e2e-test / singlecard-full (0)"
         },
         {
-          "pr": 9497,
+          "pr": 9201,
           "workflow": "vLLM Main Schedule Test",
           "job": "e2e-test / multicard-4-full (0)"
         },
         {
-          "pr": 9497,
+          "pr": 9201,
           "workflow": "vLLM Main Schedule Test",
           "job": "e2e-test / singlecard-full (1)"
         }
@@ -307,12 +307,12 @@
       "failures": 2,
       "evidence": [
         {
-          "pr": 9498,
+          "pr": 9499,
           "workflow": "E2E-Light",
           "job": "lint / pre-commit"
         },
         {
-          "pr": 9499,
+          "pr": 9498,
           "workflow": "E2E-Light",
           "job": "lint / pre-commit"
         }
@@ -331,16 +331,6 @@
       "failures": 4,
       "evidence": [
         {
-          "pr": 9201,
-          "workflow": "E2E-Light",
-          "job": "lint / pre-commit"
-        },
-        {
-          "pr": 9497,
-          "workflow": "E2E-Light",
-          "job": "lint / pre-commit"
-        },
-        {
           "pr": 9504,
           "workflow": "E2E-Light",
           "job": "lint / pre-commit"
@@ -349,6 +339,16 @@
           "pr": 9504,
           "workflow": "E2E-Light",
           "job": "lint / validate-pr-title"
+        },
+        {
+          "pr": 9497,
+          "workflow": "E2E-Light",
+          "job": "lint / pre-commit"
+        },
+        {
+          "pr": 9201,
+          "workflow": "E2E-Light",
+          "job": "lint / pre-commit"
         }
       ]
     },
@@ -365,32 +365,32 @@
       "failures": 6,
       "evidence": [
         {
-          "pr": 9648,
-          "workflow": "E2E-Light",
-          "job": "lint / pre-commit"
-        },
-        {
-          "pr": 9650,
-          "workflow": "E2E-Light",
-          "job": "lint / pre-commit"
-        },
-        {
-          "pr": 9650,
-          "workflow": "E2E-Light",
-          "job": "lint / pre-commit"
-        },
-        {
-          "pr": 9650,
-          "workflow": "E2E-Light",
-          "job": "lint / pre-commit"
-        },
-        {
           "pr": 9651,
           "workflow": "E2E-Light",
           "job": "lint / validate-pr-title"
         },
         {
           "pr": 9651,
+          "workflow": "E2E-Light",
+          "job": "lint / pre-commit"
+        },
+        {
+          "pr": 9650,
+          "workflow": "E2E-Light",
+          "job": "lint / pre-commit"
+        },
+        {
+          "pr": 9650,
+          "workflow": "E2E-Light",
+          "job": "lint / pre-commit"
+        },
+        {
+          "pr": 9650,
+          "workflow": "E2E-Light",
+          "job": "lint / pre-commit"
+        },
+        {
+          "pr": 9648,
           "workflow": "E2E-Light",
           "job": "lint / pre-commit"
         }
@@ -407,6 +407,16 @@
       "pr_count": 2,
       "failures": 7,
       "evidence": [
+        {
+          "pr": 9651,
+          "workflow": "E2E-Light",
+          "job": "lint / pre-commit"
+        },
+        {
+          "pr": 9651,
+          "workflow": "E2E-Light",
+          "job": "lint / pre-commit"
+        },
         {
           "pr": 9650,
           "workflow": "E2E-Full",
@@ -431,16 +441,6 @@
           "pr": 9650,
           "workflow": "E2E-Light",
           "job": "lint / pre-commit"
-        },
-        {
-          "pr": 9651,
-          "workflow": "E2E-Light",
-          "job": "lint / pre-commit"
-        },
-        {
-          "pr": 9651,
-          "workflow": "E2E-Light",
-          "job": "lint / pre-commit"
         }
       ]
     },
@@ -455,11 +455,6 @@
       "pr_count": 2,
       "failures": 8,
       "evidence": [
-        {
-          "pr": 9650,
-          "workflow": "E2E-Light",
-          "job": "lint / pre-commit"
-        },
         {
           "pr": 9651,
           "workflow": "Nightly-A3",
@@ -494,6 +489,11 @@
           "pr": 9651,
           "workflow": "vLLM Main Schedule Test",
           "job": "e2e-test / singlecard-full (1)"
+        },
+        {
+          "pr": 9650,
+          "workflow": "E2E-Light",
+          "job": "lint / pre-commit"
         }
       ]
     },
@@ -508,6 +508,16 @@
       "pr_count": 2,
       "failures": 14,
       "evidence": [
+        {
+          "pr": 9660,
+          "workflow": "E2E-Light",
+          "job": "lint / pre-commit"
+        },
+        {
+          "pr": 9660,
+          "workflow": "E2E-Light",
+          "job": "lint / pre-commit"
+        },
         {
           "pr": 9651,
           "workflow": "Cache csrc Build Artifacts",
@@ -547,16 +557,6 @@
           "pr": 9651,
           "workflow": "Cache csrc Build Artifacts",
           "job": "build-ARM64-310p-openeuler-cache"
-        },
-        {
-          "pr": 9651,
-          "workflow": "Cache csrc Build Artifacts",
-          "job": "build-ARM64-a3-openeuler-cache"
-        },
-        {
-          "pr": 9651,
-          "workflow": "Cache csrc Build Artifacts",
-          "job": "build-ARM64-a3-ubuntu-cache"
         }
       ]
     },
@@ -686,23 +686,23 @@
           "version": "smart test (7e1b45a09252a5b513cd83116aa7a2f310220c34) / smart-ut (a3 x2)"
         },
         {
-          "pr": 9201,
+          "pr": 9497,
           "version": "e2e-full (0d4d334eaa583b9c09aa4eb7538c22db99fd84b3) / singlecard-full (0)"
-        },
-        {
-          "pr": 9349,
-          "version": "e2e-light (0d4d334eaa583b9c09aa4eb7538c22db99fd84b3) / 310p multicards 4cards"
-        },
-        {
-          "pr": 9437,
-          "version": "smart test (0d4d334eaa583b9c09aa4eb7538c22db99fd84b3) / smart-ut (a2 x1)"
         },
         {
           "pr": 9476,
           "version": "e2e-full (0d4d334eaa583b9c09aa4eb7538c22db99fd84b3) / singlecard-full (0)"
         },
         {
-          "pr": 9497,
+          "pr": 9437,
+          "version": "smart test (0d4d334eaa583b9c09aa4eb7538c22db99fd84b3) / smart-ut (a2 x1)"
+        },
+        {
+          "pr": 9349,
+          "version": "e2e-light (0d4d334eaa583b9c09aa4eb7538c22db99fd84b3) / 310p multicards 4cards"
+        },
+        {
+          "pr": 9201,
           "version": "e2e-full (0d4d334eaa583b9c09aa4eb7538c22db99fd84b3) / singlecard-full (0)"
         }
       ]

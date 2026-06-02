@@ -12,8 +12,9 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from .models import FailureReport
+from .storage import DOCS_REPORTS_DIR, LOCAL_REPORTS_DIR, write_json
 
-REPORTS_DIR = Path("reports")
+REPORTS_DIR = LOCAL_REPORTS_DIR
 INTERFERENCE_FILE = REPORTS_DIR / "interference.json"
 
 
@@ -124,9 +125,7 @@ def detect(reports: list[FailureReport], window_hours: int = 2) -> dict:
 
 
 def save_interference(data: dict):
-    INTERFERENCE_FILE.parent.mkdir(parents=True, exist_ok=True)
-    INTERFERENCE_FILE.write_text(json.dumps(data, indent=2, ensure_ascii=False))
-    docs_path = Path("docs/reports/interference.json")
-    docs_path.parent.mkdir(parents=True, exist_ok=True)
-    docs_path.write_text(json.dumps(data, indent=2, ensure_ascii=False))
+    write_json(INTERFERENCE_FILE, data)
+    docs_path = DOCS_REPORTS_DIR / "interference.json"
+    write_json(docs_path, data)
     print(f"  Interference: {data.get('summary', '')}")

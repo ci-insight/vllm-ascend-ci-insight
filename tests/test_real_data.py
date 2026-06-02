@@ -3,17 +3,17 @@
 import json
 import re
 import os
-from pathlib import Path
 from collections import defaultdict
 import pytest
 
+from src.storage import source_reports_dir, load_rules, read_json
 
-REPORTS_DIR = Path("reports")
+REPORTS_DIR = source_reports_dir()
 
 
 def load_classification_rules():
     """Load rules from shared config."""
-    config = json.loads(Path("config/rules.json").read_text())
+    config = load_rules()
 
     pipeline_patterns = {}
     for pt, cfg in config.get("pipeline_types", {}).items():
@@ -54,7 +54,7 @@ def collect_all_analyses():
         for f in files:
             if not f.startswith("pr-") or not f.endswith(".json"):
                 continue
-            data = json.loads(Path(root, f).read_text())
+            data = read_json(os.path.join(root, f), default={})
 
             # Build job_id -> workflow_name map from runs
             job_wf = {}

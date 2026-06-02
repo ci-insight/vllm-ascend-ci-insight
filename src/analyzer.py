@@ -13,6 +13,7 @@ from typing import Optional
 
 from .collector import truncate_log
 from .models import FailureReport, JobAnalysis, CIJob
+from .storage import LOCAL_REPORTS_DIR, read_json, write_json
 
 # Maximum characters to send to claude for analysis (roughly 30K tokens)
 MAX_LOG_CHARS = 60000
@@ -201,22 +202,18 @@ def _log_hash(log_text: str) -> str:
 class AnalysisCache:
     """Simple JSON-file-based cache to avoid re-analyzing identical logs."""
 
-    def __init__(self, cache_path: Path = Path("reports/.analysis_cache.json")):
+    def __init__(self, cache_path: Path = LOCAL_REPORTS_DIR / ".analysis_cache.json"):
         self.cache_path = cache_path
         self.entries: dict[str, dict] = {}
         if cache_path.exists():
-            try:
-                self.entries = json.loads(cache_path.read_text())
-            except (json.JSONDecodeError, OSError):
-                self.entries = {}
+            self.entries = read_json(cache_path, default={}) or {}
 
     def get(self, key: str) -> Optional[dict]:
         return self.entries.get(key)
 
     def set(self, key: str, data: dict):
         self.entries[key] = data
-        self.cache_path.parent.mkdir(parents=True, exist_ok=True)
-        self.cache_path.write_text(json.dumps(self.entries, indent=2))
+        write_json(self.cache_path, self.entries)
 
 
 def analyze_report(report: FailureReport, cache: Optional[AnalysisCache] = None) -> FailureReport:

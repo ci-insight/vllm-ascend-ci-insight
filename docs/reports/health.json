@@ -1,75 +1,82 @@
 {
-  "generated_at": "2026-06-01T09:03:14.777964+00:00",
+  "generated_at": "2026-06-02T03:35:37.734521+00:00",
+  "data_quality": {
+    "complete_success_sample": true,
+    "sample_kind": "complete_ci_runs",
+    "warning": ""
+  },
   "overall": {
-    "total": 296,
-    "success": 42,
-    "success_rate": 14,
-    "health_score": 0
+    "total": 174,
+    "measured_total": 22,
+    "success": 20,
+    "success_rate": 91,
+    "health_score": 65
   },
   "pipelines": {
     "nightly": {
       "type": "nightly",
-      "total": 128,
-      "success": 6,
-      "failure": 46,
-      "success_rate": 5,
-      "health_score": 0,
-      "rating": "danger",
-      "rating_color": "#dc2626",
-      "trend": "down",
-      "consecutive_details": [
-        {
-          "workflow": "vLLM Main Schedule Test",
-          "streak": 4,
-          "penalty": 30
-        }
-      ],
-      "recent_24h_total": 0,
+      "total": 69,
+      "measured_total": 0,
+      "success": 0,
+      "failure": 0,
+      "skipped": 69,
+      "cancelled": 0,
+      "other": 0,
+      "success_rate": 0,
+      "health_score": null,
+      "rating": "insufficient_data",
+      "rating_color": "#8b949e",
+      "trend": "flat",
+      "consecutive_details": [],
+      "recent_24h_total": 69,
       "recent_24h_failures": 0,
       "daily_trend": [
         {
-          "date": "2026-05-28",
-          "total": 90,
-          "success": 6,
-          "failure": 8,
-          "success_rate": 7,
-          "health": 4
+          "date": "2026-06-02",
+          "total": 69,
+          "measured_total": 0,
+          "success": 0,
+          "failure": 0,
+          "skipped": 69,
+          "cancelled": 0,
+          "other": 0,
+          "success_rate": 0,
+          "health": 3
         }
       ]
     },
     "pr_e2e": {
       "type": "pr_e2e",
-      "total": 168,
-      "success": 36,
-      "failure": 82,
-      "success_rate": 21,
-      "health_score": 0,
-      "rating": "danger",
-      "rating_color": "#dc2626",
-      "trend": "down",
-      "consecutive_details": [
-        {
-          "workflow": "Cache csrc Build Artifacts",
-          "streak": 12,
-          "penalty": 30
-        }
-      ],
-      "recent_24h_total": 0,
-      "recent_24h_failures": 0,
+      "total": 105,
+      "measured_total": 22,
+      "success": 20,
+      "failure": 2,
+      "skipped": 53,
+      "cancelled": 16,
+      "other": 14,
+      "success_rate": 91,
+      "health_score": 65,
+      "rating": "fair",
+      "rating_color": "#ca8a04",
+      "trend": "flat",
+      "consecutive_details": [],
+      "recent_24h_total": 105,
+      "recent_24h_failures": 2,
       "daily_trend": [
         {
-          "date": "2026-05-28",
-          "total": 114,
-          "success": 36,
-          "failure": 30,
-          "success_rate": 32,
-          "health": 19
+          "date": "2026-06-02",
+          "total": 105,
+          "measured_total": 22,
+          "success": 20,
+          "failure": 2,
+          "skipped": 53,
+          "cancelled": 16,
+          "other": 14,
+          "success_rate": 91,
+          "health": 58
         }
       ]
     }
   },
-  "consecutive_failures": {
-    "vLLM Main Schedule Test": 4,
-    "Cache csrc Build Artifacts": 12
-  }
+  "consecutive_failures": {}
 }

@@ -7,18 +7,17 @@ import re
 import subprocess
 import sys
 from datetime import datetime, timedelta, timezone
-from pathlib import Path
 from typing import Optional
 
 from .models import CIRun, CIJob, StepResult
+from .storage import load_rules
 
 REPO = "vllm-project/vllm-ascend"
 
 # Load pipeline classification rules from shared config
 def _load_pipeline_rules() -> dict[str, list[str]]:
-    config_path = Path("config/rules.json")
-    if config_path.exists():
-        data = json.loads(config_path.read_text())
+    data = load_rules()
+    if data:
         return {
             pt: cfg["patterns"]
             for pt, cfg in data.get("pipeline_types", {}).items()
