@@ -110,3 +110,20 @@ Dashboard 的健康概览页签加载此文件渲染趋势折线图。
   score snapshot trend.
 
 Do not use snapshot dates for charts labeled as CI execution trends.
+
+## CI Metadata Sampling Targets
+
+The lightweight CI metadata collector must not stop only because measured job
+counts are high enough. For trend charts, the sample also needs enough distinct
+CI execution dates.
+
+Recommended default for a seven-day health dashboard:
+
+- measured target: at least five success/failure jobs per core pipeline
+  (`pr_e2e` and `nightly`)
+- execution-date target: at least seven distinct CI execution dates when the
+  upstream repository has runs across those dates
+
+If the configured run limit is exhausted before the execution-date target is
+met, the dashboard must expose the sampled execution-date count so users can see
+that the trend has limited temporal coverage.

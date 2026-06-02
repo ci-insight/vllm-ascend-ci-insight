@@ -411,6 +411,17 @@ pipeline_types / daily_snapshots
 
 Do not label a snapshot-date chart as a CI execution trend.
 
+Sampling guardrail:
+
+- Lightweight GitHub metadata collection may stop early only after both sample
+  quality targets are satisfied: measured success/failure job coverage per core
+  pipeline and distinct CI execution-date coverage.
+- The static JSON and local database should carry `execution_dates` and
+  `min_execution_days` metadata so the dashboard can disclose when a trend is
+  based on a narrow execution-date sample.
+- Increasing measured job count alone does not make a seven-day trend reliable
+  if all sampled jobs executed on the same day.
+
 ### Failure Analysis
 
 Source:

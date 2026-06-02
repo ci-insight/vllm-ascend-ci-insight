@@ -21,11 +21,17 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
   background: var(--bg);
   color: var(--text);
   line-height: 1.5;
+  min-width: 0;
+  overflow-x: hidden;
 }
 
 /* ── Header ── */
@@ -41,26 +47,33 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 24px 0;
+  gap: 12px;
+  padding: 12px clamp(12px, 3vw, 28px) 0;
+  flex-wrap: wrap;
 }
 
 .header-top h1 {
-  font-size: 18px;
+  font-size: clamp(16px, 2vw, 20px);
   font-weight: 600;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .header-actions {
   display: flex;
   gap: 8px;
   flex-shrink: 0;
+  flex-wrap: wrap;
 }
 
 /* ── Tab Navigation ── */
 .tabs {
   display: flex;
   gap: 0;
-  padding: 8px 24px 0;
+  padding: 8px clamp(12px, 3vw, 28px) 0;
   border-bottom: none;
+  overflow-x: auto;
+  scrollbar-width: thin;
 }
 
 .tab {
@@ -73,6 +86,7 @@ header {
   cursor: pointer;
   border-radius: 0;
   transition: color 0.15s, border-color 0.15s;
+  flex: 0 0 auto;
 }
 
 .tab:hover { color: var(--text); opacity: 1; }
@@ -91,6 +105,7 @@ header {
   gap: 8px;
   padding: 0 0 16px;
   flex-wrap: wrap;
+  min-width: 0;
 }
 
 .filters-bar input,
@@ -104,6 +119,10 @@ header {
 }
 
 .filters-bar input { min-width: 200px; }
+.filters-bar input,
+.filters-bar select {
+  max-width: 100%;
+}
 
 button {
   background: var(--accent);
@@ -120,9 +139,9 @@ button:hover { opacity: 0.85; }
 
 /* ── Main Layout ── */
 main {
-  max-width: 1200px;
+  width: min(100%, 1440px);
   margin: 0 auto;
-  padding: 20px 24px 40px;
+  padding: clamp(12px, 2.5vw, 24px) clamp(12px, 3vw, 28px) 40px;
 }
 
 .data-source-banner {
@@ -134,6 +153,7 @@ main {
   line-height: 1.6;
   margin-bottom: 16px;
   padding: 10px 14px;
+  overflow-wrap: anywhere;
 }
 
 .data-source-banner strong {
@@ -143,7 +163,7 @@ main {
 /* ── Metric Cards ── */
 .metrics {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
   gap: 12px;
   margin-bottom: 20px;
 }
@@ -154,6 +174,7 @@ main {
   border-radius: 8px;
   padding: 16px;
   text-align: center;
+  min-width: 0;
 }
 
 .metric-card.clickable {
@@ -167,9 +188,10 @@ main {
 }
 
 .metric-card .metric-value {
-  font-size: 28px;
+  font-size: clamp(22px, 3vw, 30px);
   font-weight: 700;
   line-height: 1.2;
+  overflow-wrap: anywhere;
 }
 
 .metric-card .metric-label {
@@ -195,13 +217,9 @@ main {
 /* ── Charts Grid ── */
 .charts {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
   gap: 12px;
   margin-bottom: 20px;
-}
-
-@media (max-width: 768px) {
-  .charts { grid-template-columns: 1fr; }
 }
 
 .chart-box {
@@ -209,6 +227,8 @@ main {
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 16px;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .chart-box.full { grid-column: 1 / -1; }
@@ -218,9 +238,15 @@ main {
   font-weight: 600;
   margin-bottom: 12px;
   color: var(--text-dim);
+  overflow-wrap: anywhere;
 }
 
-.chart-box canvas { max-height: 240px; cursor: pointer; }
+.chart-box canvas {
+  width: 100% !important;
+  height: clamp(220px, 28vh, 320px) !important;
+  max-height: none;
+  cursor: pointer;
+}
 
 /* ── Report List ── */
 .report-section { margin-top: 8px; }
@@ -244,6 +270,7 @@ main {
   justify-content: space-between;
   align-items: center;
   gap: 12px;
+  min-width: 0;
 }
 
 .report-card:hover { border-color: var(--accent); }
@@ -268,6 +295,7 @@ main {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  min-width: 0;
 }
 
 .report-card .card-right {
@@ -277,6 +305,7 @@ main {
   font-size: 12px;
   color: var(--text-dim);
   flex-shrink: 0;
+  min-width: 0;
 }
 
 .badge {
@@ -325,9 +354,11 @@ main {
   border: 1px solid var(--border);
   border-radius: 12px;
   max-width: 900px;
+  width: calc(100% - 32px);
   margin: 40px auto;
   padding: 32px;
   position: relative;
+  overflow-wrap: anywhere;
 }
 
 .modal-close {
@@ -402,10 +433,16 @@ main {
 .empty { color: var(--text-dim); padding: 20px 0; text-align: center; }
 
 /* ── Data Table ── */
-.table-wrap { overflow-x: auto; }
+.table-wrap {
+  overflow-x: auto;
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
 
 .data-table {
   width: 100%;
+  min-width: 760px;
   border-collapse: collapse;
   font-size: 13px;
 }
@@ -438,3 +475,63 @@ main {
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+@media (max-width: 720px) {
+  .header-actions {
+    width: 100%;
+  }
+
+  .header-actions button {
+    flex: 1 1 120px;
+  }
+
+  .filters-bar input,
+  .filters-bar select {
+    flex: 1 1 180px;
+  }
+
+  .report-card {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .report-card .card-left {
+    align-items: flex-start;
+  }
+
+  .report-card .card-title {
+    white-space: normal;
+  }
+
+  .report-card .card-right {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .modal-content {
+    margin: 16px auto;
+    padding: 20px 16px;
+    width: calc(100% - 16px);
+  }
+}
+
+@media (max-width: 420px) {
+  .metrics {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 120px), 1fr));
+    gap: 8px;
+  }
+
+  .metric-card,
+  .chart-box,
+  .report-card {
+    padding: 12px;
+  }
+
+  .chart-box canvas {
+    height: 220px !important;
+  }
+
+  .loading {
+    padding: 24px 8px;
+  }
+}

@@ -60,19 +60,53 @@ def _count_measured_jobs(records: list[dict]) -> dict[str, int]:
     return counts
 
 
-def _targets_met(records: list[dict], min_measured_per_pipeline: int) -> bool:
-    if min_measured_per_pipeline <= 0:
+def _job_execution_date(job: dict, fallback: str = "") -> str | None:
+    value = job.get("completed_at") or job.get("started_at") or fallback
+    parsed = _parse_time(value)
+    return parsed.date().isoformat() if parsed else None
+
+
+def _execution_dates(records: list[dict]) -> list[str]:
+    dates: set[str] = set()
+    for run in records:
+        fallback = run.get("created_at", "")
+        jobs = run.get("jobs", [])
+        if not jobs:
+            date = _job_execution_date({}, fallback)
+            if date:
+                dates.add(date)
+            continue
+        for job in jobs:
+            date = _job_execution_date(job, fallback)
+            if date:
+                dates.add(date)
+    return sorted(dates)
+
+
+def _targets_met(records: list[dict], min_measured_per_pipeline: int, min_execution_days: int) -> bool:
+    if min_measured_per_pipeline <= 0 and min_execution_days <= 0:
         return False
-    counts = _count_measured_jobs(records)
-    return all(counts[pipeline] >= min_measured_per_pipeline for pipeline in TARGET_PIPELINES)
+    if min_measured_per_pipeline > 0:
+        counts = _count_measured_jobs(records)
+        measured_ok = all(counts[pipeline] >= min_measured_per_pipeline for pipeline in TARGET_PIPELINES)
+    else:
+        measured_ok = True
+    dates_ok = min_execution_days <= 0 or len(_execution_dates(records)) >= min_execution_days
+    return measured_ok and dates_ok
 
 
-def collect_ci_metadata(days: int = 7, limit: int = 200, min_measured_per_pipeline: int = 0) -> dict:
+def collect_ci_metadata(
+    days: int = 7,
+    limit: int = 200,
+    min_measured_per_pipeline: int = 0,
+    min_execution_days: int = 0,
+) -> dict:
     """Collect run/job metadata for health metrics.
 
     This intentionally does not fetch job logs and does not call any LLM.
-    When min_measured_per_pipeline is set, collection stops early after each
-    core pipeline has enough success/failure jobs or the limit is exhausted.
+    When sample targets are set, collection stops early only after each core
+    pipeline has enough measured jobs and the sample covers enough execution
+    dates, or the limit is exhausted.
     """
     runs = list_recent_runs(days=days, limit=limit)
     records: list[dict] = []
@@ -106,15 +140,18 @@ def collect_ci_metadata(days: int = 7, limit: int = 200, min_measured_per_pipeli
             "pipeline_type": classify_pipeline(workflow),
             "jobs": jobs,
         })
-        if _targets_met(records, min_measured_per_pipeline):
+        if _targets_met(records, min_measured_per_pipeline, min_execution_days):
             counts = _count_measured_jobs(records)
+            execution_dates = _execution_dates(records)
             print(
-                "  Measured target reached: "
+                "  CI metadata sample target reached: "
                 + ", ".join(f"{name}={count}" for name, count in counts.items())
+                + f", execution_days={len(execution_dates)}"
             )
             break
 
     measured_counts = _count_measured_jobs(records)
+    execution_dates = _execution_dates(records)
 
     return {
         "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -122,7 +159,9 @@ def collect_ci_metadata(days: int = 7, limit: int = 200, min_measured_per_pipeli
         "days": days,
         "limit": limit,
         "min_measured_per_pipeline": min_measured_per_pipeline,
+        "min_execution_days": min_execution_days,
         "measured_jobs_by_pipeline": measured_counts,
+        "execution_dates": execution_dates,
         "dataset_kind": "full_ci_run_metadata",
         "runs": records,
     }

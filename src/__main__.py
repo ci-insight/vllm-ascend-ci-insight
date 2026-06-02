@@ -44,6 +44,12 @@ def main():
         default=0,
         help="Stop CI metadata collection after each core pipeline has at least N success/failure jobs (0 disables)",
     )
+    parser.add_argument(
+        "--metrics-min-execution-days",
+        type=int,
+        default=0,
+        help="Stop CI metadata collection only after at least N distinct CI execution dates are covered (0 disables)",
+    )
     parser.add_argument("--no-notify", action="store_true", help="Skip notification sending")
     parser.add_argument("--lang", choices=["zh", "en"], default="en", help="Analysis output language (default: en)")
     parser.add_argument(
@@ -80,12 +86,14 @@ def main():
             print(
                 "  Refreshing full CI metadata: "
                 f"days={args.days}, limit={args.metrics_limit}, "
-                f"min_measured={args.metrics_min_measured_per_pipeline}"
+                f"min_measured={args.metrics_min_measured_per_pipeline}, "
+                f"min_execution_days={args.metrics_min_execution_days}"
             )
             ci_metadata = collect_ci_metadata(
                 days=args.days,
                 limit=args.metrics_limit,
                 min_measured_per_pipeline=args.metrics_min_measured_per_pipeline,
+                min_execution_days=args.metrics_min_execution_days,
             )
             save_ci_metadata(ci_metadata)
         if not reports and not load_ci_metadata():
@@ -100,6 +108,7 @@ def main():
                 days=args.days,
                 limit=args.metrics_limit,
                 min_measured_per_pipeline=args.metrics_min_measured_per_pipeline,
+                min_execution_days=args.metrics_min_execution_days,
             )
             save_ci_metadata(ci_metadata)
 
