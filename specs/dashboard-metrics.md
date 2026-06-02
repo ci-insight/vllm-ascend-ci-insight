@@ -24,6 +24,8 @@ Source: `docs/reports/ci-runs.json`, `docs/reports/index.json`.
 | --- | --- |
 | Generated time | `ci_metadata.generated_at`. |
 | Sampled runs | `len(ci_metadata.runs) / ci_metadata.limit`. |
+| Run inventory | For date-partition collection, `run_inventory_count` and `run_inventory_by_date`; this is workflow-run-level coverage. |
+| Job detail coverage | `job_detail_runs_collected / run_inventory_count`; this is the fraction of inventoried runs whose jobs were fetched. `job_detail_selection` describes whether the enriched runs were all runs, newest runs, or balanced across dates. |
 | Measured jobs | Number of jobs whose conclusion is `success` or `failure`, divided by all jobs in the sampled CI metadata. |
 | Skipped jobs | Number of jobs whose conclusion is `skipped`. |
 | Pending jobs | Number of jobs whose conclusion is `queued`, `in_progress`, or `pending`. |
@@ -34,6 +36,10 @@ Source: `docs/reports/ci-runs.json`, `docs/reports/index.json`.
 The banner must disclose narrow temporal coverage. For example, `1/7 execution
 day(s)` means the collector requested seven execution dates but the sampled runs
 only covered one date.
+
+For date-partition collection, the banner must distinguish full run inventory
+from job detail coverage. A dashboard can have complete seven-day workflow-run
+inventory while health metrics are still based on a smaller job-detail subset.
 
 ## Problem Analysis Tab
 

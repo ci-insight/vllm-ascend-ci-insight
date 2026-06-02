@@ -188,3 +188,55 @@ def test_collect_ci_metadata_exhausts_limit_when_target_not_met(monkeypatch):
 
     assert len(data["runs"]) == 1
     assert data["measured_jobs_by_pipeline"] == {"pr_e2e": 0, "nightly": 0}
+
+
+def test_date_partition_collection_records_inventory_and_job_coverage(monkeypatch):
+    monkeypatch.setattr(
+        ci_metadata,
+        "list_runs_by_date",
+        lambda days: (
+            [
+                {
+                    "databaseId": 1,
+                    "workflowName": "E2E-Light",
+                    "conclusion": "success",
+                    "status": "completed",
+                    "createdAt": "2026-06-02T00:00:00Z",
+                },
+                {
+                    "databaseId": 2,
+                    "workflowName": "Nightly-A2",
+                    "conclusion": "failure",
+                    "status": "completed",
+                    "createdAt": "2026-06-01T00:00:00Z",
+                },
+                {
+                    "databaseId": 3,
+                    "workflowName": "E2E-Full",
+                    "conclusion": "success",
+                    "status": "completed",
+                    "createdAt": "2026-05-31T00:00:00Z",
+                },
+            ],
+            {"2026-06-02": 1, "2026-06-01": 1, "2026-05-31": 1},
+        ),
+    )
+    monkeypatch.setattr(
+        ci_metadata,
+        "get_run_jobs",
+        lambda run_id: [{"id": run_id * 10, "name": "job", "conclusion": "success", "started_at": "", "completed_at": ""}],
+    )
+
+    data = collect_ci_metadata(
+        days=3,
+        collection_strategy="date_partition",
+        job_detail_limit=2,
+    )
+
+    assert data["collection_strategy"] == "date_partition"
+    assert data["run_inventory_count"] == 3
+    assert data["run_inventory_by_date"] == {"2026-06-02": 1, "2026-06-01": 1, "2026-05-31": 1}
+    assert data["job_detail_runs_collected"] == 2
+    assert data["job_detail_selection"] == "balanced_by_date"
+    assert data["job_detail_coverage_percent"] == 66.67
+    assert [run["run_id"] for run in data["runs"]] == [1, 2]

@@ -252,13 +252,20 @@ function renderDataSourceBanner(indexData) {
     const target = ciMetadata.min_measured_per_pipeline || 0;
     const executionDates = ciMetadata.execution_dates || [];
     const executionTarget = ciMetadata.min_execution_days || 0;
+    const inventoryCount = ciMetadata.run_inventory_count || ciMetadata.runs?.length || 0;
+    const jobDetailRuns = ciMetadata.job_detail_runs_collected || ciMetadata.runs?.length || 0;
+    const coverage = ciMetadata.job_detail_coverage_percent;
+    const selection = ciMetadata.job_detail_selection;
     const targetText = target
       ? ` · target ${target}/pipeline (${Object.entries(byPipeline).map(([k, v]) => `${k}:${v}`).join(", ")})`
       : "";
     const dateText = executionDates.length
       ? ` | ${executionDates.length}${executionTarget ? `/${executionTarget}` : ""} execution day(s): ${executionDates[0]}..${executionDates[executionDates.length - 1]}`
       : "";
-    ciText = `Current CI metadata: ${formatTimestamp(ciMetadata.generated_at)} · ${ciMetadata.runs?.length || 0}/${ciMetadata.limit || "?"} runs · ${measured}/${jobs.length} measured jobs · ${skipped} skipped · ${pending} pending${targetText}`;
+    const inventoryText = ciMetadata.collection_strategy === "date_partition"
+      ? ` | inventory ${inventoryCount} runs | job details ${jobDetailRuns}/${inventoryCount}${coverage !== undefined ? ` (${coverage}%)` : ""}${selection ? ` ${selection}` : ""}`
+      : ` | ${ciMetadata.runs?.length || 0}/${ciMetadata.limit || "?"} runs`;
+    ciText = `Current CI metadata: ${formatTimestamp(ciMetadata.generated_at)}${inventoryText} | ${measured}/${jobs.length} measured jobs | ${skipped} skipped | ${pending} pending${targetText}`;
     ciText += dateText;
   }
 

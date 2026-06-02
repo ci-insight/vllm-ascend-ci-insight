@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import json
+import subprocess
 import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -47,6 +49,75 @@ def list_recent_runs(days: int = 7, limit: int = 200) -> list[dict]:
     ]
 
 
+def _api_json(*args: str) -> list[dict] | dict:
+    cmd = ["gh", "api", *args]
+    result = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8")
+    if result.returncode != 0:
+        print(f"Warning: gh api {' '.join(args)} failed: {result.stderr}", file=sys.stderr)
+        return []
+    try:
+        return json.loads(result.stdout or "[]")
+    except json.JSONDecodeError:
+        return []
+
+
+def _to_run_record(run: dict) -> dict:
+    workflow = run.get("workflow_name") or run.get("name") or ""
+    return {
+        "databaseId": run.get("id") or run.get("databaseId"),
+        "name": run.get("name") or workflow,
+        "workflowName": workflow,
+        "conclusion": run.get("conclusion") or "",
+        "status": run.get("status") or "",
+        "createdAt": run.get("created_at") or run.get("createdAt") or "",
+        "updatedAt": run.get("updated_at") or run.get("updatedAt") or "",
+        "headBranch": run.get("head_branch") or run.get("headBranch") or "",
+        "event": run.get("event") or "",
+        "url": run.get("html_url") or run.get("url") or "",
+    }
+
+
+def list_runs_for_date(day: str) -> list[dict]:
+    """List all workflow runs for one UTC date without fetching jobs."""
+    created = f"{day}T00:00:00Z..{day}T23:59:59Z"
+    data = _api_json(
+        "--method", "GET",
+        "/repos/vllm-project/vllm-ascend/actions/runs",
+        "-f", "per_page=100",
+        "-f", f"created={created}",
+        "--paginate",
+        "--slurp",
+    )
+    if not isinstance(data, list):
+        return []
+    runs: list[dict] = []
+    for page in data:
+        if isinstance(page, dict):
+            runs.extend(page.get("workflow_runs", []))
+    return [_to_run_record(run) for run in runs]
+
+
+def list_runs_by_date(days: int = 7) -> tuple[list[dict], dict[str, int]]:
+    """List run inventory by UTC date, newest date first."""
+    today = datetime.now(timezone.utc).date()
+    all_runs: list[dict] = []
+    counts: dict[str, int] = {}
+    seen: set[int] = set()
+    for offset in range(days):
+        day = (today - timedelta(days=offset)).isoformat()
+        runs = list_runs_for_date(day)
+        counts[day] = len(runs)
+        print(f"  Run inventory {day}: {len(runs)} run(s)")
+        for run in runs:
+            run_id = run.get("databaseId")
+            if run_id in seen:
+                continue
+            seen.add(run_id)
+            all_runs.append(run)
+    all_runs.sort(key=lambda run: run.get("createdAt", ""), reverse=True)
+    return all_runs, counts
+
+
 def _count_measured_jobs(records: list[dict]) -> dict[str, int]:
     counts = {pipeline: 0 for pipeline in TARGET_PIPELINES}
     for run in records:
@@ -83,6 +154,50 @@ def _execution_dates(records: list[dict]) -> list[str]:
     return sorted(dates)
 
 
+def _run_created_date(run: dict) -> str:
+    return (run.get("createdAt") or "")[:10]
+
+
+def _select_runs_for_job_details(runs: list[dict], limit: int, inventory_by_date: dict[str, int]) -> tuple[list[dict], str]:
+    if limit <= 0 or limit >= len(runs):
+        return runs, "all"
+    if not inventory_by_date:
+        return runs[:limit], "newest"
+
+    dates = [day for day in sorted(inventory_by_date.keys(), reverse=True) if inventory_by_date.get(day, 0) > 0]
+    if not dates:
+        return runs[:limit], "newest"
+
+    groups: dict[str, list[dict]] = {day: [] for day in dates}
+    for run in runs:
+        day = _run_created_date(run)
+        if day in groups:
+            groups[day].append(run)
+
+    per_day = max(1, limit // len(dates))
+    selected: list[dict] = []
+    selected_ids: set[int] = set()
+    for day in dates:
+        for run in groups[day][:per_day]:
+            run_id = run.get("databaseId")
+            if run_id in selected_ids:
+                continue
+            selected.append(run)
+            selected_ids.add(run_id)
+            if len(selected) >= limit:
+                return selected, "balanced_by_date"
+
+    for run in runs:
+        run_id = run.get("databaseId")
+        if run_id in selected_ids:
+            continue
+        selected.append(run)
+        selected_ids.add(run_id)
+        if len(selected) >= limit:
+            break
+    return selected, "balanced_by_date"
+
+
 def _targets_met(records: list[dict], min_measured_per_pipeline: int, min_execution_days: int) -> bool:
     if min_measured_per_pipeline <= 0 and min_execution_days <= 0:
         return False
@@ -100,6 +215,8 @@ def collect_ci_metadata(
     limit: int = 200,
     min_measured_per_pipeline: int = 0,
     min_execution_days: int = 0,
+    collection_strategy: str = "recent",
+    job_detail_limit: int = 0,
 ) -> dict:
     """Collect run/job metadata for health metrics.
 
@@ -108,13 +225,23 @@ def collect_ci_metadata(
     pipeline has enough measured jobs and the sample covers enough execution
     dates, or the limit is exhausted.
     """
-    runs = list_recent_runs(days=days, limit=limit)
+    if collection_strategy == "date_partition":
+        runs, run_inventory_by_date = list_runs_by_date(days=days)
+    else:
+        runs = list_recent_runs(days=days, limit=limit)
+        run_inventory_by_date = {}
+    run_inventory_count = len(runs)
+    runs_to_fetch, job_detail_selection = _select_runs_for_job_details(
+        runs,
+        job_detail_limit,
+        run_inventory_by_date if collection_strategy == "date_partition" else {},
+    )
     records: list[dict] = []
 
-    for idx, run in enumerate(runs, 1):
+    for idx, run in enumerate(runs_to_fetch, 1):
         run_id = run.get("databaseId")
         workflow = run.get("workflowName") or run.get("name") or ""
-        print(f"  [{idx}/{len(runs)}] {workflow} run {run_id}")
+        print(f"  [{idx}/{len(runs_to_fetch)}] {workflow} run {run_id}")
         jobs_raw = get_run_jobs(run_id)
         jobs = [
             {
@@ -158,6 +285,13 @@ def collect_ci_metadata(
         "repo": REPO,
         "days": days,
         "limit": limit,
+        "collection_strategy": collection_strategy,
+        "run_inventory_count": run_inventory_count,
+        "run_inventory_by_date": run_inventory_by_date,
+        "job_detail_limit": job_detail_limit,
+        "job_detail_selection": job_detail_selection,
+        "job_detail_runs_collected": len(records),
+        "job_detail_coverage_percent": round(len(records) / run_inventory_count * 100, 2) if run_inventory_count else 0,
         "min_measured_per_pipeline": min_measured_per_pipeline,
         "min_execution_days": min_execution_days,
         "measured_jobs_by_pipeline": measured_counts,

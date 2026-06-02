@@ -513,10 +513,33 @@ Recommended job:
 python -m src --health \
   --refresh-ci-metrics \
   --days 7 \
-  --metrics-limit 300 \
+  --metrics-collection-strategy date_partition \
+  --metrics-job-detail-limit 500 \
   --metrics-min-measured-per-pipeline 10 \
+  --metrics-min-execution-days 7 \
   --no-notify
 ```
+
+The refresh must not blindly increase `--metrics-limit` to approximate seven
+days of CI activity. The upstream repository can produce thousands of workflow
+runs per day, so a recency limit may cover only a few hours.
+
+Recommended collection model:
+
+1. Run inventory: query GitHub Actions by UTC date range
+   (`created=DAYT00:00:00Z..DAYT23:59:59Z`) for each day in the lookback
+   window. This produces complete workflow-run coverage and per-day counts.
+2. Job detail enrichment: fetch `/actions/runs/{run_id}/jobs` for inventoried
+   runs with an explicit budget. When the budget is smaller than the run
+   inventory, select runs evenly across inventory dates first, then fill any
+   remaining budget with newest runs. The process must be resumable and must
+   expose `job_detail_runs_collected / run_inventory_count`.
+3. Health computation: job-level health scores must be labeled with job-detail
+   coverage. Run-level coverage and job-level health coverage are separate
+   quality dimensions.
+4. Static export: `ci-runs.json` must carry `collection_strategy`,
+   `run_inventory_count`, `run_inventory_by_date`, `job_detail_runs_collected`,
+   `job_detail_selection`, and `job_detail_coverage_percent`.
 
 Future version:
 

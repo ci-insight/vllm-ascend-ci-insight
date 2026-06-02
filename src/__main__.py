@@ -39,6 +39,18 @@ def main():
     parser.add_argument("--refresh-ci-metrics", action="store_true", help="Collect full lightweight CI run/job metadata for health metrics")
     parser.add_argument("--metrics-limit", type=int, default=200, help="Max workflow runs to fetch for CI metrics")
     parser.add_argument(
+        "--metrics-collection-strategy",
+        choices=["recent", "date_partition"],
+        default="recent",
+        help="CI metadata collection strategy: recent uses gh run list; date_partition inventories each UTC day first",
+    )
+    parser.add_argument(
+        "--metrics-job-detail-limit",
+        type=int,
+        default=500,
+        help="Max inventoried workflow runs to enrich with job details (0 disables the cap and may be slow)",
+    )
+    parser.add_argument(
         "--metrics-min-measured-per-pipeline",
         type=int,
         default=0,
@@ -86,6 +98,8 @@ def main():
             print(
                 "  Refreshing full CI metadata: "
                 f"days={args.days}, limit={args.metrics_limit}, "
+                f"strategy={args.metrics_collection_strategy}, "
+                f"job_detail_limit={args.metrics_job_detail_limit}, "
                 f"min_measured={args.metrics_min_measured_per_pipeline}, "
                 f"min_execution_days={args.metrics_min_execution_days}"
             )
@@ -94,6 +108,8 @@ def main():
                 limit=args.metrics_limit,
                 min_measured_per_pipeline=args.metrics_min_measured_per_pipeline,
                 min_execution_days=args.metrics_min_execution_days,
+                collection_strategy=args.metrics_collection_strategy,
+                job_detail_limit=args.metrics_job_detail_limit,
             )
             save_ci_metadata(ci_metadata)
         if not reports and not load_ci_metadata():
@@ -109,6 +125,8 @@ def main():
                 limit=args.metrics_limit,
                 min_measured_per_pipeline=args.metrics_min_measured_per_pipeline,
                 min_execution_days=args.metrics_min_execution_days,
+                collection_strategy=args.metrics_collection_strategy,
+                job_detail_limit=args.metrics_job_detail_limit,
             )
             save_ci_metadata(ci_metadata)
 
