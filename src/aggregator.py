@@ -18,7 +18,7 @@ SNAPSHOT_JSON = DOCS_REPORTS_DIR / "daily-snapshots.json"
 
 
 def _conn() -> sqlite3.Connection:
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     db = sqlite3.connect(str(DB_PATH))
     db.execute("PRAGMA journal_mode=WAL")
     db.execute("""CREATE TABLE IF NOT EXISTS daily_snapshots (

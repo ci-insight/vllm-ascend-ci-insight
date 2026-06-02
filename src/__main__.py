@@ -23,6 +23,7 @@ from .interference import detect as detect_interference, save_interference
 from .aggregator import save_snapshot
 from .storage import load_reports
 from .ci_metadata import collect_ci_metadata, save_ci_metadata, load_ci_metadata, metadata_to_reports
+from .static_sync import import_static_reports
 
 
 def main():
@@ -45,6 +46,13 @@ def main():
     )
     parser.add_argument("--no-notify", action="store_true", help="Skip notification sending")
     parser.add_argument("--lang", choices=["zh", "en"], default="en", help="Analysis output language (default: en)")
+    parser.add_argument(
+        "--import-static",
+        nargs="?",
+        const="docs/reports",
+        metavar="DIR",
+        help="Import static dashboard JSON artifacts into local SQLite and exit (default: docs/reports)",
+    )
     args = parser.parse_args()
 
     set_analysis_lang(args.lang)
@@ -52,6 +60,17 @@ def main():
     print("=" * 60)
     print("  vllm-ascend CI Insight")
     print("=" * 60)
+
+    if args.import_static:
+        print(f"  Importing static reports from {args.import_static}")
+        result = import_static_reports(args.import_static)
+        print(
+            "  Imported: "
+            f"{result['daily_snapshots']} daily snapshot row(s), "
+            f"{result['job_records']} job record(s)"
+        )
+        print(f"  SQLite: data/metrics.db")
+        return
 
     if args.health:
         # Health-only mode: reload existing reports and compute metrics

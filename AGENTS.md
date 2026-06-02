@@ -72,6 +72,12 @@ Recompute health, alerts, interference, and snapshots from existing reports:
 python -m src --health
 ```
 
+Rebuild local SQLite from committed static dashboard JSON:
+
+```bash
+python -m src --import-static
+```
+
 Collect only, skipping Claude analysis:
 
 ```bash

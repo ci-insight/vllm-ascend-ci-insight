@@ -102,7 +102,14 @@ The exporter should:
 
 Import JSON snapshots into SQLite for cold start, recovery, or workstation handoff.
 
-Recommended command shape:
+Implemented compatibility command:
+
+```bash
+python -m src --import-static
+python -m src --import-static docs/reports
+```
+
+Future subcommand shape:
 
 ```bash
 python -m src import-static --from docs/reports
