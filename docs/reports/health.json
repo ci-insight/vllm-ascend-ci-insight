@@ -1,15 +1,15 @@
 {
-  "generated_at": "2026-06-03T05:48:27.873330+00:00",
+  "generated_at": "2026-06-03T06:02:08.034000+00:00",
   "data_quality": {
     "complete_success_sample": false,
     "sample_kind": "partial_job_details",
     "warning": "Job detail coverage is partial for the selected period. Do not interpret health scores or alerts as full-period objective CI health."
   },
   "overall": {
-    "total": 25031,
-    "measured_total": 6170,
-    "success": 5393,
-    "success_rate": 87,
+    "total": 28189,
+    "measured_total": 6926,
+    "success": 6077,
+    "success_rate": 88,
     "health_score": null
   },
   "pipelines": {
@@ -59,14 +59,14 @@
     },
     "nightly": {
       "type": "nightly",
-      "total": 11540,
-      "measured_total": 260,
-      "success": 159,
-      "failure": 101,
-      "skipped": 11199,
-      "cancelled": 73,
+      "total": 13015,
+      "measured_total": 278,
+      "success": 174,
+      "failure": 104,
+      "skipped": 12646,
+      "cancelled": 83,
       "other": 8,
-      "success_rate": 61,
+      "success_rate": 63,
       "health_score": null,
       "rating": "insufficient_data",
       "rating_color": "#8b949e",
@@ -77,15 +77,15 @@
       "daily_trend": [
         {
           "date": "2026-06-01",
-          "total": 5101,
-          "measured_total": 125,
-          "success": 79,
-          "failure": 46,
-          "skipped": 4941,
-          "cancelled": 34,
+          "total": 6576,
+          "measured_total": 143,
+          "success": 94,
+          "failure": 49,
+          "skipped": 6388,
+          "cancelled": 44,
           "other": 1,
-          "success_rate": 63,
-          "health": 41
+          "success_rate": 66,
+          "health": 42
         },
         {
           "date": "2026-06-02",
@@ -115,9 +115,9 @@
     },
     "other": {
       "type": "other",
-      "total": 242,
-      "measured_total": 225,
-      "success": 224,
+      "total": 275,
+      "measured_total": 258,
+      "success": 257,
       "failure": 1,
       "skipped": 17,
       "cancelled": 0,
@@ -133,15 +133,15 @@
       "daily_trend": [
         {
           "date": "2026-06-01",
-          "total": 104,
-          "measured_total": 94,
-          "success": 93,
+          "total": 137,
+          "measured_total": 127,
+          "success": 126,
           "failure": 1,
           "skipped": 10,
           "cancelled": 0,
           "other": 0,
           "success_rate": 99,
-          "health": 62
+          "health": 63
         },
         {
           "date": "2026-06-02",
@@ -171,12 +171,12 @@
     },
     "pr_e2e": {
       "type": "pr_e2e",
-      "total": 13193,
-      "measured_total": 5645,
-      "success": 4974,
-      "failure": 671,
-      "skipped": 6251,
-      "cancelled": 1254,
+      "total": 14843,
+      "measured_total": 6350,
+      "success": 5610,
+      "failure": 740,
+      "skipped": 7040,
+      "cancelled": 1410,
       "other": 43,
       "success_rate": 88,
       "health_score": null,
@@ -201,12 +201,12 @@
         },
         {
           "date": "2026-06-01",
-          "total": 5766,
-          "measured_total": 2381,
-          "success": 2168,
-          "failure": 213,
-          "skipped": 2784,
-          "cancelled": 601,
+          "total": 7416,
+          "measured_total": 3086,
+          "success": 2804,
+          "failure": 282,
+          "skipped": 3573,
+          "cancelled": 757,
           "other": 0,
           "success_rate": 91,
           "health": 58
