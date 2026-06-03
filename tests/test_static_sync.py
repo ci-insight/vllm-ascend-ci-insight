@@ -70,6 +70,8 @@ def test_import_static_reports_rebuilds_local_sqlite(tmp_path, monkeypatch):
     try:
         snapshots = db.execute("SELECT pipeline_type, total_runs, health_score FROM daily_snapshots").fetchall()
         jobs = db.execute("SELECT run_id, job_name, conclusion, duration_sec, queue_sec FROM job_records ORDER BY job_name").fetchall()
+        runs = db.execute("SELECT run_id, workflow_name, jobs_collected_at FROM workflow_runs").fetchall()
+        ci_jobs = db.execute("SELECT run_id, job_name, conclusion FROM ci_jobs ORDER BY job_name").fetchall()
     finally:
         db.close()
 
@@ -77,6 +79,10 @@ def test_import_static_reports_rebuilds_local_sqlite(tmp_path, monkeypatch):
     assert len(jobs) == 2
     assert jobs[0][:4] == (100, "lint", "success", 120)
     assert jobs[0][4] == 60
+    assert len(runs) == 1
+    assert runs[0][0:2] == (100, "E2E-Light")
+    assert runs[0][2]
+    assert ci_jobs == [(100, "lint", "success"), (100, "test", "failure")]
 
     exported = json.loads((reports_dir / "daily-snapshots.json").read_text(encoding="utf-8"))
     assert exported["trend_axes"]["execution_trends"].startswith("CI execution date")

@@ -7,6 +7,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from . import aggregator
+from . import ci_store
 from .storage import DOCS_REPORTS_DIR, read_json
 
 
@@ -96,6 +97,23 @@ def _import_daily_snapshots(db, path: Path, imported_at: str) -> int:
 def _import_ci_runs(db, path: Path, imported_at: str) -> int:
     data = read_json(path, default={})
     runs = data.get("runs", []) if isinstance(data, dict) else []
+    ci_store.ensure_schema(db)
+    ci_store.upsert_runs(db, [
+        {
+            "databaseId": run.get("run_id"),
+            "workflowName": run.get("workflow_name", ""),
+            "conclusion": run.get("conclusion", ""),
+            "status": run.get("status", ""),
+            "headBranch": run.get("branch", ""),
+            "event": run.get("event", ""),
+            "url": run.get("url", ""),
+            "createdAt": run.get("created_at", ""),
+            "updatedAt": run.get("updated_at", ""),
+            "pipeline_type": run.get("pipeline_type", "other"),
+        }
+        for run in runs
+        if run.get("run_id") is not None
+    ])
     run_ids = [run.get("run_id") for run in runs if run.get("run_id") is not None]
     for run_id in run_ids:
         db.execute("DELETE FROM job_records WHERE run_id = ?", (run_id,))
@@ -108,6 +126,11 @@ def _import_ci_runs(db, path: Path, imported_at: str) -> int:
         created_at = run.get("created_at", "")
         workflow_name = run.get("workflow_name", "")
         pipeline_type = run.get("pipeline_type", "other") or "other"
+        ci_store.replace_run_jobs(db, {
+            "databaseId": run_id,
+            "workflowName": workflow_name,
+            "createdAt": created_at,
+        }, run.get("jobs", []) or [])
         for job in run.get("jobs", []) or []:
             job_id = job.get("job_id")
             if job_id is None:

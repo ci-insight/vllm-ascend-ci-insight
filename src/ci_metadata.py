@@ -8,12 +8,15 @@ import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
+from . import ci_store
 from .collector import REPO, _gh, _parse_json_output, classify_pipeline, get_run_jobs
 from .models import CIJob, CIRun, FailureReport
 from .storage import DOCS_REPORTS_DIR, LOCAL_REPORTS_DIR, read_json, write_json
 
 LOCAL_CI_RUNS_FILE = LOCAL_REPORTS_DIR / "ci-runs.json"
 DOCS_CI_RUNS_FILE = DOCS_REPORTS_DIR / "ci-runs.json"
+LOCAL_COVERAGE_FILE = LOCAL_REPORTS_DIR / "coverage.json"
+DOCS_COVERAGE_FILE = DOCS_REPORTS_DIR / "coverage.json"
 MEASURED_CONCLUSIONS = {"success", "failure"}
 TARGET_PIPELINES = ("pr_e2e", "nightly")
 
@@ -49,7 +52,7 @@ def list_recent_runs(days: int = 7, limit: int = 200) -> list[dict]:
     ]
 
 
-def _api_json(*args: str) -> list[dict] | dict:
+def _api_json(*args: str):
     cmd = ["gh", "api", *args]
     result = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8")
     if result.returncode != 0:
@@ -77,9 +80,24 @@ def _to_run_record(run: dict) -> dict:
     }
 
 
-def list_runs_for_date(day: str) -> list[dict]:
-    """List all workflow runs for one UTC date without fetching jobs."""
-    created = f"{day}T00:00:00Z..{day}T23:59:59Z"
+def _format_z(value: datetime) -> str:
+    return value.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def count_runs_for_window(start: datetime, end: datetime) -> int:
+    created = f"{_format_z(start)}..{_format_z(end)}"
+    data = _api_json(
+        "--method", "GET",
+        "/repos/vllm-project/vllm-ascend/actions/runs",
+        "-f", "per_page=1",
+        "-f", f"created={created}",
+        "--jq", ".total_count",
+    )
+    return data if isinstance(data, int) else 0
+
+
+def list_runs_for_window(start: datetime, end: datetime) -> list[dict]:
+    created = f"{_format_z(start)}..{_format_z(end)}"
     data = _api_json(
         "--method", "GET",
         "/repos/vllm-project/vllm-ascend/actions/runs",
@@ -95,6 +113,41 @@ def list_runs_for_date(day: str) -> list[dict]:
         if isinstance(page, dict):
             runs.extend(page.get("workflow_runs", []))
     return [_to_run_record(run) for run in runs]
+
+
+def list_runs_for_window_complete(start: datetime, end: datetime, cap: int = 1000) -> list[dict]:
+    """List runs for a window, splitting recursively when GitHub caps results."""
+    total = count_runs_for_window(start, end)
+    if total <= cap:
+        return list_runs_for_window(start, end)
+    if (end - start).total_seconds() <= 60:
+        print(
+            f"Warning: run inventory window {_format_z(start)}..{_format_z(end)} "
+            f"has {total} runs; GitHub may cap returned rows",
+            file=sys.stderr,
+        )
+        return list_runs_for_window(start, end)
+
+    midpoint = start + (end - start) / 2
+    left = list_runs_for_window_complete(start, midpoint, cap=cap)
+    right_start = midpoint + timedelta(seconds=1)
+    right = list_runs_for_window_complete(right_start, end, cap=cap)
+    seen: set[int] = set()
+    merged: list[dict] = []
+    for run in [*left, *right]:
+        run_id = run.get("databaseId")
+        if run_id in seen:
+            continue
+        seen.add(run_id)
+        merged.append(run)
+    return merged
+
+
+def list_runs_for_date(day: str) -> list[dict]:
+    """List all workflow runs for one UTC date without fetching jobs."""
+    start = datetime.fromisoformat(f"{day}T00:00:00+00:00")
+    end = datetime.fromisoformat(f"{day}T23:59:59+00:00")
+    return list_runs_for_window_complete(start, end)
 
 
 def list_runs_by_date(days: int = 7) -> tuple[list[dict], dict[str, int]]:
@@ -231,43 +284,27 @@ def collect_ci_metadata(
         runs = list_recent_runs(days=days, limit=limit)
         run_inventory_by_date = {}
     run_inventory_count = len(runs)
+
+    db = ci_store.conn()
+    runs_needing_jobs = ci_store.runs_needing_jobs(db, runs)
+    ci_store.upsert_runs(db, runs)
+    db.commit()
     runs_to_fetch, job_detail_selection = _select_runs_for_job_details(
-        runs,
+        runs_needing_jobs,
         job_detail_limit,
         run_inventory_by_date if collection_strategy == "date_partition" else {},
     )
-    records: list[dict] = []
 
     for idx, run in enumerate(runs_to_fetch, 1):
         run_id = run.get("databaseId")
         workflow = run.get("workflowName") or run.get("name") or ""
         print(f"  [{idx}/{len(runs_to_fetch)}] {workflow} run {run_id}")
         jobs_raw = get_run_jobs(run_id)
-        jobs = [
-            {
-                "job_id": job.get("id"),
-                "job_name": job.get("name", ""),
-                "conclusion": job.get("conclusion") or job.get("status") or "unknown",
-                "started_at": job.get("started_at", ""),
-                "completed_at": job.get("completed_at", ""),
-            }
-            for job in jobs_raw
-            if job.get("id") is not None
-        ]
-        records.append({
-            "run_id": run_id,
-            "workflow_name": workflow,
-            "conclusion": run.get("conclusion") or run.get("status") or "unknown",
-            "status": run.get("status", ""),
-            "branch": run.get("headBranch", ""),
-            "created_at": run.get("createdAt", ""),
-            "updated_at": run.get("updatedAt", ""),
-            "event": run.get("event", ""),
-            "url": run.get("url", ""),
-            "pipeline_type": classify_pipeline(workflow),
-            "jobs": jobs,
-        })
-        if _targets_met(records, min_measured_per_pipeline, min_execution_days):
+        ci_store.replace_run_jobs(db, run, jobs_raw)
+        db.commit()
+
+        if collection_strategy != "date_partition" and _targets_met(ci_store.export_runs_with_jobs(db, days), min_measured_per_pipeline, min_execution_days):
+            records = ci_store.export_runs_with_jobs(db, days)
             counts = _count_measured_jobs(records)
             execution_dates = _execution_dates(records)
             print(
@@ -277,8 +314,13 @@ def collect_ci_metadata(
             )
             break
 
+    records = ci_store.export_runs_with_jobs(db, days)
+    coverage = ci_store.coverage(db, days)
+    db.close()
     measured_counts = _count_measured_jobs(records)
     execution_dates = _execution_dates(records)
+    run_inventory_by_date = run_inventory_by_date or coverage["run_inventory"]["by_date"]
+    run_inventory_count = coverage["run_inventory"]["total"] or run_inventory_count
 
     return {
         "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -290,8 +332,9 @@ def collect_ci_metadata(
         "run_inventory_by_date": run_inventory_by_date,
         "job_detail_limit": job_detail_limit,
         "job_detail_selection": job_detail_selection,
-        "job_detail_runs_collected": len(records),
-        "job_detail_coverage_percent": round(len(records) / run_inventory_count * 100, 2) if run_inventory_count else 0,
+        "job_detail_runs_collected": coverage["job_details"]["collected_runs"],
+        "job_detail_coverage_percent": coverage["job_details"]["coverage_percent"],
+        "coverage": coverage,
         "min_measured_per_pipeline": min_measured_per_pipeline,
         "min_execution_days": min_execution_days,
         "measured_jobs_by_pipeline": measured_counts,
@@ -304,6 +347,9 @@ def collect_ci_metadata(
 def save_ci_metadata(data: dict) -> None:
     write_json(LOCAL_CI_RUNS_FILE, data)
     write_json(DOCS_CI_RUNS_FILE, data)
+    if isinstance(data.get("coverage"), dict):
+        write_json(LOCAL_COVERAGE_FILE, data["coverage"])
+        write_json(DOCS_COVERAGE_FILE, data["coverage"])
     print(f"  CI metadata: {DOCS_CI_RUNS_FILE} ({len(data.get('runs', []))} runs)")
 
 

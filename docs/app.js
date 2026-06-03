@@ -1,10 +1,12 @@
 const INDEX_URL = "reports/index.json";
 const CI_RUNS_URL = "reports/ci-runs.json";
+const COVERAGE_URL = "reports/coverage.json";
 let allReports = [];
 let allAnalyses = [];
 let allJobs = []; // Current CI jobs when ci-runs.json exists, otherwise historical report jobs.
 let historicalJobs = [];
 let ciMetadata = null;
+let ciCoverage = null;
 let ciMetadataLoaded = false;
 let ciWorkflowRuns = [];
 let charts = {};
@@ -180,6 +182,13 @@ async function loadCiMetadata() {
     const resp = await fetch(CI_RUNS_URL);
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     ciMetadata = await resp.json();
+    ciCoverage = ciMetadata.coverage || null;
+    try {
+      const coverageResp = await fetch(COVERAGE_URL);
+      if (coverageResp.ok) ciCoverage = await coverageResp.json();
+    } catch (e) {
+      // coverage.json is optional for older static exports.
+    }
     const seenJobs = new Set();
     const jobs = [];
     ciWorkflowRuns = (ciMetadata.runs || []).map(run => {
@@ -215,6 +224,7 @@ async function loadCiMetadata() {
     allJobs = jobs;
   } catch (e) {
     ciMetadata = null;
+    ciCoverage = null;
     ciWorkflowRuns = [];
   }
   return ciMetadata;
@@ -255,6 +265,7 @@ function renderDataSourceBanner(indexData) {
     const inventoryCount = ciMetadata.run_inventory_count || ciMetadata.runs?.length || 0;
     const jobDetailRuns = ciMetadata.job_detail_runs_collected || ciMetadata.runs?.length || 0;
     const coverage = ciMetadata.job_detail_coverage_percent;
+    const jobCoverage = ciCoverage?.job_details || null;
     const selection = ciMetadata.job_detail_selection;
     const targetText = target
       ? ` · target ${target}/pipeline (${Object.entries(byPipeline).map(([k, v]) => `${k}:${v}`).join(", ")})`
@@ -263,7 +274,7 @@ function renderDataSourceBanner(indexData) {
       ? ` | ${executionDates.length}${executionTarget ? `/${executionTarget}` : ""} execution day(s): ${executionDates[0]}..${executionDates[executionDates.length - 1]}`
       : "";
     const inventoryText = ciMetadata.collection_strategy === "date_partition"
-      ? ` | inventory ${inventoryCount} runs | job details ${jobDetailRuns}/${inventoryCount}${coverage !== undefined ? ` (${coverage}%)` : ""}${selection ? ` ${selection}` : ""}`
+      ? ` | inventory ${ciCoverage?.run_inventory?.total || inventoryCount} runs | job details ${jobCoverage?.collected_runs || jobDetailRuns}/${jobCoverage?.total_runs || inventoryCount}${jobCoverage?.coverage_percent !== undefined ? ` (${jobCoverage.coverage_percent}%, ${jobCoverage.quality})` : coverage !== undefined ? ` (${coverage}%)` : ""}${selection ? ` ${selection}` : ""}`
       : ` | ${ciMetadata.runs?.length || 0}/${ciMetadata.limit || "?"} runs`;
     ciText = `Current CI metadata: ${formatTimestamp(ciMetadata.generated_at)}${inventoryText} | ${measured}/${jobs.length} measured jobs | ${skipped} skipped | ${pending} pending${targetText}`;
     ciText += dateText;

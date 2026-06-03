@@ -182,7 +182,16 @@ def main():
     ci_metadata = load_ci_metadata()
     if ci_metadata:
         health_reports = metadata_to_reports(ci_metadata)
-        health_data = compute_health(health_reports, complete_sample=True)
+        coverage = ci_metadata.get("coverage", {}) if isinstance(ci_metadata, dict) else {}
+        job_quality = coverage.get("job_details", {}).get("quality")
+        complete_sample = job_quality in (None, "full")
+        health_data = compute_health(health_reports, complete_sample=complete_sample)
+        if not complete_sample:
+            health_data["data_quality"]["sample_kind"] = "partial_job_details"
+            health_data["data_quality"]["warning"] = (
+                "Job detail coverage is partial for the selected period. "
+                "Do not interpret health scores or alerts as full-period objective CI health."
+            )
     else:
         health_reports = reports if reports else []
         health_data = compute_health(health_reports, complete_sample=False)

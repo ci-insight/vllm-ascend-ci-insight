@@ -19,6 +19,7 @@ thousands of jobs. Health totals are job counts, not workflow-run counts.
 ## Data Source Banner
 
 Source: `docs/reports/ci-runs.json`, `docs/reports/index.json`.
+Coverage source: `docs/reports/coverage.json` or `ci-runs.json.coverage`.
 
 | Display | Calculation |
 | --- | --- |

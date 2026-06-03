@@ -1,8 +1,17 @@
 """Tests for lightweight CI metadata health input."""
 
+import pytest
+
 from src import ci_metadata
+from src import aggregator
 from src.ci_metadata import collect_ci_metadata, metadata_to_reports
 from src.health import compute_health
+
+
+@pytest.fixture(autouse=True)
+def isolate_metrics_db(tmp_path, monkeypatch):
+    monkeypatch.setattr(aggregator, "DB_PATH", tmp_path / "data" / "metrics.db")
+    monkeypatch.setattr(aggregator, "SNAPSHOT_JSON", tmp_path / "docs" / "reports" / "daily-snapshots.json")
 
 
 def test_metadata_to_reports_produces_complete_health_input():
@@ -201,24 +210,24 @@ def test_date_partition_collection_records_inventory_and_job_coverage(monkeypatc
                     "workflowName": "E2E-Light",
                     "conclusion": "success",
                     "status": "completed",
-                    "createdAt": "2026-06-02T00:00:00Z",
+                    "createdAt": "2026-06-03T00:00:00Z",
                 },
                 {
                     "databaseId": 2,
                     "workflowName": "Nightly-A2",
                     "conclusion": "failure",
                     "status": "completed",
-                    "createdAt": "2026-06-01T00:00:00Z",
+                    "createdAt": "2026-06-02T00:00:00Z",
                 },
                 {
                     "databaseId": 3,
                     "workflowName": "E2E-Full",
                     "conclusion": "success",
                     "status": "completed",
-                    "createdAt": "2026-05-31T00:00:00Z",
+                    "createdAt": "2026-06-01T00:00:00Z",
                 },
             ],
-            {"2026-06-02": 1, "2026-06-01": 1, "2026-05-31": 1},
+            {"2026-06-03": 1, "2026-06-02": 1, "2026-06-01": 1},
         ),
     )
     monkeypatch.setattr(
@@ -235,8 +244,36 @@ def test_date_partition_collection_records_inventory_and_job_coverage(monkeypatc
 
     assert data["collection_strategy"] == "date_partition"
     assert data["run_inventory_count"] == 3
-    assert data["run_inventory_by_date"] == {"2026-06-02": 1, "2026-06-01": 1, "2026-05-31": 1}
+    assert data["run_inventory_by_date"] == {"2026-06-03": 1, "2026-06-02": 1, "2026-06-01": 1}
     assert data["job_detail_runs_collected"] == 2
     assert data["job_detail_selection"] == "balanced_by_date"
     assert data["job_detail_coverage_percent"] == 66.67
     assert [run["run_id"] for run in data["runs"]] == [1, 2]
+
+
+def test_list_runs_for_window_complete_splits_capped_windows(monkeypatch):
+    calls = []
+
+    def fake_count(start, end):
+        if start.hour == 0 and end.hour == 23:
+            return 1500
+        return 750
+
+    def fake_list(start, end):
+        calls.append((start, end))
+        base = 1 if len(calls) == 1 else 100
+        return [
+            {
+                "databaseId": base,
+                "workflowName": "E2E-Light",
+                "createdAt": start.isoformat(),
+            }
+        ]
+
+    monkeypatch.setattr(ci_metadata, "count_runs_for_window", fake_count)
+    monkeypatch.setattr(ci_metadata, "list_runs_for_window", fake_list)
+
+    runs = ci_metadata.list_runs_for_date("2026-06-03")
+
+    assert len(calls) == 2
+    assert [run["databaseId"] for run in runs] == [1, 100]

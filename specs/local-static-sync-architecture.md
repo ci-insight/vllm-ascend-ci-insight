@@ -528,7 +528,9 @@ Recommended collection model:
 
 1. Run inventory: query GitHub Actions by UTC date range
    (`created=DAYT00:00:00Z..DAYT23:59:59Z`) for each day in the lookback
-   window. This produces complete workflow-run coverage and per-day counts.
+   window. If a date window exceeds the GitHub result cap, recursively split it
+   into smaller time windows until each window can be fetched completely. This
+   produces complete workflow-run coverage and per-day counts.
 2. Job detail enrichment: fetch `/actions/runs/{run_id}/jobs` for inventoried
    runs with an explicit budget. When the budget is smaller than the run
    inventory, select runs evenly across inventory dates first, then fill any
