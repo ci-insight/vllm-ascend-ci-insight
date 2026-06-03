@@ -65,7 +65,16 @@ def save_snapshot(health_data: dict, reports: list):
 
     pipelines = health_data.get("pipelines", {})
     db.execute("DELETE FROM daily_snapshots WHERE date = ?", (today,))
-    db.execute("DELETE FROM job_records WHERE date(created_at) = ?", (today,))
+
+    run_ids = sorted({
+        run.run_id
+        for report in reports
+        for run in report.runs
+        if run.run_id is not None
+    })
+    if run_ids:
+        placeholders = ",".join("?" for _ in run_ids)
+        db.execute(f"DELETE FROM job_records WHERE run_id IN ({placeholders})", run_ids)
 
     for ptype, pdata in pipelines.items():
         db.execute(
@@ -139,7 +148,7 @@ def save_snapshot(health_data: dict, reports: list):
         """UPDATE daily_snapshots SET avg_duration_sec = (
             SELECT COALESCE(AVG(duration_sec), 0) FROM job_records
             WHERE job_records.pipeline_type = daily_snapshots.pipeline_type
-            AND date(job_records.created_at) = ?
+            AND date(COALESCE(NULLIF(completed_at, ''), NULLIF(started_at, ''), created_at)) = ?
         ) WHERE date = ?""",
         (today, today),
     )
