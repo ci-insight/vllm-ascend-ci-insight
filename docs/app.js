@@ -18,7 +18,7 @@ let CATEGORY_RULES = null;
 async function loadRules() {
   if (CATEGORY_RULES) return;
   try {
-    const resp = await fetch("rules.json");
+    const resp = await fetchReportJson("rules.json");
     if (!resp.ok) throw new Error("HTTP " + resp.status);
     const cfg = await resp.json();
     PIPELINE_PATTERNS = {};
@@ -61,6 +61,35 @@ function classifyPipeline(wfName) {
 
 let ciCharts = {};
 let activeTab = "analysis";
+
+function reportUrl(path) {
+  const separator = path.includes("?") ? "&" : "?";
+  return `${path}${separator}_=${Date.now()}`;
+}
+
+function fetchReportJson(path) {
+  return fetch(reportUrl(path), { cache: "no-store" });
+}
+
+function resetLoadedData() {
+  allReports = [];
+  allAnalyses = [];
+  allJobs = [];
+  historicalJobs = [];
+  ciMetadata = null;
+  ciCoverage = null;
+  ciMetadataLoaded = false;
+  ciWorkflowRuns = [];
+}
+
+function refreshDashboard() {
+  resetLoadedData();
+  destroyCharts();
+  Object.values(ciCharts).forEach(c => c.destroy());
+  ciCharts = {};
+  loadReports();
+  if (activeTab === "health") loadHealthTab(true);
+}
 
 function classifyJob(analysis, jobName) {
   const text = [analysis.root_cause || "", (analysis.error_snippets || []).join(" "), jobName].join(" ");
@@ -161,7 +190,7 @@ async function loadReports() {
 
   try {
     await loadCiMetadata();
-    const resp = await fetch(INDEX_URL);
+    const resp = await fetchReportJson(INDEX_URL);
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     const data = await resp.json();
     allReports = data.reports || [];
@@ -179,12 +208,12 @@ async function loadCiMetadata() {
   if (ciMetadataLoaded) return ciMetadata;
   ciMetadataLoaded = true;
   try {
-    const resp = await fetch(CI_RUNS_URL);
+    const resp = await fetchReportJson(CI_RUNS_URL);
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     ciMetadata = await resp.json();
     ciCoverage = ciMetadata.coverage || null;
     try {
-      const coverageResp = await fetch(COVERAGE_URL);
+      const coverageResp = await fetchReportJson(COVERAGE_URL);
       if (coverageResp.ok) ciCoverage = await coverageResp.json();
     } catch (e) {
       // coverage.json is optional for older static exports.
@@ -295,7 +324,7 @@ async function loadAnalysesData() {
   for (const r of allReports) {
     let data = null;
     try {
-      const resp = await fetch(r.json_path);
+      const resp = await fetchReportJson(r.json_path);
       if (!resp.ok) continue;
       data = await resp.json();
 
@@ -828,7 +857,7 @@ async function openDetail(prNumber) {
   document.getElementById("detailContent").innerHTML = `<div class="loading">${t("loading")}</div>`;
   modal.classList.add("open");
   try {
-    const resp = await fetch(report.json_path);
+    const resp = await fetchReportJson(report.json_path);
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     renderDetail(await resp.json());
   } catch (err) {

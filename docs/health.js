@@ -7,13 +7,18 @@ let alertsData = null;
 let snapshotsData = null;
 let healthCharts = {};
 
-async function loadHealthTab() {
+async function loadHealthTab(force = false) {
   try {
+    if (force) {
+      healthData = null;
+      alertsData = null;
+      snapshotsData = null;
+    }
     if (typeof loadCiMetadata === "function") await loadCiMetadata();
     const [hResp, aResp, sResp] = await Promise.all([
-      fetch(HEALTH_URL),
-      fetch(ALERTS_URL),
-      fetch(SNAPSHOTS_URL),
+      fetchReportJson(HEALTH_URL),
+      fetchReportJson(ALERTS_URL),
+      fetchReportJson(SNAPSHOTS_URL),
     ]);
     if (hResp.ok) healthData = await hResp.json();
     if (aResp.ok) alertsData = await aResp.json();
