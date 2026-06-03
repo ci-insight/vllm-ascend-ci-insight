@@ -344,6 +344,96 @@ def collect_ci_metadata(
     }
 
 
+def collect_run_inventory(
+    days: int = 7,
+    limit: int = 200,
+    collection_strategy: str = "recent",
+) -> dict:
+    """Collect only lightweight workflow-run inventory into SQLite."""
+    if collection_strategy == "date_partition":
+        runs, run_inventory_by_date = list_runs_by_date(days=days)
+    else:
+        runs = list_recent_runs(days=days, limit=limit)
+        run_inventory_by_date = {}
+
+    db = ci_store.conn()
+    ci_store.upsert_runs(db, runs)
+    db.commit()
+    coverage = ci_store.coverage(db, days)
+    db.close()
+
+    return {
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "repo": REPO,
+        "days": days,
+        "limit": limit,
+        "collection_strategy": collection_strategy,
+        "run_inventory_count": coverage["run_inventory"]["total"] or len(runs),
+        "run_inventory_by_date": run_inventory_by_date or coverage["run_inventory"]["by_date"],
+        "coverage": coverage,
+    }
+
+
+def collect_pending_job_details(days: int = 7, limit: int = 500, force: bool = False) -> dict:
+    """Fetch job details for inventoried runs that still need them."""
+    db = ci_store.conn()
+    runs = ci_store.runs_for_job_collection(db, days=days, limit=limit, force=force)
+    for idx, run in enumerate(runs, 1):
+        run_id = run.get("databaseId")
+        workflow = run.get("workflowName") or run.get("name") or ""
+        print(f"  [{idx}/{len(runs)}] {workflow} run {run_id}")
+        jobs_raw = get_run_jobs(run_id)
+        ci_store.replace_run_jobs(db, run, jobs_raw)
+        db.commit()
+    coverage = ci_store.coverage(db, days)
+    db.close()
+    return {
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "repo": REPO,
+        "days": days,
+        "job_detail_limit": limit,
+        "force": force,
+        "job_detail_runs_processed": len(runs),
+        "coverage": coverage,
+    }
+
+
+def build_ci_metadata_from_store(
+    days: int = 7,
+    limit: int = 0,
+    collection_strategy: str = "sqlite",
+    job_detail_limit: int = 0,
+    job_detail_selection: str = "sqlite_pending",
+) -> dict:
+    """Build static CI metadata JSON from the local SQLite store."""
+    db = ci_store.conn()
+    records = ci_store.export_runs_with_jobs(db, days)
+    coverage = ci_store.coverage(db, days)
+    db.close()
+    measured_counts = _count_measured_jobs(records)
+    execution_dates = _execution_dates(records)
+    return {
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "repo": REPO,
+        "days": days,
+        "limit": limit,
+        "collection_strategy": collection_strategy,
+        "run_inventory_count": coverage["run_inventory"]["total"],
+        "run_inventory_by_date": coverage["run_inventory"]["by_date"],
+        "job_detail_limit": job_detail_limit,
+        "job_detail_selection": job_detail_selection,
+        "job_detail_runs_collected": coverage["job_details"]["collected_runs"],
+        "job_detail_coverage_percent": coverage["job_details"]["coverage_percent"],
+        "coverage": coverage,
+        "min_measured_per_pipeline": 0,
+        "min_execution_days": 0,
+        "measured_jobs_by_pipeline": measured_counts,
+        "execution_dates": execution_dates,
+        "dataset_kind": "full_ci_run_metadata",
+        "runs": records,
+    }
+
+
 def save_ci_metadata(data: dict) -> None:
     write_json(LOCAL_CI_RUNS_FILE, data)
     write_json(DOCS_CI_RUNS_FILE, data)

@@ -72,3 +72,24 @@ reports/coverage.json
 - Always show job detail coverage when CI metadata is available.
 - Label health as `partial` when `job_details.quality != "full"`.
 - Do not present partial job-detail health as full-period objective health.
+
+## Resumable Collection Workflow
+
+The preferred production workflow is split into resumable stages:
+
+```bash
+python -m src --collect-run-inventory --days 7 --metrics-collection-strategy date_partition
+python -m src --collect-job-details --days 7 --metrics-job-detail-limit 500
+python -m src --export-ci-metadata --health --days 7 --no-notify
+```
+
+Rules:
+
+- Run inventory is cheap and can be refreshed frequently.
+- Job detail collection is budgeted and resumes from runs where
+  `jobs_collected_at IS NULL`.
+- If an inventoried run changes `updated_at` or moves from non-completed to
+  completed, its existing `jobs_collected_at` is cleared so jobs are refreshed.
+- `--force-job-details` intentionally re-fetches already collected jobs.
+- Static export must read from SQLite, not from only the current command's API
+  sample.

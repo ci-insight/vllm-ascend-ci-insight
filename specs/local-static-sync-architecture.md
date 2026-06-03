@@ -543,13 +543,18 @@ Recommended collection model:
    `run_inventory_count`, `run_inventory_by_date`, `job_detail_runs_collected`,
    `job_detail_selection`, and `job_detail_coverage_percent`.
 
-Future version:
+Implemented compatibility split workflow:
 
 ```bash
-python -m src collect-ci --db --days 7 --limit 300 --min-measured-per-pipeline 10
-python -m src compute-health --db
-python -m src export-static
+python -m src --collect-run-inventory --days 7 --metrics-collection-strategy date_partition
+python -m src --collect-job-details --days 7 --metrics-job-detail-limit 500
+python -m src --export-ci-metadata --health --days 7 --no-notify
 ```
+
+The second command is resumable: it selects inventoried runs with missing or
+stale job details. When the run inventory upsert observes a changed
+`updated_at`, or a run transitions from non-completed to completed, the run's
+`jobs_collected_at` is cleared so job details are fetched again.
 
 ## Implementation Roadmap
 

@@ -126,6 +126,11 @@ def upsert_runs(db: sqlite3.Connection, runs: list[dict]) -> None:
                  url = excluded.url,
                  created_at = excluded.created_at,
                  updated_at = excluded.updated_at,
+                 jobs_collected_at = CASE
+                   WHEN excluded.updated_at != workflow_runs.updated_at THEN NULL
+                   WHEN workflow_runs.status != 'completed' AND excluded.status = 'completed' THEN NULL
+                   ELSE workflow_runs.jobs_collected_at
+                 END,
                  inventory_seen_at = excluded.inventory_seen_at,
                  raw_metadata = excluded.raw_metadata""",
             (
@@ -177,6 +182,41 @@ def runs_needing_jobs(db: sqlite3.Connection, runs: list[dict], force: bool = Fa
         elif stored_status != "completed" and current_status == "completed":
             needed.append(run)
     return needed
+
+
+def runs_for_job_collection(db: sqlite3.Connection, days: int, limit: int = 500, force: bool = False) -> list[dict]:
+    """Return inventoried workflow runs that still need job details."""
+    where = "created_at >= ?"
+    params: list[object] = [period_start(days)]
+    if not force:
+        where += " AND jobs_collected_at IS NULL"
+    limit_sql = "" if limit <= 0 else " LIMIT ?"
+    if limit > 0:
+        params.append(limit)
+    rows = db.execute(
+        f"""SELECT run_id, workflow_name, conclusion, status, branch, event, url,
+                  created_at, updated_at, pipeline_type
+             FROM workflow_runs
+             WHERE {where}
+             ORDER BY created_at DESC, run_id DESC{limit_sql}""",
+        params,
+    ).fetchall()
+    return [
+        {
+            "databaseId": run_id,
+            "workflowName": workflow,
+            "name": workflow,
+            "conclusion": conclusion,
+            "status": status,
+            "headBranch": branch or "",
+            "event": event or "",
+            "url": url or "",
+            "createdAt": created_at,
+            "updatedAt": updated_at or "",
+            "pipeline_type": pipeline,
+        }
+        for run_id, workflow, conclusion, status, branch, event, url, created_at, updated_at, pipeline in rows
+    ]
 
 
 def replace_run_jobs(db: sqlite3.Connection, run: dict, jobs: list[dict]) -> None:

@@ -22,7 +22,15 @@ from .notify import notify_alerts
 from .interference import detect as detect_interference, save_interference
 from .aggregator import save_snapshot
 from .storage import load_reports
-from .ci_metadata import collect_ci_metadata, save_ci_metadata, load_ci_metadata, metadata_to_reports
+from .ci_metadata import (
+    build_ci_metadata_from_store,
+    collect_ci_metadata,
+    collect_pending_job_details,
+    collect_run_inventory,
+    save_ci_metadata,
+    load_ci_metadata,
+    metadata_to_reports,
+)
 from .static_sync import import_static_reports
 
 
@@ -37,6 +45,10 @@ def main():
     parser.add_argument("--no-analyze", action="store_true", help="Only collect data, skip analysis")
     parser.add_argument("--health", action="store_true", help="Only compute health/alert/interference")
     parser.add_argument("--refresh-ci-metrics", action="store_true", help="Collect full lightweight CI run/job metadata for health metrics")
+    parser.add_argument("--collect-run-inventory", action="store_true", help="Collect only workflow-run inventory into SQLite")
+    parser.add_argument("--collect-job-details", action="store_true", help="Collect missing workflow-run job details from SQLite inventory")
+    parser.add_argument("--export-ci-metadata", action="store_true", help="Export SQLite CI metadata to reports/ and docs/reports/")
+    parser.add_argument("--force-job-details", action="store_true", help="Re-fetch job details even when already collected")
     parser.add_argument("--metrics-limit", type=int, default=200, help="Max workflow runs to fetch for CI metrics")
     parser.add_argument(
         "--metrics-collection-strategy",
@@ -89,6 +101,56 @@ def main():
         )
         print(f"  SQLite: data/metrics.db")
         return
+
+    if args.collect_run_inventory or args.collect_job_details or args.export_ci_metadata:
+        if args.collect_run_inventory:
+            print(
+                "  Collecting workflow-run inventory: "
+                f"days={args.days}, limit={args.metrics_limit}, "
+                f"strategy={args.metrics_collection_strategy}"
+            )
+            result = collect_run_inventory(
+                days=args.days,
+                limit=args.metrics_limit,
+                collection_strategy=args.metrics_collection_strategy,
+            )
+            coverage = result["coverage"]
+            print(
+                "  Inventory: "
+                f"{coverage['run_inventory']['total']} run(s), "
+                f"job details {coverage['job_details']['collected_runs']}/"
+                f"{coverage['job_details']['total_runs']}"
+            )
+        if args.collect_job_details:
+            print(
+                "  Collecting pending job details: "
+                f"days={args.days}, limit={args.metrics_job_detail_limit}, "
+                f"force={args.force_job_details}"
+            )
+            result = collect_pending_job_details(
+                days=args.days,
+                limit=args.metrics_job_detail_limit,
+                force=args.force_job_details,
+            )
+            coverage = result["coverage"]
+            print(
+                "  Job detail coverage: "
+                f"{coverage['job_details']['collected_runs']}/"
+                f"{coverage['job_details']['total_runs']} "
+                f"({coverage['job_details']['coverage_percent']}%, "
+                f"{coverage['job_details']['quality']})"
+            )
+        if args.export_ci_metadata:
+            print("  Exporting SQLite CI metadata to static JSON")
+            ci_metadata = build_ci_metadata_from_store(
+                days=args.days,
+                limit=args.metrics_limit,
+                collection_strategy="sqlite",
+                job_detail_limit=args.metrics_job_detail_limit,
+            )
+            save_ci_metadata(ci_metadata)
+        if not args.health:
+            return
 
     if args.health:
         # Health-only mode: reload existing reports and compute metrics
