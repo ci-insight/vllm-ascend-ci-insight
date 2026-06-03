@@ -69,12 +69,13 @@ function renderHealthUI() {
     if (!p) continue;
     const label = { pr_e2e: "PR CI", nightly: "Nightly", weekly: "Weekly", other: "Other" }[pt] || pt;
     const hasMeasured = (p.measured_total || 0) > 0;
+    const observedRuns = ciWorkflowRuns.filter(run => (run.pipeline_type || classifyPipeline(run.workflow_name)) === pt).length;
     const scoreText = completeSample && p.health_score !== null
       ? p.health_score
       : hasMeasured
-        ? `${p.success_rate}%`
+        ? observedRuns
         : "No data";
-    const labelText = completeSample ? label : `${label} observed`;
+    const labelText = completeSample ? label : `${label} workflows`;
     const sampleText = (p.measured_total || 0) === 0
       ? `no completed jobs · ${p.total || 0} total`
       : `${completeSample ? `${p.success_rate}% SR` : `${p.success_rate}% observed`} · ${p.measured_total || 0}/${p.total || 0} measured`;
