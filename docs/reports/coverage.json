@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-06-03T06:02:07.011121+00:00",
+  "generated_at": "2026-06-03T06:16:53.789751+00:00",
   "period": {
     "days": 7,
     "since": "2026-05-28T00:00:00+00:00",
-    "until": "2026-06-03T06:02:07.011121+00:00"
+    "until": "2026-06-03T06:16:53.789751+00:00"
   },
   "run_inventory": {
     "total": 9594,
@@ -19,15 +19,15 @@
     }
   },
   "job_details": {
-    "collected_runs": 4503,
+    "collected_runs": 5003,
     "total_runs": 9594,
-    "coverage_percent": 46.94,
+    "coverage_percent": 52.15,
     "quality": "partial"
   },
   "measured_jobs": {
-    "measured": 6926,
-    "total_jobs": 28189,
-    "coverage_percent": 24.57
+    "measured": 7902,
+    "total_jobs": 31428,
+    "coverage_percent": 25.14
   },
   "ai_analysis": {
     "analyzed": 0,
