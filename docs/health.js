@@ -68,13 +68,19 @@ function renderHealthUI() {
     const p = pipelines[pt];
     if (!p) continue;
     const label = { pr_e2e: "PR CI", nightly: "Nightly", weekly: "Weekly", other: "Other" }[pt] || pt;
-    const scoreText = completeSample && p.health_score !== null ? p.health_score : "N/A";
+    const hasMeasured = (p.measured_total || 0) > 0;
+    const scoreText = completeSample && p.health_score !== null
+      ? p.health_score
+      : hasMeasured
+        ? `${p.success_rate}%`
+        : "No data";
+    const labelText = completeSample ? label : `${label} observed`;
     const sampleText = (p.measured_total || 0) === 0
       ? `no completed jobs · ${p.total || 0} total`
       : `${completeSample ? `${p.success_rate}% SR` : `${p.success_rate}% observed`} · ${p.measured_total || 0}/${p.total || 0} measured`;
     cardsHtml += `<div class="metric-card clickable" onclick="showPipelineDetail('${pt}')" style="border-left:3px solid ${p.rating_color}">
       <div class="metric-value" style="color:${p.rating_color}">${scoreText}</div>
-      <div class="metric-label">${label}</div>
+      <div class="metric-label">${labelText}</div>
       <div style="font-size:11px;color:var(--text-dim);margin-top:4px">${(p.measured_total || 0) === 0 ? `no measured success/failure jobs · ${p.total || 0} total` : `${completeSample ? `${p.success_rate}% SR` : `${p.success_rate}% observed`} · ${p.measured_total || 0}/${p.total || 0} measured`}</div>
     </div>`;
   }
@@ -288,7 +294,9 @@ function showPipelineDetail(ptype) {
   });
 
   const completeSample = healthData?.data_quality?.complete_success_sample !== false;
-  const scoreText = completeSample && p.health_score !== null ? `${p.health_score}/100` : "N/A";
+  const scoreText = completeSample && p.health_score !== null
+    ? `${p.health_score}/100`
+    : `${p.success_rate}% observed`;
   let html = `<h2>${label} Pipeline <span style="color:${p.rating_color};font-size:18px">${scoreText}</span></h2>`;
   html += `<div style="display:flex;gap:16px;margin:12px 0;flex-wrap:wrap">
     <div class="metric-card"><div class="metric-value">${p.total}</div><div class="metric-label">Total Jobs</div></div>
