@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-03T04:52:28.115273+00:00",
+  "generated_at": "2026-06-03T05:06:47.644241+00:00",
   "trend_axes": {
     "execution_trends": "CI execution date from job completed_at/started_at",
     "pipeline_types": "dashboard snapshot date from collection/export time"
@@ -55,18 +55,18 @@
       },
       {
         "date": "2026-06-03",
-        "total": 5813,
-        "success": 75,
-        "failure": 55,
+        "total": 7303,
+        "success": 125,
+        "failure": 89,
         "success_rate": 58.0,
         "health_score": null,
-        "avg_duration_sec": 30.9,
+        "avg_duration_sec": 56.0,
         "rating": "insufficient_data",
         "trend": "flat",
-        "measured_total": 130,
-        "skipped": 5641,
-        "cancelled": 35,
-        "other": 7
+        "measured_total": 214,
+        "skipped": 7027,
+        "cancelled": 54,
+        "other": 8
       }
     ],
     "other": [
@@ -87,15 +87,15 @@
       },
       {
         "date": "2026-06-03",
-        "total": 101,
-        "success": 94,
+        "total": 166,
+        "success": 159,
         "failure": 0,
         "success_rate": 100.0,
         "health_score": null,
         "avg_duration_sec": 43.9,
         "rating": "insufficient_data",
         "trend": "flat",
-        "measured_total": 94,
+        "measured_total": 159,
         "skipped": 7,
         "cancelled": 0,
         "other": 0
@@ -119,65 +119,74 @@
       },
       {
         "date": "2026-06-03",
-        "total": 6652,
-        "success": 2479,
-        "failure": 413,
-        "success_rate": 86.0,
+        "total": 8192,
+        "success": 3106,
+        "failure": 480,
+        "success_rate": 87.0,
         "health_score": null,
         "avg_duration_sec": 347.7,
         "rating": "insufficient_data",
         "trend": "flat",
-        "measured_total": 2892,
-        "skipped": 3115,
-        "cancelled": 602,
+        "measured_total": 3586,
+        "skipped": 3855,
+        "cancelled": 708,
         "other": 43
       }
     ]
   },
   "execution_trends": {
-    "build": [
-      {
-        "date": "2026-06-02",
-        "total": 28,
-        "measured_total": 20,
-        "success": 18,
-        "failure": 2,
-        "skipped": 2,
-        "cancelled": 6,
-        "other": 0,
-        "success_rate": 90.0
-      }
-    ],
     "nightly": [
       {
-        "date": "2026-06-02",
-        "total": 5007,
-        "measured_total": 116,
-        "success": 67,
-        "failure": 49,
-        "skipped": 4859,
-        "cancelled": 32,
+        "date": "2026-06-01",
+        "total": 771,
+        "measured_total": 30,
+        "success": 21,
+        "failure": 9,
+        "skipped": 728,
+        "cancelled": 13,
         "other": 0,
-        "success_rate": 57.8
+        "success_rate": 70.0
+      },
+      {
+        "date": "2026-06-02",
+        "total": 5718,
+        "measured_total": 163,
+        "success": 93,
+        "failure": 70,
+        "skipped": 5517,
+        "cancelled": 38,
+        "other": 0,
+        "success_rate": 57.1
       },
       {
         "date": "2026-06-03",
-        "total": 798,
-        "measured_total": 13,
-        "success": 8,
-        "failure": 5,
+        "total": 805,
+        "measured_total": 20,
+        "success": 11,
+        "failure": 9,
         "skipped": 782,
         "cancelled": 3,
         "other": 0,
-        "success_rate": 61.5
+        "success_rate": 55.0
       }
     ],
     "other": [
       {
+        "date": "2026-06-01",
+        "total": 28,
+        "measured_total": 28,
+        "success": 28,
+        "failure": 0,
+        "skipped": 0,
+        "cancelled": 0,
+        "other": 0,
+        "success_rate": 100.0
+      },
+      {
         "date": "2026-06-02",
-        "total": 94,
-        "measured_total": 90,
-        "success": 90,
+        "total": 131,
+        "measured_total": 127,
+        "success": 127,
         "failure": 0,
         "skipped": 4,
         "cancelled": 0,
@@ -198,15 +207,26 @@
     ],
     "pr_e2e": [
       {
-        "date": "2026-06-02",
-        "total": 6056,
-        "measured_total": 2646,
-        "success": 2263,
-        "failure": 383,
-        "skipped": 2848,
-        "cancelled": 562,
+        "date": "2026-06-01",
+        "total": 737,
+        "measured_total": 299,
+        "success": 278,
+        "failure": 21,
+        "skipped": 388,
+        "cancelled": 50,
         "other": 0,
-        "success_rate": 85.5
+        "success_rate": 93.0
+      },
+      {
+        "date": "2026-06-02",
+        "total": 6859,
+        "measured_total": 3041,
+        "success": 2612,
+        "failure": 429,
+        "skipped": 3200,
+        "cancelled": 618,
+        "other": 0,
+        "success_rate": 85.9
       },
       {
         "date": "2026-06-03",
@@ -218,6 +238,19 @@
         "cancelled": 40,
         "other": 0,
         "success_rate": 87.8
+      }
+    ],
+    "build": [
+      {
+        "date": "2026-06-02",
+        "total": 28,
+        "measured_total": 20,
+        "success": 18,
+        "failure": 2,
+        "skipped": 2,
+        "cancelled": 6,
+        "other": 0,
+        "success_rate": 90.0
       }
     ]
   }
