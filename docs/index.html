@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>vllm-ascend CI Insight</title>
-<link rel="stylesheet" href="style.css?v=20260604-encoding-fix">
+<link rel="stylesheet" href="style.css?v=20260604-encoding-fix-2">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
@@ -13,13 +13,13 @@
     <h1 id="pageTitle">vllm-ascend CI Insight</h1>
     <div class="header-actions">
       <button id="refreshBtn" onclick="refreshDashboard()">Refresh</button>
-      <button id="langToggle" onclick="toggleLang()">涓枃</button>
+      <button id="langToggle" onclick="toggleLang()">English</button>
     </div>
   </div>
   <nav class="tabs">
-    <button class="tab active" data-tab="analysis" onclick="switchTab('analysis')">闂鍒嗘瀽</button>
-    <button class="tab" data-tab="ci-stats" onclick="switchTab('ci-stats')">CI鎵ц鍒嗘瀽</button>
-    <button class="tab" data-tab="health" onclick="switchTab('health')">鍋ュ悍姒傝</button>
+    <button class="tab active" data-tab="analysis" onclick="switchTab('analysis')">Problem Analysis</button>
+    <button class="tab" data-tab="ci-stats" onclick="switchTab('ci-stats')">CI Execution</button>
+    <button class="tab" data-tab="health" onclick="switchTab('health')">Health Overview</button>
   </nav>
 </header>
 
@@ -139,8 +139,8 @@
   </div>
 </div>
 
-<script src="i18n.js?v=20260604-encoding-fix"></script>
-<script src="app.js?v=20260604-encoding-fix"></script>
-<script src="health.js?v=20260604-encoding-fix"></script>
+<script src="i18n.js?v=20260604-encoding-fix-2"></script>
+<script src="app.js?v=20260604-encoding-fix-2"></script>
+<script src="health.js?v=20260604-encoding-fix-2"></script>
 </body>
 </html>

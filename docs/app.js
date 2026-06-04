@@ -828,7 +828,7 @@ function renderCIStatsV2() {
     <div class="metric-card"><div class="metric-value">${fmtDuration(percentile(durations, 20))}</div><div class="metric-label">${t("ciJobP20")}</div></div>
     <div class="metric-card clickable" onclick="showQueueDetail()"><div class="metric-value">${fmtDuration(percentile(queueTimes, 50))}</div><div class="metric-label">${t("ciQueueTime")}</div><div style="font-size:10px;color:var(--text-dim);margin-top:3px">${queueCoverage} ${t("ciQueueMeasured")}</div></div>
     <div class="metric-card"><div class="metric-value">${measured ? Math.round(success / measured * 100) + "%" : "N/A"}</div><div class="metric-label">Measured Success Rate</div></div>
-    <div style="grid-column:1/-1;font-size:12px;color:var(--text-dim);margin-bottom:-8px;margin-top:8px">Workflow 缁村害 <span style="color:var(--text-dim);font-weight:400">(wall-clock)</span></div>
+    <div style="grid-column:1/-1;font-size:12px;color:var(--text-dim);margin-bottom:-8px;margin-top:8px">Workflow dimension <span style="color:var(--text-dim);font-weight:400">(wall-clock)</span></div>
     <div class="metric-card"><div class="metric-value">${wfTotal}</div><div class="metric-label">${t("ciWfTotal")}</div></div>
     <div class="metric-card"><div class="metric-value">${fmtDuration(wfAvgWC)}</div><div class="metric-label">${t("ciWfAvgWC")}</div></div>
     <div class="metric-card"><div class="metric-value">${fmtDuration(percentile(wcDurations, 50))}</div><div class="metric-label">${t("ciWfP50")}</div></div>
@@ -1086,7 +1086,7 @@ function renderDetail(data) {
     html += `<div class="meta-line">${t("noRuns")}</div>`;
   } else {
     runs.forEach(run => {
-      html += `<div class="meta-line"><strong>${escapeHtml(run.workflow_name)}</strong> (${run.run_id}) 鈥?${run.conclusion} @ ${escapeHtml(run.branch)}</div>`;
+      html += `<div class="meta-line"><strong>${escapeHtml(run.workflow_name)}</strong> (${run.run_id}) - ${run.conclusion} @ ${escapeHtml(run.branch)}</div>`;
     });
   }
   html += `<h3>${t("analysis")} (${analyses.length} ${t("failedJobs")})</h3>`;
