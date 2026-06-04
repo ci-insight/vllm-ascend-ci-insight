@@ -147,3 +147,32 @@ git status --short
 ```
 
 Do not include incidental report churn in code-only changes.
+
+## Live Data Collection Workflow
+
+When collecting live CI data or running AI analysis that produces generated artifacts under `docs/reports/`, work in an isolated branch and worktree to avoid polluting `main`:
+
+```bash
+# 1. Create a branch for the data refresh
+git checkout -b data/refresh-YYYY-MM-DD
+
+# 2. Run collection/analysis (in worktree or directly)
+python -m src --days 1 --limit 10 --lang zh
+
+# 3. Commit generated artifacts
+git add docs/reports/ docs/index.html docs/app.js docs/health.js docs/i18n.js docs/style.css
+git commit -m "Refresh CI data and analysis for YYYY-MM-DD"
+
+# 4. Push and create PR
+git push -u origin HEAD
+gh pr create --title "Refresh CI data for YYYY-MM-DD" --body "Automated data refresh."
+
+# 5. After PR is merged, switch back to main and pull
+git checkout main
+git pull
+```
+
+- Always use a dedicated branch for data refreshes — never commit generated reports directly to `main`.
+- Prefer `--days 1 --limit 10` for quick daily refreshes; use `--days 7 --limit 30` for weekly deep dives.
+- Verify `python -m pytest tests/ -q` passes before pushing.
+- Use `gh pr view --web` to review the PR diff before merging.
