@@ -16,7 +16,7 @@ from .models import FailureReport, JobAnalysis, CIJob
 from .storage import LOCAL_REPORTS_DIR, read_json, write_json
 
 # Maximum characters to send to claude for analysis (roughly 30K tokens)
-MAX_LOG_CHARS = 60000
+MAX_LOG_CHARS = 30000
 
 # Resolved path to Claude CLI (lazy-initialized)
 _CLAUDE_BIN: str | None = None
@@ -160,7 +160,7 @@ def _claude_analyze(text: str) -> dict:
             capture_output=True,
             text=True,
             encoding="utf-8",
-            timeout=300,
+            timeout=600,
         )
 
         if result.returncode == 0:
