@@ -111,7 +111,7 @@ def list_runs_for_branch(branch: str, status: str = "failure", limit: int = 10) 
     return runs if isinstance(runs, list) else []
 
 
-def get_run_jobs(run_id: int) -> list[dict]:
+def get_run_jobs(run_id: int) -> list[dict] | None:
     """Get all jobs for a CI run, including their steps."""
     result = _gh(
         "api", f"repos/{REPO}/actions/runs/{run_id}/jobs",
@@ -120,7 +120,7 @@ def get_run_jobs(run_id: int) -> list[dict]:
     )
     if result.returncode != 0:
         print(f"Warning: failed to get jobs for run {run_id}: {result.stderr}", file=sys.stderr)
-        return []
+        return None
 
     data = _parse_json_output(result)
     if isinstance(data, dict):
@@ -200,6 +200,7 @@ def _build_ci_job(job: dict, fetch_log: bool = True) -> CIJob:
         completed_at=job.get("completed_at", ""),
         steps=steps,
         raw_log=log,
+        created_at=job.get("created_at", ""),
     )
 
 

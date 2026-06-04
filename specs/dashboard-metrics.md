@@ -4,6 +4,9 @@ This document defines the meaning, source, aggregation level, and calculation
 rule for every major dashboard number. It is intended for both human review and
 AI-assisted implementation changes.
 
+For the product boundary between fact-based health analytics and AI-derived
+failure explanation, see `specs/health-operations-analytics.md`.
+
 ## Core Counting Levels
 
 The dashboard uses two different CI levels. They must not be added together.
@@ -64,7 +67,7 @@ metadata.
 | Display | Calculation |
 | --- | --- |
 | Pipeline value | Failed job count for the pipeline: `count(job.conclusion == "failure")`. |
-| WF | Distinct workflow names in that pipeline. |
+| Workflows | Distinct workflow names in that pipeline. |
 | Runs | Distinct `(workflow_name, run_id)` pairs in that pipeline. |
 | Jobs | Total historical jobs in that pipeline. |
 
@@ -105,7 +108,7 @@ Let `jobs` be all jobs after the selected pipeline filter.
 | Job P50 | 50th percentile of positive job durations. |
 | Job P90 | 90th percentile of positive job durations. |
 | Job P20 | 20th percentile of positive job durations. |
-| Queue Time | 50th percentile of non-negative queue times. |
+| Queue Time | 50th percentile of non-negative job queue times. A job queue time is `job.started_at - job.created_at`, where `job.created_at` is the GitHub Actions job creation/queued timestamp. |
 | Measured Success Rate | `round(success / measured_jobs * 100)`, or `N/A` if no measured jobs exist. |
 
 Job conclusion buckets:
@@ -126,12 +129,21 @@ Jobs are grouped into workflow runs by `(workflow_name, run_id)`.
 For each workflow run:
 
 ```text
+job_queue_time = job.started_at - job.created_at
+workflow_queue_time = max(job_queue_time)
 wall_clock = max(job.completed_at) - min(job.started_at)
 sum_duration = sum(job.duration)
 job_count = len(jobs in the workflow run)
 max_concurrency = maximum number of overlapping jobs
 parallel_efficiency = sum_duration / wall_clock
 ```
+
+`workflow_queue_time` is the longest job-level queue wait inside the workflow
+run. It must not be calculated from `run.created_at`, because GitHub Actions
+re-runs and delayed matrix expansion can make `run.created_at` much earlier than
+the current job queue interval. `wall_clock` intentionally excludes queue wait;
+it measures only the execution span between the first started job and the last
+completed job.
 
 Dashboard cards:
 
@@ -150,10 +162,10 @@ Dashboard cards:
 | Chart | Calculation |
 | --- | --- |
 | Job Duration Distribution | Histogram of positive job durations. |
-| Queue Wait Time | Top workflows by average queue time. |
+| Queue Wait Time | Top workflows by average job queue time. |
 | Success Rate by Workflow | Top ten workflows by measured job count, then failure count; stacked success/failure/skipped/pending counts. |
 | Slowest Jobs | Top ten timed jobs by duration. |
-| Workflow Runs Detail | Workflow-run groups sorted by descending wall-clock time. |
+| Workflow Runs Detail | Workflow-run groups sorted by descending wall-clock time. Columns include workflow name, status, job count, max queue wait, wall-clock total duration, average job duration, max concurrency, and parallel efficiency. |
 
 ## Health Overview Tab
 
@@ -167,12 +179,14 @@ Health is computed per pipeline type from job-level data.
 For each pipeline:
 
 ```text
+workflow_runs = count(distinct (workflow_name, run_id))
 total = len(jobs)
 success = count(conclusion == "success")
 failure = count(conclusion == "failure")
 skipped = count(conclusion == "skipped")
 cancelled = count(conclusion == "cancelled")
-other = total - success - failure - skipped - cancelled
+pending = count(conclusion in ["queued", "in_progress", "pending"])
+other = total - success - failure - skipped - cancelled - pending
 measured_total = success + failure
 success_rate = success / measured_total
 ```
@@ -248,6 +262,7 @@ The overall section is job-level aggregation across pipeline types:
 
 ```text
 overall.total = sum(pipeline.total)
+overall.workflow_runs = sum(pipeline.workflow_runs)
 overall.measured_total = sum(pipeline.measured_total)
 overall.success = sum(pipeline.success)
 overall.success_rate = round(overall.success / overall.measured_total * 100)
@@ -272,12 +287,14 @@ Do not use dashboard snapshot dates for CI execution trend charts.
 
 | Display | Calculation |
 | --- | --- |
+| Workflow Runs | `pipeline.workflow_runs`, counted as distinct `(workflow_name, run_id)` from the same CI metadata as the CI Execution tab. |
 | Total Jobs | `pipeline.total`. |
 | Measured Jobs | `pipeline.measured_total`. |
 | Success Rate | `pipeline.success_rate`. |
 | Failures | `pipeline.failure`. |
 | Skipped | `pipeline.skipped`. |
 | Cancelled | `pipeline.cancelled`. |
+| Pending | `pipeline.pending`. |
 | 24h Failures | `pipeline.recent_24h_failures`. |
 | Failed Jobs by Workflow | Failed jobs in the selected pipeline grouped by workflow. |
 
@@ -293,9 +310,14 @@ Do not use dashboard snapshot dates for CI execution trend charts.
 ## Invariants
 
 - Always label whether a number is workflow-run level or job level.
+- CI Execution and Health Overview must use the same exported CI fact model for
+  workflow/job basics. Health may add scoring, but must not recalculate base
+  counts from a different report family.
 - Success rate must use measured jobs only: `success / (success + failure)`.
 - Skipped, cancelled, queued, in-progress, and pending jobs must not be treated
   as failures.
+- Pending jobs must remain in an explicit `pending` bucket, not be hidden inside
+  `other`.
 - Health score must be `N/A` or insufficient when the dataset is failure-only.
 - Sample coverage must disclose both sampled workflow runs and execution-date
   coverage.

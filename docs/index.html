@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>vllm-ascend CI Insight</title>
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=20260604-health-problem-linkback">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
@@ -13,13 +13,13 @@
     <h1 id="pageTitle">vllm-ascend CI Insight</h1>
     <div class="header-actions">
       <button id="refreshBtn" onclick="refreshDashboard()">Refresh</button>
-      <button id="langToggle" onclick="toggleLang()">中文</button>
+      <button id="langToggle" onclick="toggleLang()">涓枃</button>
     </div>
   </div>
   <nav class="tabs">
-    <button class="tab active" data-tab="analysis" onclick="switchTab('analysis')">问题分析</button>
-    <button class="tab" data-tab="ci-stats" onclick="switchTab('ci-stats')">CI执行分析</button>
-    <button class="tab" data-tab="health" onclick="switchTab('health')">健康概览</button>
+    <button class="tab active" data-tab="analysis" onclick="switchTab('analysis')">闂鍒嗘瀽</button>
+    <button class="tab" data-tab="ci-stats" onclick="switchTab('ci-stats')">CI鎵ц鍒嗘瀽</button>
+    <button class="tab" data-tab="health" onclick="switchTab('health')">鍋ュ悍姒傝</button>
   </nav>
 </header>
 
@@ -79,8 +79,8 @@
         <option value="other">Other</option>
       </select>
     </div>
-    <section class="metrics" id="ciMetrics"></section>
-    <section class="charts">
+    <section class="metrics ci-metrics-grid" id="ciMetrics"></section>
+    <section class="charts ci-charts-grid">
       <div class="chart-box">
         <h3 id="chartDurationTitle">Job Duration Distribution (P50/P90/P20)</h3>
         <canvas id="chartDuration"></canvas>
@@ -89,11 +89,11 @@
         <h3 id="chartQueueTitle">Queue Wait Time</h3>
         <canvas id="chartQueue"></canvas>
       </div>
-      <div class="chart-box">
+      <div class="chart-box full">
         <h3 id="chartSuccessTitle">Success Rate by Workflow</h3>
         <canvas id="chartSuccess"></canvas>
       </div>
-      <div class="chart-box">
+      <div class="chart-box full slowest-jobs-chart">
         <h3 id="chartSlowestTitle">Slowest Jobs (Top 10)</h3>
         <canvas id="chartSlowest"></canvas>
       </div>
@@ -108,6 +108,7 @@
               <th id="ciThWorkflow">Workflow</th>
               <th id="ciThStatus">Status</th>
               <th id="ciThJobs">Jobs</th>
+              <th id="ciThQueueTime">Max Queue Wait</th>
               <th id="ciThWallClock">Wall-Clock</th>
               <th id="ciThAvgJob">Avg Job</th>
               <th id="ciThConcurrency">Concurrency</th>
@@ -115,7 +116,7 @@
             </tr>
           </thead>
           <tbody id="ciTableBody">
-            <tr><td colspan="8" class="loading">Loading...</td></tr>
+            <tr><td colspan="9" class="loading">Loading...</td></tr>
           </tbody>
         </table>
       </div>
@@ -138,8 +139,8 @@
   </div>
 </div>
 
-<script src="i18n.js?v=20260603-health-value-color"></script>
-<script src="app.js?v=20260603-health-value-color"></script>
-<script src="health.js?v=20260603-health-value-color"></script>
+<script src="i18n.js?v=20260604-health-problem-linkback"></script>
+<script src="app.js?v=20260604-health-problem-linkback"></script>
+<script src="health.js?v=20260604-health-problem-linkback"></script>
 </body>
 </html>

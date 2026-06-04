@@ -5,7 +5,7 @@ from src import aggregator
 from src.models import CIJob, CIRun, FailureReport
 
 
-def _report(run_id: int, run_created: str, job_started: str, job_completed: str) -> FailureReport:
+def _report(run_id: int, run_created: str, job_started: str, job_completed: str, job_created: str = "") -> FailureReport:
     return FailureReport(
         pr_number=0,
         pr_title="",
@@ -29,6 +29,7 @@ def _report(run_id: int, run_created: str, job_started: str, job_completed: str)
                         conclusion="success",
                         started_at=job_started,
                         completed_at=job_completed,
+                        created_at=job_created,
                     )
                 ],
             )
@@ -83,16 +84,18 @@ def test_save_snapshot_does_not_delete_historical_jobs_collected_today(tmp_path,
     }
     aggregator.save_snapshot(
         health_data,
-        [_report(2, "2026-06-03T00:00:00Z", "2026-06-03T00:01:00Z", "2026-06-03T00:02:00Z")],
+        [_report(2, "2026-06-02T00:00:00Z", "2026-06-03T00:01:00Z", "2026-06-03T00:02:00Z", "2026-06-03T00:00:30Z")],
     )
 
     db = sqlite3.connect(db_path)
     try:
         rows = db.execute("SELECT run_id, job_name FROM job_records ORDER BY run_id").fetchall()
+        queue = db.execute("SELECT queue_sec FROM job_records WHERE run_id = 2").fetchone()[0]
     finally:
         db.close()
 
     assert rows == [(1, "old"), (2, "test")]
+    assert queue == 30
 
     exported = json.loads(snapshot_path.read_text(encoding="utf-8"))
     assert exported["execution_trends"]["pr_e2e"][0]["date"] == "2026-06-01"

@@ -300,6 +300,8 @@ def collect_ci_metadata(
         workflow = run.get("workflowName") or run.get("name") or ""
         print(f"  [{idx}/{len(runs_to_fetch)}] {workflow} run {run_id}")
         jobs_raw = get_run_jobs(run_id)
+        if jobs_raw is None:
+            continue
         ci_store.replace_run_jobs(db, run, jobs_raw)
         db.commit()
 
@@ -383,6 +385,8 @@ def collect_pending_job_details(days: int = 7, limit: int = 500, force: bool = F
         workflow = run.get("workflowName") or run.get("name") or ""
         print(f"  [{idx}/{len(runs)}] {workflow} run {run_id}")
         jobs_raw = get_run_jobs(run_id)
+        if jobs_raw is None:
+            continue
         ci_store.replace_run_jobs(db, run, jobs_raw)
         db.commit()
     coverage = ci_store.coverage(db, days)
@@ -460,6 +464,7 @@ def metadata_to_reports(data: dict) -> list[FailureReport]:
                 conclusion=job.get("conclusion", "unknown"),
                 started_at=job.get("started_at", ""),
                 completed_at=job.get("completed_at", ""),
+                created_at=job.get("created_at", "") or job.get("queued_at", ""),
             )
             for job in run.get("jobs", [])
             if job.get("job_id") is not None

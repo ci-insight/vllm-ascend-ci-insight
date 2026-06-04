@@ -46,7 +46,7 @@ python3 -m src --days 2
 | pipeline_type | TEXT | pr_e2e, nightly, build, other |
 | conclusion | TEXT | success, failure, skipped, cancelled |
 | duration_sec | REAL | completed_at - started_at |
-| queue_sec | REAL | started_at - run.created_at |
+| queue_sec | REAL | started_at - job.created_at |
 | started_at | TEXT | ISO timestamp |
 | completed_at | TEXT | ISO timestamp |
 | created_at | TEXT | Record insertion time |

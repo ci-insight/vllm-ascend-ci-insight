@@ -28,8 +28,8 @@ def _duration_seconds(started_at: str, completed_at: str) -> float:
     return max(0, (completed - started).total_seconds())
 
 
-def _queue_seconds(created_at: str, started_at: str) -> float:
-    created = _parse_time(created_at)
+def _queue_seconds(queued_at: str, started_at: str) -> float:
+    created = _parse_time(queued_at)
     started = _parse_time(started_at)
     if not created or not started:
         return 0
@@ -129,7 +129,6 @@ def _import_ci_runs(db, path: Path, imported_at: str) -> int:
         ci_store.replace_run_jobs(db, {
             "databaseId": run_id,
             "workflowName": workflow_name,
-            "createdAt": created_at,
         }, run.get("jobs", []) or [])
         for job in run.get("jobs", []) or []:
             job_id = job.get("job_id")
@@ -137,6 +136,7 @@ def _import_ci_runs(db, path: Path, imported_at: str) -> int:
                 continue
             started_at = job.get("started_at", "")
             completed_at = job.get("completed_at", "")
+            queued_at = job.get("created_at") or job.get("queued_at") or ""
             db.execute(
                 """INSERT INTO job_records
                    (run_id, job_name, workflow_name, pipeline_type, conclusion,
@@ -149,7 +149,7 @@ def _import_ci_runs(db, path: Path, imported_at: str) -> int:
                     pipeline_type,
                     job.get("conclusion", "unknown"),
                     _duration_seconds(started_at, completed_at),
-                    _queue_seconds(created_at, started_at),
+                    _queue_seconds(queued_at, started_at),
                     started_at,
                     completed_at,
                     imported_at,

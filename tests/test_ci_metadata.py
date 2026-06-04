@@ -1,5 +1,7 @@
 """Tests for lightweight CI metadata health input."""
 
+from datetime import datetime, timedelta, timezone
+
 import pytest
 
 from src import ci_metadata
@@ -201,6 +203,9 @@ def test_collect_ci_metadata_exhausts_limit_when_target_not_met(monkeypatch):
 
 
 def test_date_partition_collection_records_inventory_and_job_coverage(monkeypatch):
+    today = datetime.now(timezone.utc).date()
+    date_keys = [(today - timedelta(days=offset)).isoformat() for offset in range(3)]
+    inventory_by_date = {day: 1 for day in date_keys}
     monkeypatch.setattr(
         ci_metadata,
         "list_runs_by_date",
@@ -208,29 +213,29 @@ def test_date_partition_collection_records_inventory_and_job_coverage(monkeypatc
             [
                 {
                     "databaseId": 1,
-                    "workflowName": "E2E-Light",
-                    "conclusion": "success",
-                    "status": "completed",
-                    "createdAt": "2026-06-03T00:00:00Z",
-                },
-                {
-                    "databaseId": 2,
-                    "workflowName": "Nightly-A2",
-                    "conclusion": "failure",
-                    "status": "completed",
-                    "createdAt": "2026-06-02T00:00:00Z",
-                },
-                {
-                    "databaseId": 3,
-                    "workflowName": "E2E-Full",
-                    "conclusion": "success",
-                    "status": "completed",
-                    "createdAt": "2026-06-01T00:00:00Z",
-                },
-            ],
-            {"2026-06-03": 1, "2026-06-02": 1, "2026-06-01": 1},
-        ),
-    )
+                        "workflowName": "E2E-Light",
+                        "conclusion": "success",
+                        "status": "completed",
+                        "createdAt": f"{date_keys[0]}T00:00:00Z",
+                    },
+                    {
+                        "databaseId": 2,
+                        "workflowName": "Nightly-A2",
+                        "conclusion": "failure",
+                        "status": "completed",
+                        "createdAt": f"{date_keys[1]}T00:00:00Z",
+                    },
+                    {
+                        "databaseId": 3,
+                        "workflowName": "E2E-Full",
+                        "conclusion": "success",
+                        "status": "completed",
+                        "createdAt": f"{date_keys[2]}T00:00:00Z",
+                    },
+                ],
+                inventory_by_date,
+            ),
+        )
     monkeypatch.setattr(
         ci_metadata,
         "get_run_jobs",
@@ -245,7 +250,7 @@ def test_date_partition_collection_records_inventory_and_job_coverage(monkeypatc
 
     assert data["collection_strategy"] == "date_partition"
     assert data["run_inventory_count"] == 3
-    assert data["run_inventory_by_date"] == {"2026-06-03": 1, "2026-06-02": 1, "2026-06-01": 1}
+    assert data["run_inventory_by_date"] == inventory_by_date
     assert data["job_detail_runs_collected"] == 2
     assert data["job_detail_selection"] == "balanced_by_date"
     assert data["job_detail_coverage_percent"] == 66.67
@@ -281,19 +286,20 @@ def test_list_runs_for_window_complete_splits_capped_windows(monkeypatch):
 
 
 def test_inventory_update_marks_jobs_stale_when_run_changes():
+    today = datetime.now(timezone.utc).date().isoformat()
     db = ci_store.conn()
     original = {
         "databaseId": 1,
         "workflowName": "E2E-Light",
         "conclusion": "success",
         "status": "in_progress",
-        "createdAt": "2026-06-03T00:00:00Z",
-        "updatedAt": "2026-06-03T00:01:00Z",
+        "createdAt": f"{today}T00:00:00Z",
+        "updatedAt": f"{today}T00:01:00Z",
     }
     updated = {
         **original,
         "status": "completed",
-        "updatedAt": "2026-06-03T00:05:00Z",
+        "updatedAt": f"{today}T00:05:00Z",
     }
 
     ci_store.upsert_runs(db, [original])
@@ -314,22 +320,23 @@ def test_inventory_update_marks_jobs_stale_when_run_changes():
 
 
 def test_split_collection_can_export_metadata_from_sqlite(monkeypatch):
+    today = datetime.now(timezone.utc).date().isoformat()
     runs = [
         {
             "databaseId": 1,
             "workflowName": "E2E-Light",
             "conclusion": "success",
             "status": "completed",
-            "createdAt": "2026-06-03T00:00:00Z",
-            "updatedAt": "2026-06-03T00:01:00Z",
+            "createdAt": f"{today}T00:00:00Z",
+            "updatedAt": f"{today}T00:01:00Z",
         },
         {
             "databaseId": 2,
             "workflowName": "Nightly-A2",
             "conclusion": "failure",
             "status": "completed",
-            "createdAt": "2026-06-03T01:00:00Z",
-            "updatedAt": "2026-06-03T01:01:00Z",
+            "createdAt": f"{today}T01:00:00Z",
+            "updatedAt": f"{today}T01:01:00Z",
         },
     ]
     monkeypatch.setattr(ci_metadata, "list_recent_runs", lambda days, limit: runs)

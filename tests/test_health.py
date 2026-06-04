@@ -115,6 +115,18 @@ def test_skipped_jobs_do_not_lower_success_rate():
     assert pr["success_rate"] == 100
 
 
+def test_pending_jobs_are_explicit_neutral_bucket():
+    reports = [make_report(1, "E2E-Light", "pr_e2e", ["success", "pending", "queued", "in_progress"])]
+    data = compute_health(reports)
+    pr = data["pipelines"]["pr_e2e"]
+    assert pr["workflow_runs"] == 1
+    assert pr["total"] == 4
+    assert pr["measured_total"] == 1
+    assert pr["pending"] == 3
+    assert pr["other"] == 0
+    assert pr["success_rate"] == 100
+
+
 def test_no_measured_jobs_has_no_health_score():
     reports = [make_report(1, "Nightly-A2", "nightly", ["skipped", "cancelled"])]
     data = compute_health(reports, complete_sample=True)
@@ -143,3 +155,13 @@ def test_duplicate_run_jobs_are_counted_once():
     pr = data["pipelines"]["pr_e2e"]
     assert pr["total"] == 2
     assert pr["measured_total"] == 2
+
+
+def test_workflow_runs_include_empty_run_inventory_entries():
+    report = make_report(1, "E2E-Light", "pr_e2e", ["success"])
+    empty = make_report(2, "E2E-Light", "pr_e2e", [])
+    report.runs.extend(empty.runs)
+    data = compute_health([report])
+    pr = data["pipelines"]["pr_e2e"]
+    assert pr["workflow_runs"] == 2
+    assert pr["total"] == 1

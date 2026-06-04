@@ -94,9 +94,11 @@ def save_snapshot(health_data: dict, reports: list):
                 json.dumps({
                     "rating": pdata.get("rating", ""),
                     "trend": pdata.get("trend", ""),
+                    "workflow_runs": pdata.get("workflow_runs", 0),
                     "measured_total": pdata.get("measured_total", 0),
                     "skipped": pdata.get("skipped", 0),
                     "cancelled": pdata.get("cancelled", 0),
+                    "pending": pdata.get("pending", 0),
                     "other": pdata.get("other", 0),
                 }),
                 now,
@@ -117,8 +119,8 @@ def save_snapshot(health_data: dict, reports: list):
                     duration = 0
 
                 try:
-                    created = datetime.fromisoformat(run.created_at.replace("Z", "+00:00"))
-                    queue = (started - created).total_seconds() if duration else 0
+                    queued = datetime.fromisoformat(job.created_at.replace("Z", "+00:00"))
+                    queue = (started - queued).total_seconds() if duration else 0
                 except (ValueError, AttributeError):
                     queue = 0
 

@@ -1,4 +1,4 @@
-:root {
+﻿:root {
   --bg: #0d1117;
   --surface: #161b22;
   --border: #30363d;
@@ -34,7 +34,7 @@ body {
   overflow-x: hidden;
 }
 
-/* ── Header ── */
+/* 鈹€鈹€ Header 鈹€鈹€ */
 header {
   background: var(--surface);
   border-bottom: 1px solid var(--border);
@@ -66,7 +66,7 @@ header {
   flex-wrap: wrap;
 }
 
-/* ── Tab Navigation ── */
+/* 鈹€鈹€ Tab Navigation 鈹€鈹€ */
 .tabs {
   display: flex;
   gap: 0;
@@ -99,7 +99,7 @@ header {
 .tab-content { display: none; }
 .tab-content.active { display: block; }
 
-/* ── Filters Bar ── */
+/* 鈹€鈹€ Filters Bar 鈹€鈹€ */
 .filters-bar {
   display: flex;
   gap: 8px;
@@ -137,7 +137,24 @@ button {
 
 button:hover { opacity: 0.85; }
 
-/* ── Main Layout ── */
+.link-button {
+  background: transparent;
+  border: 0;
+  color: var(--link);
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+  line-height: inherit;
+  text-align: left;
+  white-space: normal;
+}
+
+.link-button:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+/* 鈹€鈹€ Main Layout 鈹€鈹€ */
 main {
   width: min(100%, 1440px);
   margin: 0 auto;
@@ -160,12 +177,34 @@ main {
   color: var(--text);
 }
 
-/* ── Metric Cards ── */
+/* 鈹€鈹€ Metric Cards 鈹€鈹€ */
 .metrics {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
   gap: 12px;
   margin-bottom: 20px;
+}
+
+.ci-metrics-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.health-ops-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+@media (max-width: 1100px) {
+  .ci-metrics-grid,
+  .health-ops-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .ci-metrics-grid,
+  .health-ops-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .metric-card {
@@ -205,7 +244,7 @@ main {
 .metric-card.medium .metric-value { color: var(--medium); }
 .metric-card.low .metric-value { color: var(--low); }
 
-/* ── Alert Banners ── */
+/* 鈹€鈹€ Alert Banners 鈹€鈹€ */
 .alert-banner {
   padding: 10px 16px;
   border-radius: 6px;
@@ -214,12 +253,55 @@ main {
   color: var(--text);
 }
 
-/* ── Charts Grid ── */
+/* 鈹€鈹€ Charts Grid 鈹€鈹€ */
 .charts {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
   margin-bottom: 20px;
+}
+
+.ai-context-box {
+  background: rgba(88, 166, 255, 0.06);
+  border: 1px solid rgba(88, 166, 255, 0.24);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 13px;
+  margin: 12px 0;
+  padding: 10px 12px;
+}
+
+.fact-context {
+  background: rgba(31, 111, 235, 0.05);
+  border: 1px solid rgba(88, 166, 255, 0.18);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 12px;
+  margin: 8px 0;
+  padding: 8px 10px;
+}
+
+.fact-context.muted {
+  color: var(--text-dim);
+}
+
+.fact-context-title {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.fact-context-title span {
+  color: var(--text-dim);
+  font-weight: 400;
+  margin-left: 6px;
+}
+
+.fact-context-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 4px 10px;
+  color: var(--text-dim);
+  margin-bottom: 6px;
 }
 
 @media (max-width: 900px) {
@@ -245,6 +327,14 @@ main {
   height: 360px;
 }
 
+.ci-charts-grid .chart-box.full {
+  height: 380px;
+}
+
+.chart-box.slowest-jobs-chart {
+  height: 430px;
+}
+
 .chart-box h3 {
   font-size: 14px;
   font-weight: 600;
@@ -263,7 +353,7 @@ main {
   cursor: pointer;
 }
 
-/* ── Report List ── */
+/* 鈹€鈹€ Report List 鈹€鈹€ */
 .report-section { margin-top: 8px; }
 
 .report-section h3 {
@@ -352,7 +442,7 @@ main {
 .badge-effort-medium { background: #ca8a04; color: #000; }
 .badge-effort-high { background: #dc2626; }
 
-/* ── Modal ── */
+/* 鈹€鈹€ Modal 鈹€鈹€ */
 .modal {
   display: none;
   position: fixed;
@@ -447,7 +537,7 @@ main {
 .loading { text-align: center; color: var(--text-dim); padding: 40px; }
 .empty { color: var(--text-dim); padding: 20px 0; text-align: center; }
 
-/* ── Data Table ── */
+/* 鈹€鈹€ Data Table 鈹€鈹€ */
 .table-wrap {
   overflow-x: auto;
   width: 100%;

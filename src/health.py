@@ -17,6 +17,7 @@ HEALTH_FILE = REPORTS_DIR / "health.json"
 SUCCESS_CONCLUSIONS = {"success"}
 FAILURE_CONCLUSIONS = {"failure", "timed_out"}
 NEUTRAL_CONCLUSIONS = {"skipped", "cancelled", "neutral"}
+PENDING_CONCLUSIONS = {"queued", "in_progress", "pending"}
 
 
 def _run_conclusion(run_jobs: list[dict], fallback: str = "") -> str:
@@ -92,7 +93,7 @@ def compute_health(reports: list[FailureReport], *, complete_sample: bool = True
                 by_type[ptype].append(job_record)
                 run_jobs.append(job_record)
             run_key = (run.workflow_name, run.run_id)
-            if run_jobs and run_key not in seen_runs:
+            if run_key not in seen_runs:
                 seen_runs.add(run_key)
                 runs_by_type[ptype].append({
                     "workflow": run.workflow_name,
@@ -114,8 +115,10 @@ def compute_health(reports: list[FailureReport], *, complete_sample: bool = True
         failure = sum(1 for j in jobs if j["conclusion"] in FAILURE_CONCLUSIONS)
         skipped = sum(1 for j in jobs if j["conclusion"] == "skipped")
         cancelled = sum(1 for j in jobs if j["conclusion"] == "cancelled")
-        other = total - success - failure - skipped - cancelled
+        pending = sum(1 for j in jobs if j["conclusion"] in PENDING_CONCLUSIONS)
+        other = total - success - failure - skipped - cancelled - pending
         measured_total = success + failure
+        workflow_runs = len(runs_by_type.get(ptype, []))
         success_rate = success / measured_total if measured_total > 0 else 0
 
         # Recent stats
@@ -202,7 +205,16 @@ def compute_health(reports: list[FailureReport], *, complete_sample: bool = True
         for j in recent_7d:
             day = j["created_at"][:10]
             if day not in daily:
-                daily[day] = {"total": 0, "measured_total": 0, "success": 0, "failure": 0, "skipped": 0, "cancelled": 0, "other": 0}
+                daily[day] = {
+                    "total": 0,
+                    "measured_total": 0,
+                    "success": 0,
+                    "failure": 0,
+                    "skipped": 0,
+                    "cancelled": 0,
+                    "pending": 0,
+                    "other": 0,
+                }
             daily[day]["total"] += 1
             if j["conclusion"] in SUCCESS_CONCLUSIONS:
                 daily[day]["success"] += 1
@@ -214,6 +226,8 @@ def compute_health(reports: list[FailureReport], *, complete_sample: bool = True
                 daily[day]["skipped"] += 1
             elif j["conclusion"] == "cancelled":
                 daily[day]["cancelled"] += 1
+            elif j["conclusion"] in PENDING_CONCLUSIONS:
+                daily[day]["pending"] += 1
             else:
                 daily[day]["other"] += 1
 
@@ -229,6 +243,7 @@ def compute_health(reports: list[FailureReport], *, complete_sample: bool = True
                 "failure": d["failure"],
                 "skipped": d["skipped"],
                 "cancelled": d["cancelled"],
+                "pending": d["pending"],
                 "other": d["other"],
                 "success_rate": round(day_rate * 100),
                 "health": round(max(0, min(100,
@@ -238,12 +253,14 @@ def compute_health(reports: list[FailureReport], *, complete_sample: bool = True
 
         pipelines[ptype] = {
             "type": ptype,
+            "workflow_runs": workflow_runs,
             "total": total,
             "measured_total": measured_total,
             "success": success,
             "failure": failure,
             "skipped": skipped,
             "cancelled": cancelled,
+            "pending": pending,
             "other": other,
             "success_rate": round(success_rate * 100),
             "health_score": health_score,
@@ -261,6 +278,7 @@ def compute_health(reports: list[FailureReport], *, complete_sample: bool = True
         overall_success += success
 
     scored = [p["health_score"] for p in pipelines.values() if p["health_score"] is not None]
+    overall_workflow_runs = sum(p.get("workflow_runs", 0) for p in pipelines.values())
     return {
         "generated_at": now.isoformat(),
         "data_quality": {
@@ -272,6 +290,7 @@ def compute_health(reports: list[FailureReport], *, complete_sample: bool = True
             ),
         },
         "overall": {
+            "workflow_runs": overall_workflow_runs,
             "total": overall_total,
             "measured_total": overall_measured_total,
             "success": overall_success,

@@ -1,4 +1,4 @@
-const INDEX_URL = "reports/index.json";
+﻿const INDEX_URL = "reports/index.json";
 const CI_RUNS_URL = "reports/ci-runs.json";
 const COVERAGE_URL = "reports/coverage.json";
 let allReports = [];
@@ -98,7 +98,7 @@ function classifyJob(analysis, jobName) {
   return "other";
 }
 
-// ── I18n ──
+// 鈹€鈹€ I18n 鈹€鈹€
 
 function applyI18n() {
   document.title = t("title");
@@ -158,13 +158,13 @@ function applyI18n() {
   const elCiTable = document.getElementById("ciTableTitle");
   if (elCiTable) elCiTable.textContent = t("ciTableTitle");
   // CI table headers
-  ["ciThWorkflow","ciThStatus","ciThJobs","ciThWallClock","ciThAvgJob","ciThConcurrency","ciThEfficiency"].forEach(id => {
+  ["ciThWorkflow","ciThStatus","ciThJobs","ciThQueueTime","ciThWallClock","ciThAvgJob","ciThConcurrency","ciThEfficiency"].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.textContent = t(id);
   });
 }
 
-// ── Tab Switching ──
+// 鈹€鈹€ Tab Switching 鈹€鈹€
 
 function switchTab(name) {
   activeTab = name;
@@ -182,7 +182,7 @@ function switchTab(name) {
   }
 }
 
-// ── Data Loading ──
+// 鈹€鈹€ Data Loading 鈹€鈹€
 
 async function loadReports() {
   applyI18n();
@@ -229,7 +229,7 @@ async function loadCiMetadata() {
 
         const started = job.started_at ? new Date(job.started_at) : null;
         const completed = job.completed_at ? new Date(job.completed_at) : null;
-        const created = run.created_at ? new Date(run.created_at) : started;
+        const queued = job.created_at || job.queued_at ? new Date(job.created_at || job.queued_at) : null;
         const item = {
           job_name: job.job_name,
           job_id: jobId,
@@ -238,10 +238,12 @@ async function loadCiMetadata() {
           pipeline_type: run.pipeline_type || classifyPipeline(run.workflow_name),
           run_id: run.run_id,
           branch: run.branch,
+          run_created_at: run.created_at,
+          queued_at: job.created_at || job.queued_at || "",
           started_at: job.started_at,
           completed_at: job.completed_at,
           duration: started && completed ? Math.max(0, (completed - started) / 1000) : null,
-          queue_time: started && created ? Math.max(0, (started - created) / 1000) : null,
+          queue_time: started && queued ? Math.max(0, (started - queued) / 1000) : null,
           url: run.url,
           source: "ci_metadata",
         };
@@ -297,7 +299,7 @@ function renderDataSourceBanner(indexData) {
     const jobCoverage = ciCoverage?.job_details || null;
     const selection = ciMetadata.job_detail_selection;
     const targetText = target
-      ? ` · target ${target}/pipeline (${Object.entries(byPipeline).map(([k, v]) => `${k}:${v}`).join(", ")})`
+      ? ` 路 target ${target}/pipeline (${Object.entries(byPipeline).map(([k, v]) => `${k}:${v}`).join(", ")})`
       : "";
     const dateText = executionDates.length
       ? ` | ${executionDates.length}${executionTarget ? `/${executionTarget}` : ""} execution day(s): ${executionDates[0]}..${executionDates[executionDates.length - 1]}`
@@ -311,7 +313,7 @@ function renderDataSourceBanner(indexData) {
 
   el.innerHTML = `
     <div><strong>CI Execution / Health:</strong> ${escapeHtml(ciText)}</div>
-    <div><strong>Problem Analysis:</strong> historical failure reports · ${reportCount} reports · generated ${escapeHtml(historicalTime)}</div>
+    <div><strong>Problem Analysis:</strong> historical failure reports 路 ${reportCount} reports 路 generated ${escapeHtml(historicalTime)}</div>
     <div><strong>Refresh:</strong> reloads static JSON artifacts only; dynamic collection must update reports separately.</div>
   `;
 }
@@ -347,7 +349,7 @@ async function loadAnalysesData() {
           if (job.started_at && job.completed_at) {
             const started = new Date(job.started_at);
             const completed = new Date(job.completed_at);
-            const created = new Date(run.created_at || job.started_at);
+            const queued = job.created_at || job.queued_at ? new Date(job.created_at || job.queued_at) : null;
           historicalJobs.push({
               job_name: job.job_name,
               job_id: job.job_id,
@@ -356,10 +358,12 @@ async function loadAnalysesData() {
               pipeline_type: run.pipeline_type || classifyPipeline(run.workflow_name),
               run_id: run.run_id,
               branch: run.branch,
+              run_created_at: run.created_at,
+              queued_at: job.created_at || job.queued_at || "",
               started_at: job.started_at,
               completed_at: job.completed_at,
               duration: (completed - started) / 1000,
-              queue_time: (started - created) / 1000,
+              queue_time: queued ? Math.max(0, (started - queued) / 1000) : null,
               pr_number: r.pr_number,
             });
           }
@@ -396,7 +400,7 @@ async function loadAnalysesData() {
   if (allJobs.length && activeTab === "ci-stats") renderCIStats();
 }
 
-// ── Filtered Data Helpers ──
+// 鈹€鈹€ Filtered Data Helpers 鈹€鈹€
 
 function getActiveFilters() {
   return {
@@ -417,13 +421,163 @@ function getFilteredAnalyses() {
   });
 }
 
-// ── Metrics (Analysis Tab) ──
+// 鈹€鈹€ Metrics (Analysis Tab) 鈹€鈹€
+
+function normalizeMatchText(value) {
+  return (value || "").toString().replace(/\s+/g, " ").trim().toLowerCase();
+}
+
+function getRelatedAiAnalyses({ pipeline = "", workflow = "", jobName = "", jobId = "" } = {}) {
+  const wf = normalizeMatchText(workflow);
+  const job = normalizeMatchText(jobName);
+  const jid = jobId ? String(jobId) : "";
+  return allAnalyses.filter(a => {
+    if (pipeline && a._pipeline_type !== pipeline) return false;
+    if (wf && normalizeMatchText(a._workflow) !== wf) return false;
+    if (jid && String(a.job_id || "") === jid) return true;
+    if (job) {
+      const analysisJob = normalizeMatchText(a.job_name);
+      return analysisJob === job || analysisJob.includes(job) || job.includes(analysisJob);
+    }
+    return true;
+  });
+}
+
+function getAiAnalysisSummary(options = {}) {
+  const matches = getRelatedAiAnalyses(options);
+  const categories = {};
+  const severities = {};
+  matches.forEach(a => {
+    categories[a._category || "other"] = (categories[a._category || "other"] || 0) + 1;
+    severities[a.severity || "low"] = (severities[a.severity || "low"] || 0) + 1;
+  });
+  const topCategory = Object.entries(categories).sort((a, b) => b[1] - a[1])[0]?.[0] || "";
+  const topSeverity = Object.entries(severities).sort((a, b) => b[1] - a[1])[0]?.[0] || "";
+  return { count: matches.length, topCategory, topSeverity, matches };
+}
+
+function jsString(value) {
+  return JSON.stringify(value || "").replace(/</g, "\\u003c");
+}
+
+function relatedAiBadge(options = {}) {
+  const summary = getAiAnalysisSummary(options);
+  const label = summary.count
+    ? `AI-derived from failed samples: ${summary.count} related`
+    : "No related AI analysis in collected failed samples";
+  const categoryText = summary.topCategory ? ` 路 top category ${tCategory(summary.topCategory)}` : "";
+  return `<button class="link-button" onclick="showRelatedAiAnalysesFromHealth(${jsString(options.pipeline)}, ${jsString(options.workflow)}, ${jsString(options.jobName)}, ${jsString(options.jobId)})">${escapeHtml(label + categoryText)}</button>`;
+}
+
+function getCiFactContextForAnalysis(analysis) {
+  if (!analysis || !allJobs.length) return null;
+  const analysisJobId = analysis.job_id ? String(analysis.job_id) : "";
+  const workflow = normalizeMatchText(analysis._workflow || "");
+  const jobName = normalizeMatchText(analysis.job_name || "");
+  const exactJob = analysisJobId
+    ? allJobs.find(j => String(j.job_id || "") === analysisJobId)
+    : null;
+  const matched = allJobs.filter(j => {
+    if (exactJob) return j.workflow_name === exactJob.workflow_name && j.job_name === exactJob.job_name;
+    if (workflow && normalizeMatchText(j.workflow_name) !== workflow) return false;
+    const currentJob = normalizeMatchText(j.job_name);
+    return jobName && (currentJob === jobName || currentJob.includes(jobName) || jobName.includes(currentJob));
+  });
+  if (!matched.length) return null;
+  const success = matched.filter(j => j.conclusion === "success").length;
+  const failure = matched.filter(j => j.conclusion === "failure").length;
+  const measured = success + failure;
+  const durations = matched.map(j => j.duration).filter(v => v !== null && v !== undefined && v > 0);
+  const queues = matched.map(j => j.queue_time).filter(v => v !== null && v !== undefined && v >= 0);
+  return {
+    pipeline: matched[0].pipeline_type || "",
+    workflow: matched[0].workflow_name || analysis._workflow || "",
+    jobName: matched[0].job_name || analysis.job_name || "",
+    total: matched.length,
+    measured,
+    success,
+    failure,
+    successRate: measured ? Math.round(success / measured * 100) : null,
+    avgDuration: durations.length ? durations.reduce((s, v) => s + v, 0) / durations.length : null,
+    p90Duration: durations.length ? percentile(durations, 90) : null,
+    p90Queue: queues.length ? percentile(queues, 90) : null,
+  };
+}
+
+function renderCiFactContextForAnalysis(analysis) {
+  const ctx = getCiFactContextForAnalysis(analysis);
+  if (!ctx) {
+    return `<div class="fact-context muted">Current CI fact context unavailable for this failed sample.</div>`;
+  }
+  const srText = ctx.successRate === null ? "N/A" : `${ctx.successRate}%`;
+  return `<div class="fact-context">
+    <div class="fact-context-title">Current CI fact context <span>collected jobs only</span></div>
+    <div class="fact-context-grid">
+      <span>${escapeHtml(ctx.workflow)}</span>
+      <span>${ctx.failure}/${ctx.measured} measured failures</span>
+      <span>${srText} success</span>
+      <span>P90 ${fmtDuration(ctx.p90Duration)}</span>
+      <span>Queue P90 ${fmtQueueCell(ctx.p90Queue)}</span>
+    </div>
+    <button class="link-button" onclick="showWorkflowHealthDetail(${jsString(ctx.workflow)})">Open Health workflow context</button>
+  </div>`;
+}
+
+function focusProblemAnalysisFromHealth(pipeline = "", workflow = "") {
+  closeDetail();
+  const pipelineFilter = document.getElementById("pipelineFilter");
+  if (pipelineFilter) pipelineFilter.value = pipeline || "";
+  switchTab("analysis");
+  if (workflow) showDrillDown("workflow", workflow, workflow);
+}
+
+async function showRelatedAiAnalysesFromHealth(pipeline = "", workflow = "", jobName = "", jobId = "") {
+  if (!allAnalyses.length && allReports.length) await loadAnalysesData();
+  const summary = getAiAnalysisSummary({ pipeline, workflow, jobName, jobId });
+  const matches = summary.matches;
+  const title = jobName || workflow || (pipeline ? (t("pipeline_" + pipeline) || pipeline) : "Health selection");
+  let html = `<h2>${escapeHtml(title)} <span style="color:var(--text-dim);font-size:14px">AI-derived from failed samples</span></h2>`;
+  html += `<div class="meta-line">Related AI analyses: ${matches.length}${summary.topCategory ? ` 路 top category ${escapeHtml(tCategory(summary.topCategory))}` : ""}${summary.topSeverity ? ` 路 top severity ${escapeHtml(tSeverity(summary.topSeverity))}` : ""}</div>`;
+  html += `<div style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0">
+    <button onclick="focusProblemAnalysisFromHealth(${jsString(pipeline)}, ${jsString(workflow)})">Open Problem Analysis</button>
+  </div>`;
+  if (!matches.length) {
+    html += `<div class="empty">No related AI analysis in collected failed samples.</div>`;
+  } else {
+    const grouped = {};
+    matches.forEach(a => {
+      if (!grouped[a._pr_number]) grouped[a._pr_number] = [];
+      grouped[a._pr_number].push(a);
+    });
+    for (const [prNum, items] of Object.entries(grouped)) {
+      const pr = allReports.find(r => r.pr_number === parseInt(prNum));
+      html += `<div style="margin:16px 0 8px">
+        <a href="javascript:void(0)" onclick="closeDetail();openDetail(${prNum})" style="color:var(--link);font-weight:600;font-size:15px">#${prNum}</a>
+        <span style="color:var(--text-dim);font-size:13px;margin-left:8px">${escapeHtml(pr ? pr.pr_title : "")}</span>
+      </div>`;
+      items.forEach(a => {
+        html += `<div style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px 14px;margin:6px 0">
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;flex-wrap:wrap">
+            <span class="badge badge-${a.severity}">${tSeverity(a.severity)}</span>
+            <span class="badge badge-${a._category}">${tCategory(a._category)}</span>
+            <span style="font-size:13px;color:var(--text-dim)">${escapeHtml(a.job_name)}</span>
+            <span style="font-size:12px;color:var(--text-dim);margin-left:auto">${a.confidence || 0}% confidence</span>
+          </div>
+          ${renderCiFactContextForAnalysis(a)}
+          <div class="root-cause" style="font-size:13px;margin:0">${escapeHtml(a.root_cause || t("noRootCause"))}</div>
+        </div>`;
+      });
+    }
+  }
+  document.getElementById("detailContent").innerHTML = html;
+  document.getElementById("detailModal").classList.add("open");
+}
 
 function renderMetrics() {
   const filtered = getFilteredAnalyses();
   const base = filtered.length ? filtered : allAnalyses;
 
-  // ── Pipeline-level stats from allJobs ──
+  // 鈹€鈹€ Pipeline-level stats from allJobs 鈹€鈹€
   const ptStats = {};
   const jobPool = historicalJobs.length ? historicalJobs : [];
   jobPool.forEach(j => {
@@ -435,7 +589,7 @@ function renderMetrics() {
     if (j.conclusion === "failure") ptStats[pt].failed++;
   });
 
-  // ── Severity counts from analyses ──
+  // 鈹€鈹€ Severity counts from analyses 鈹€鈹€
   const totalJobs = base.length;
   let crit = 0, high = 0, med = 0, low = 0, confSum = 0;
   base.forEach(a => {
@@ -457,7 +611,7 @@ function renderMetrics() {
     ptCards += `<div class="metric-card clickable" onclick="showPipelineDetail('${pt}')">
       <div class="metric-value">${s.failed}</div>
       <div class="metric-label">${label}</div>
-      <div style="font-size:10px;color:var(--text-dim);margin-top:3px">${s.workflows.size} WF · ${s.runs.size} Runs · ${s.total} Jobs</div>
+      <div style="font-size:10px;color:var(--text-dim);margin-top:3px">${s.workflows.size} Workflows 路 ${s.runs.size} Runs 路 ${s.total} Jobs</div>
     </div>`;
   });
 
@@ -471,7 +625,7 @@ function renderMetrics() {
   `;
 }
 
-// ── Charts (Analysis Tab) ──
+// 鈹€鈹€ Charts (Analysis Tab) 鈹€鈹€
 
 function destroyCharts() { Object.values(charts).forEach(c => c.destroy()); charts = {}; }
 
@@ -549,7 +703,7 @@ function renderCategoryChart(filtered) {
   });
 }
 
-// ── CI Execution Analysis ──
+// 鈹€鈹€ CI Execution Analysis 鈹€鈹€
 
 function destroyCICharts() { Object.values(ciCharts).forEach(c => c.destroy()); ciCharts = {}; }
 
@@ -569,6 +723,31 @@ function fmtDuration(seconds) {
   return `${(seconds / 3600).toFixed(1)}h`;
 }
 
+function fmtQueueCell(seconds) {
+  if (seconds === null || seconds === undefined || !Number.isFinite(seconds)) {
+    return `<span class="muted" title="${t("ciQueueNotCollectedHint")}">${t("ciNotCollected")}</span>`;
+  }
+  return fmtDuration(seconds);
+}
+
+function compactJobLabel(job) {
+  const workflow = (job.workflow_name || "").replace(/\s+/g, " ").trim();
+  const rawName = (job.job_name || "").replace(/\s+/g, " ").trim();
+  const segments = rawName.split(" / ").map(s => s.trim()).filter(Boolean);
+  let detail = segments.length > 1 ? segments[segments.length - 1] : rawName;
+  detail = detail
+    .replace(/\s*\([0-9a-f]{12,}\)/gi, "")
+    .replace(/\s*\([^)]*v0\.[^)]*\)/gi, "")
+    .replace(/\s*\$\{\{\s*matrix\.[^}]+\}\}/gi, "matrix")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (!detail || detail.length < 4) detail = segments[0] || rawName || "job";
+  const label = workflow && !detail.toLowerCase().startsWith(workflow.toLowerCase())
+    ? `${workflow} / ${detail}`
+    : detail;
+  return label.length > 56 ? `${label.slice(0, 53)}...` : label;
+}
+
 function renderCIStats() {
   return renderCIStatsV2();
 }
@@ -581,17 +760,18 @@ function renderCIStatsV2() {
   const ptFilter = document.getElementById("ciPipelineFilter")?.value || "";
   const jobs = ptFilter ? allJobs.filter(j => j.pipeline_type === ptFilter) : allJobs;
 
-  // ── Job-level metrics ──
+  // 鈹€鈹€ Job-level metrics 鈹€鈹€
   const timedJobs = jobs.filter(j => j.duration !== null && j.duration !== undefined);
   const durations = timedJobs.map(j => j.duration).filter(d => d > 0);
   const queueTimes = jobs.map(j => j.queue_time).filter(q => q !== null && q !== undefined && q >= 0);
+  const queueCoverage = `${queueTimes.length}/${jobs.length}`;
   const avgDur = durations.reduce((s, d) => s + d, 0) / (durations.length || 1);
   const totalJobs = jobs.length;
   const success = jobs.filter(j => j.conclusion === "success").length;
   const failure = jobs.filter(j => j.conclusion === "failure").length;
   const measured = success + failure;
 
-  // ── Workflow-run-level metrics ──
+  // 鈹€鈹€ Workflow-run-level metrics 鈹€鈹€
   const wfKey = j => `${j.workflow_name}::${j.run_id}`;
   const wfGroups = {};
   jobs.forEach(j => { (wfGroups[wfKey(j)] ||= []).push(j); });
@@ -601,6 +781,8 @@ function renderCIStatsV2() {
     const ends = jobs.map(j => j.completed_at ? new Date(j.completed_at) : null).filter(Boolean);
     const firstStart = starts.length ? new Date(Math.min(...starts)) : null;
     const lastEnd = ends.length ? new Date(Math.max(...ends)) : firstStart;
+    const jobQueueTimes = jobs.map(j => j.queue_time).filter(q => q !== null && q !== undefined && q >= 0);
+    const queueTime = jobQueueTimes.length ? Math.max(...jobQueueTimes) : null;
     const wallClock = firstStart && lastEnd ? Math.max(0, (lastEnd - firstStart) / 1000) : null;
     const sumDur = jobs.reduce((s, j) => s + (j.duration || 0), 0);
     // Compute max concurrency: count overlapping jobs
@@ -617,6 +799,7 @@ function renderCIStatsV2() {
       workflow_name: jobs[0].workflow_name,
       run_id: jobs[0].run_id,
       jobs,
+      queueTime,
       wallClock,
       sumDur,
       jobCount: jobs.length,
@@ -634,7 +817,7 @@ function renderCIStatsV2() {
   const wfAvgJobs = _wfRuns.reduce((s, w) => s + w.jobCount, 0) / (wfTotal || 1);
   const wfAvgEfficiency = _wfRuns.reduce((s, w) => s + w.parallelEfficiency, 0) / (wfTotal || 1);
 
-  // ── Metric cards: Job row + Workflow row ──
+  // 鈹€鈹€ Metric cards: Job row + Workflow row 鈹€鈹€
   document.getElementById("ciMetrics").innerHTML = `
     <div style="grid-column:1/-1;font-size:12px;color:var(--text-dim);margin-bottom:-8px">Job metrics ${ciMetadata ? "(current CI metadata)" : "(historical failure reports)"}</div>
     <div class="metric-card"><div class="metric-value">${totalJobs}</div><div class="metric-label">${t("ciTotalJobs")}</div></div>
@@ -643,9 +826,9 @@ function renderCIStatsV2() {
     <div class="metric-card"><div class="metric-value">${fmtDuration(percentile(durations, 50))}</div><div class="metric-label">${t("ciJobP50")}</div></div>
     <div class="metric-card"><div class="metric-value">${fmtDuration(percentile(durations, 90))}</div><div class="metric-label">${t("ciJobP90")}</div></div>
     <div class="metric-card"><div class="metric-value">${fmtDuration(percentile(durations, 20))}</div><div class="metric-label">${t("ciJobP20")}</div></div>
-    <div class="metric-card clickable" onclick="showQueueDetail()"><div class="metric-value">${fmtDuration(percentile(queueTimes, 50))}</div><div class="metric-label">${t("ciQueueTime")}</div></div>
+    <div class="metric-card clickable" onclick="showQueueDetail()"><div class="metric-value">${fmtDuration(percentile(queueTimes, 50))}</div><div class="metric-label">${t("ciQueueTime")}</div><div style="font-size:10px;color:var(--text-dim);margin-top:3px">${queueCoverage} ${t("ciQueueMeasured")}</div></div>
     <div class="metric-card"><div class="metric-value">${measured ? Math.round(success / measured * 100) + "%" : "N/A"}</div><div class="metric-label">Measured Success Rate</div></div>
-    <div style="grid-column:1/-1;font-size:12px;color:var(--text-dim);margin-bottom:-8px;margin-top:8px">Workflow 维度 <span style="color:var(--text-dim);font-weight:400">(wall-clock)</span></div>
+    <div style="grid-column:1/-1;font-size:12px;color:var(--text-dim);margin-bottom:-8px;margin-top:8px">Workflow 缁村害 <span style="color:var(--text-dim);font-weight:400">(wall-clock)</span></div>
     <div class="metric-card"><div class="metric-value">${wfTotal}</div><div class="metric-label">${t("ciWfTotal")}</div></div>
     <div class="metric-card"><div class="metric-value">${fmtDuration(wfAvgWC)}</div><div class="metric-label">${t("ciWfAvgWC")}</div></div>
     <div class="metric-card"><div class="metric-value">${fmtDuration(percentile(wcDurations, 50))}</div><div class="metric-label">${t("ciWfP50")}</div></div>
@@ -752,23 +935,40 @@ function renderCIStatsV2() {
 
   // Slowest jobs
   const slowest = [...timedJobs].sort((a, b) => b.duration - a.duration).slice(0, 10);
+  const slowestLabels = slowest.map(compactJobLabel);
   ciCharts.slowest = new Chart(document.getElementById("chartSlowest"), {
     type: "bar",
     data: {
-      labels: slowest.map(j => j.job_name.length > 40 ? j.job_name.slice(0, 40) + "..." : j.job_name),
+      labels: slowestLabels,
       datasets: [{ data: slowest.map(j => j.duration), backgroundColor: slowest.map(j => j.conclusion === "failure" ? "#dc2626" : j.conclusion === "success" ? "#16a34a" : "#8b949e"), borderRadius: 4 }],
     },
     options: {
       indexAxis: "y", responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
+      layout: { padding: { left: 8, right: 12 } },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            title: items => {
+              const job = slowest[items[0].dataIndex];
+              return job?.job_name || "";
+            },
+            afterTitle: items => {
+              const job = slowest[items[0].dataIndex];
+              return job ? `${job.workflow_name || ""} 路 run ${job.run_id || ""}` : "";
+            },
+            label: item => `${t("ciDuration")}: ${fmtDuration(item.raw)}`,
+          },
+        },
+      },
       scales: {
         x: { grid: { color: "#21262d" }, ticks: { color: "#8b949e", font: { size: 11 }, callback: v => fmtDuration(v) } },
-        y: { grid: { display: false }, ticks: { color: "#c9d1d9", font: { size: 10 } } },
+        y: { grid: { display: false }, ticks: { color: "#c9d1d9", font: { size: 12 } } },
       },
     },
   });
 
-  // ── Workflow Runs Detail Table ──
+  // 鈹€鈹€ Workflow Runs Detail Table 鈹€鈹€
   const tbody = document.getElementById("ciTableBody");
   if (!tbody) return;
 
@@ -794,6 +994,7 @@ function renderCIStatsV2() {
       <td title="${escapeHtml(w.workflow_name)}"><a href="${runUrl}" target="_blank" rel="noopener" style="color:var(--link);text-decoration:none" onclick="event.stopPropagation()">${escapeHtml(w.workflow_name.length > 28 ? w.workflow_name.slice(0,28)+"..." : w.workflow_name)}</a></td>
       <td>${statusBadge}</td>
       <td>${w.jobCount}</td>
+      <td>${fmtQueueCell(w.queueTime)}</td>
       <td>${fmtDuration(w.wallClock)}</td>
       <td>${fmtDuration(w.sumDur / Math.max(1, w.jobCount))}</td>
       <td>${w.maxConcurrency} ${concBar}</td>
@@ -802,7 +1003,7 @@ function renderCIStatsV2() {
   }).join("");
 }
 
-// ── Report List ──
+// 鈹€鈹€ Report List 鈹€鈹€
 
 function renderReports() {
   const search = (document.getElementById("searchInput").value || "").toLowerCase();
@@ -848,7 +1049,7 @@ function renderReports() {
   }).join("");
 }
 
-// ── Detail Modal ──
+// 鈹€鈹€ Detail Modal 鈹€鈹€
 
 async function openDetail(prNumber) {
   const report = allReports.find(r => r.pr_number === prNumber);
@@ -885,7 +1086,7 @@ function renderDetail(data) {
     html += `<div class="meta-line">${t("noRuns")}</div>`;
   } else {
     runs.forEach(run => {
-      html += `<div class="meta-line"><strong>${escapeHtml(run.workflow_name)}</strong> (${run.run_id}) — ${run.conclusion} @ ${escapeHtml(run.branch)}</div>`;
+      html += `<div class="meta-line"><strong>${escapeHtml(run.workflow_name)}</strong> (${run.run_id}) 鈥?${run.conclusion} @ ${escapeHtml(run.branch)}</div>`;
     });
   }
   html += `<h3>${t("analysis")} (${analyses.length} ${t("failedJobs")})</h3>`;
@@ -896,7 +1097,11 @@ function renderDetail(data) {
       const cat = classifyJob(a, a.job_name);
       const effort = a.effort || "";
       const effortBadge = effort ? `<span class="badge badge-effort-${effort}">${t("effort_"+effort) || effort}</span>` : "";
+      const matchedJob = historicalJobs.find(j => String(j.job_id || "") === String(a.job_id || ""));
+      a._workflow = a._workflow || (matchedJob ? matchedJob.workflow_name : (a.job_name || "").split(" / ")[0] || "");
+      a._pipeline_type = a._pipeline_type || (matchedJob ? matchedJob.pipeline_type : classifyPipeline(a.job_name || ""));
       html += `<h4><span class="badge badge-${a.severity}">${tSeverity(a.severity)}</span> <span class="badge badge-${cat}">${tCategory(cat)}</span> ${effortBadge} ${escapeHtml(a.job_name)} <small style="color:var(--text-dim)">(${t("confidence")}: ${a.confidence}%)</small></h4>`;
+      html += renderCiFactContextForAnalysis(a);
       html += `<div class="root-cause">${escapeHtml(a.root_cause || t("noRootCause"))}</div>`;
       if (a.error_snippets && a.error_snippets.length) {
         html += `<div><strong>${t("errorSnippets")}</strong></div>`;
@@ -919,7 +1124,7 @@ function renderDetail(data) {
 
 function closeDetail() { document.getElementById("detailModal").classList.remove("open"); }
 
-// ── Drill Down ──
+// 鈹€鈹€ Drill Down 鈹€鈹€
 
 let _wfRuns = []; // cached for queue detail drill-down
 
@@ -1009,8 +1214,9 @@ function showDrillDown(filterType, filterValue, displayName) {
           <span class="badge badge-${a.severity}">${tSeverity(a.severity)}</span>
           <span class="badge badge-${a._category}">${tCategory(a._category)}</span>
           <span style="font-size:13px;color:var(--text-dim)">${escapeHtml(a.job_name)}</span>
-          <span style="font-size:12px;color:var(--text-dim);margin-left:auto">${date} · ${a.confidence}%</span>
+          <span style="font-size:12px;color:var(--text-dim);margin-left:auto">${date} 路 ${a.confidence}%</span>
         </div>
+        ${renderCiFactContextForAnalysis(a)}
         <div class="root-cause" style="font-size:13px;margin:0">${escapeHtml(a.root_cause || t("noRootCause"))}</div>
         ${a.fix_suggestions && a.fix_suggestions.length ? `<div style="margin-top:6px;font-size:12px;color:var(--text-dim)">${t("fixSuggestions")} ${escapeHtml(a.fix_suggestions[0])}</div>` : ""}
       </div>`;
@@ -1027,7 +1233,7 @@ function escapeHtml(text) {
   return div.innerHTML;
 }
 
-// ── Event Handlers ──
+// 鈹€鈹€ Event Handlers 鈹€鈹€
 
 function onAnalysisFilterChange() {
   if (activeTab !== "analysis") return;
@@ -1042,7 +1248,7 @@ document.getElementById("categoryFilter").addEventListener("change", onAnalysisF
 const pipeFilter = document.getElementById("pipelineFilter");
 if (pipeFilter) pipeFilter.addEventListener("change", onAnalysisFilterChange);
 
-// ── Boot ──
+// 鈹€鈹€ Boot 鈹€鈹€
 
 applyI18n();
 loadReports();

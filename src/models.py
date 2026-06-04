@@ -23,6 +23,7 @@ class CIJob:
     completed_at: str
     steps: list[StepResult] = field(default_factory=list)
     raw_log: str = ""
+    created_at: str = ""
 
 
 @dataclass

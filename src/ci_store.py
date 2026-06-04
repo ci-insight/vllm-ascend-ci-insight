@@ -31,8 +31,8 @@ def _duration_seconds(started_at: str, completed_at: str) -> float:
     return max(0, (completed - started).total_seconds())
 
 
-def _queue_seconds(created_at: str, started_at: str) -> float:
-    created = _parse_time(created_at)
+def _queue_seconds(queued_at: str, started_at: str) -> float:
+    created = _parse_time(queued_at)
     started = _parse_time(started_at)
     if not created or not started:
         return 0
@@ -60,6 +60,7 @@ def ensure_schema(db: sqlite3.Connection) -> None:
         run_id INTEGER NOT NULL,
         job_name TEXT NOT NULL,
         conclusion TEXT NOT NULL,
+        queued_at TEXT,
         started_at TEXT,
         completed_at TEXT,
         duration_sec REAL DEFAULT 0,
@@ -71,6 +72,9 @@ def ensure_schema(db: sqlite3.Connection) -> None:
         value TEXT,
         updated_at TEXT NOT NULL
     )""")
+    columns = {row[1] for row in db.execute("PRAGMA table_info(ci_jobs)").fetchall()}
+    if "queued_at" not in columns:
+        db.execute("ALTER TABLE ci_jobs ADD COLUMN queued_at TEXT")
     db.commit()
 
 
@@ -224,28 +228,29 @@ def replace_run_jobs(db: sqlite3.Connection, run: dict, jobs: list[dict]) -> Non
     if run_id is None:
         return
     collected_at = _now()
-    created_at = _created_at(run)
     db.execute("DELETE FROM ci_jobs WHERE run_id = ?", (run_id,))
     for job in jobs:
         job_id = job.get("id") or job.get("job_id")
         if job_id is None:
             continue
+        queued_at = job.get("created_at") or job.get("queued_at") or ""
         started_at = job.get("started_at", "")
         completed_at = job.get("completed_at", "")
         db.execute(
             """INSERT OR REPLACE INTO ci_jobs
-               (job_id, run_id, job_name, conclusion, started_at, completed_at,
+               (job_id, run_id, job_name, conclusion, queued_at, started_at, completed_at,
                 duration_sec, queue_sec, collected_at)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
             (
                 job_id,
                 run_id,
                 job.get("name") or job.get("job_name", ""),
                 job.get("conclusion") or job.get("status") or "unknown",
+                queued_at,
                 started_at,
                 completed_at,
                 _duration_seconds(started_at, completed_at),
-                _queue_seconds(created_at, started_at),
+                _queue_seconds(queued_at, started_at),
                 collected_at,
             ),
         )
@@ -285,12 +290,24 @@ def export_runs_with_jobs(db: sqlite3.Connection, days: int) -> list[dict]:
     for row in rows:
         run_id, workflow, pipeline, conclusion, status, branch, event, url, created_at, updated_at, jobs_collected_at = row
         jobs = db.execute(
-            """SELECT job_id, job_name, conclusion, started_at, completed_at
+            """SELECT job_id, job_name, conclusion, queued_at, started_at, completed_at
                FROM ci_jobs
                WHERE run_id = ?
                ORDER BY job_id ASC""",
             (run_id,),
         ).fetchall()
+        exported_jobs = []
+        for job_id, job_name, job_conclusion, queued_at, started_at, completed_at in jobs:
+            item = {
+                "job_id": job_id,
+                "job_name": job_name,
+                "conclusion": job_conclusion,
+                "started_at": started_at or "",
+                "completed_at": completed_at or "",
+            }
+            if queued_at:
+                item["created_at"] = queued_at
+            exported_jobs.append(item)
         runs.append({
             "run_id": run_id,
             "workflow_name": workflow,
@@ -303,16 +320,7 @@ def export_runs_with_jobs(db: sqlite3.Connection, days: int) -> list[dict]:
             "url": url or "",
             "pipeline_type": pipeline,
             "jobs_collected_at": jobs_collected_at,
-            "jobs": [
-                {
-                    "job_id": job_id,
-                    "job_name": job_name,
-                    "conclusion": job_conclusion,
-                    "started_at": started_at or "",
-                    "completed_at": completed_at or "",
-                }
-                for job_id, job_name, job_conclusion, started_at, completed_at in jobs
-            ],
+            "jobs": exported_jobs,
         })
     return runs
 

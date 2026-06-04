@@ -18,7 +18,7 @@ CIRun
 
 CIJob
 ├── job_id, job_name, conclusion
-├── started_at, completed_at (ISO timestamps)
+├── created_at, started_at, completed_at (ISO timestamps)
 ├── steps: list[StepResult]
 └── raw_log: str (only for failed jobs)
 

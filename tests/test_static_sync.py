@@ -38,12 +38,13 @@ def test_import_static_reports_rebuilds_local_sqlite(tmp_path, monkeypatch):
                 "run_id": 100,
                 "workflow_name": "E2E-Light",
                 "pipeline_type": "pr_e2e",
-                "created_at": "2026-06-02T00:00:00Z",
+                "created_at": "2026-06-01T00:00:00Z",
                 "jobs": [
                     {
                         "job_id": 1,
                         "job_name": "lint",
                         "conclusion": "success",
+                        "created_at": "2026-06-02T00:00:00Z",
                         "started_at": "2026-06-02T00:01:00Z",
                         "completed_at": "2026-06-02T00:03:00Z",
                     },
@@ -51,6 +52,7 @@ def test_import_static_reports_rebuilds_local_sqlite(tmp_path, monkeypatch):
                         "job_id": 2,
                         "job_name": "test",
                         "conclusion": "failure",
+                        "created_at": "2026-06-02T00:01:30Z",
                         "started_at": "2026-06-02T00:02:00Z",
                         "completed_at": "2026-06-02T00:07:00Z",
                     },
@@ -71,7 +73,7 @@ def test_import_static_reports_rebuilds_local_sqlite(tmp_path, monkeypatch):
         snapshots = db.execute("SELECT pipeline_type, total_runs, health_score FROM daily_snapshots").fetchall()
         jobs = db.execute("SELECT run_id, job_name, conclusion, duration_sec, queue_sec FROM job_records ORDER BY job_name").fetchall()
         runs = db.execute("SELECT run_id, workflow_name, jobs_collected_at FROM workflow_runs").fetchall()
-        ci_jobs = db.execute("SELECT run_id, job_name, conclusion FROM ci_jobs ORDER BY job_name").fetchall()
+        ci_jobs = db.execute("SELECT run_id, job_name, conclusion, queued_at FROM ci_jobs ORDER BY job_name").fetchall()
     finally:
         db.close()
 
@@ -82,7 +84,10 @@ def test_import_static_reports_rebuilds_local_sqlite(tmp_path, monkeypatch):
     assert len(runs) == 1
     assert runs[0][0:2] == (100, "E2E-Light")
     assert runs[0][2]
-    assert ci_jobs == [(100, "lint", "success"), (100, "test", "failure")]
+    assert ci_jobs == [
+        (100, "lint", "success", "2026-06-02T00:00:00Z"),
+        (100, "test", "failure", "2026-06-02T00:01:30Z"),
+    ]
 
     exported = json.loads((reports_dir / "daily-snapshots.json").read_text(encoding="utf-8"))
     assert exported["trend_axes"]["execution_trends"].startswith("CI execution date")

@@ -282,7 +282,7 @@ def main():
         rating = pdata["rating"]
         measured_total = pdata.get("measured_total", pdata.get("total", 0))
         score_text = "n/a" if score is None else f"{score:3d}"
-        sr_text = "no measured success/failure jobs" if measured_total == 0 else f"SR={pdata['success_rate']}% ({pdata['success']}/{measured_total} measured)"
+        sr_text = "no measured success/failure jobs" if measured_total == 0 else f"Success Rate={pdata['success_rate']}% ({pdata['success']}/{measured_total} measured)"
         print(f"  {ptype:12s}: score={score_text} ({rating})  {sr_text}, {pdata['total']} total")
     if alerts:
         print(f"  Alerts: {len(alerts)} active")

@@ -163,9 +163,10 @@ def test_health_counts_are_consistent():
     overall_bucket_sum = 0
     overall_measured = 0
     for ptype, pdata in data.get("pipelines", {}).items():
-        bucket_sum = sum(pdata.get(key, 0) for key in ("success", "failure", "skipped", "cancelled", "other"))
+        bucket_sum = sum(pdata.get(key, 0) for key in ("success", "failure", "skipped", "cancelled", "pending", "other"))
         assert pdata.get("total", 0) == bucket_sum, f"{ptype}: total does not match conclusion buckets"
         assert pdata.get("measured_total", 0) == pdata.get("success", 0) + pdata.get("failure", 0)
+        assert "workflow_runs" in pdata, f"{ptype}: missing workflow-run count"
         overall_bucket_sum += bucket_sum
         overall_measured += pdata.get("measured_total", 0)
     assert data.get("overall", {}).get("total", 0) == overall_bucket_sum
