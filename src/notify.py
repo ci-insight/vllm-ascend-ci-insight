@@ -25,7 +25,7 @@ def send_feishu(message: str, chat_id: str = "") -> bool:
 
     result = subprocess.run(
         ["feishu", "message", "send", "--type", "text", "--content", message, "--chat-id", target],
-        capture_output=True, text=True, timeout=30,
+        capture_output=True, text=True, encoding="utf-8", timeout=30,
     )
     if result.returncode == 0:
         print(f"  Feishu: sent to {target}")

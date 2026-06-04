@@ -18,6 +18,41 @@ from .storage import LOCAL_REPORTS_DIR, read_json, write_json
 # Maximum characters to send to claude for analysis (roughly 30K tokens)
 MAX_LOG_CHARS = 60000
 
+# Resolved path to Claude CLI (lazy-initialized)
+_CLAUDE_BIN: str | None = None
+
+
+def _find_claude() -> str:
+    """Resolve the Claude CLI executable, handling platform differences."""
+    global _CLAUDE_BIN
+    if _CLAUDE_BIN is not None:
+        return _CLAUDE_BIN
+
+    candidates = ["claude"]
+
+    # On Windows, npm global installs put claude.cmd in AppData
+    if sys.platform == "win32":
+        import os
+        npm_root = os.environ.get("APPDATA", "")
+        if npm_root:
+            candidates.insert(0, str(Path(npm_root) / "npm" / "claude.cmd"))
+        candidates.append("claude.cmd")
+
+    for candidate in candidates:
+        try:
+            result = subprocess.run(
+                [candidate, "--version"],
+                capture_output=True, text=True, encoding="utf-8", timeout=10,
+            )
+            if result.returncode == 0:
+                _CLAUDE_BIN = candidate
+                return candidate
+        except (FileNotFoundError, OSError):
+            continue
+
+    _CLAUDE_BIN = "claude"
+    return _CLAUDE_BIN
+
 # Delay between Claude CLI calls to avoid rate limiting (seconds)
 CALL_DELAY = 2.0
 
@@ -120,9 +155,11 @@ def _claude_analyze(text: str) -> dict:
         _last_call_time = time.time()
 
         result = subprocess.run(
-            ["claude", "-p", prompt, "--output-format", "text"],
+            [_find_claude(), "-p", "--output-format", "text"],
+            input=prompt,
             capture_output=True,
             text=True,
+            encoding="utf-8",
             timeout=120,
         )
 

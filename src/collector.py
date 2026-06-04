@@ -57,7 +57,7 @@ ERROR_PATTERNS = [
 def _gh(*args: str, check: bool = True) -> subprocess.CompletedProcess:
     """Run a gh command and return the CompletedProcess."""
     cmd = ["gh", *args]
-    result = subprocess.run(cmd, capture_output=True, text=True)
+    result = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8")
     if check and result.returncode != 0:
         raise RuntimeError(f"gh {' '.join(args)} failed: {result.stderr.strip()}")
     return result
