@@ -155,12 +155,12 @@ def _claude_analyze(text: str) -> dict:
         _last_call_time = time.time()
 
         result = subprocess.run(
-            [_find_claude(), "-p", "--output-format", "text"],
+            [_find_claude(), "--output-format", "text"],
             input=prompt,
             capture_output=True,
             text=True,
             encoding="utf-8",
-            timeout=120,
+            timeout=300,
         )
 
         if result.returncode == 0:
