@@ -251,5 +251,17 @@ def update_index(reports: list[FailureReport]) -> Path:
     docs_index = DOCS_DIR / "index.json"
     write_json(docs_index, index.to_dict())
     docs_index.chmod(0o644)
+    print_persist_reminder(date_str)
 
     return INDEX_FILE
+
+
+def print_persist_reminder(date_str: str | None = None) -> None:
+    """Print the git commands needed to keep generated static reports."""
+    target_date = date_str or current_date_str()
+    print()
+    print("  [IMPORTANT] AI analysis reports are only durable after committing docs/reports.")
+    print("  Local reports/ is gitignored and can be deleted by cleanup/reset.")
+    print("  To preserve the generated reports for local clones and GitHub Pages, run:")
+    print(f"    git add docs/reports/{target_date}/ docs/reports/index.json docs/reports/*.json")
+    print(f"    git commit -m \"Add {target_date} AI analysis reports\"")
