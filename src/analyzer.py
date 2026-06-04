@@ -59,6 +59,9 @@ CALL_DELAY = 2.0
 # Max retries for failed Claude calls
 MAX_RETRIES = 3
 
+# Only failed-like jobs are meaningful AI analysis inputs.
+ANALYZABLE_CONCLUSIONS = {"failure", "cancelled", "timed_out"}
+
 # Track last call time for rate limiting
 _last_call_time: float = 0.0
 
@@ -265,6 +268,8 @@ def analyze_report(report: FailureReport, cache: Optional[AnalysisCache] = None)
 
     for run in report.runs:
         for job in run.jobs:
+            if job.conclusion not in ANALYZABLE_CONCLUSIONS:
+                continue
             print(f"  Analyzing job: {job.job_name} (id={job.job_id})")
 
             # Truncate log for analysis

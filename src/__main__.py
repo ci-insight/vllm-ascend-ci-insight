@@ -192,6 +192,7 @@ def main():
             for i, report in enumerate(reports):
                 print(f"\nAnalyzing stored run {report.pr_number} ({i + 1}/{len(reports)})")
                 analyze_report(report, cache=cache)
+                generate_report(report)
         else:
             print("[2/4] Skipping analysis (--no-analyze)")
 
@@ -273,6 +274,7 @@ def main():
             for i, report in enumerate(reports):
                 print(f"\nAnalyzing PR #{report.pr_number} ({i + 1}/{len(reports)})")
                 analyze_report(report, cache=cache)
+                generate_report(report)
         else:
             print("[2/4] Skipping analysis (--no-analyze)")
 
