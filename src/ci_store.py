@@ -65,6 +65,8 @@ def ensure_schema(db: sqlite3.Connection) -> None:
         completed_at TEXT,
         duration_sec REAL DEFAULT 0,
         queue_sec REAL DEFAULT 0,
+        raw_log TEXT DEFAULT '',
+        log_collected_at TEXT,
         collected_at TEXT NOT NULL
     )""")
     db.execute("""CREATE TABLE IF NOT EXISTS collection_state (
@@ -75,6 +77,10 @@ def ensure_schema(db: sqlite3.Connection) -> None:
     columns = {row[1] for row in db.execute("PRAGMA table_info(ci_jobs)").fetchall()}
     if "queued_at" not in columns:
         db.execute("ALTER TABLE ci_jobs ADD COLUMN queued_at TEXT")
+    if "raw_log" not in columns:
+        db.execute("ALTER TABLE ci_jobs ADD COLUMN raw_log TEXT DEFAULT ''")
+    if "log_collected_at" not in columns:
+        db.execute("ALTER TABLE ci_jobs ADD COLUMN log_collected_at TEXT")
     db.commit()
 
 
@@ -228,6 +234,13 @@ def replace_run_jobs(db: sqlite3.Connection, run: dict, jobs: list[dict]) -> Non
     if run_id is None:
         return
     collected_at = _now()
+    existing_logs = {
+        row[0]: (row[1] or "", row[2])
+        for row in db.execute(
+            "SELECT job_id, raw_log, log_collected_at FROM ci_jobs WHERE run_id = ?",
+            (run_id,),
+        ).fetchall()
+    }
     db.execute("DELETE FROM ci_jobs WHERE run_id = ?", (run_id,))
     for job in jobs:
         job_id = job.get("id") or job.get("job_id")
@@ -236,11 +249,12 @@ def replace_run_jobs(db: sqlite3.Connection, run: dict, jobs: list[dict]) -> Non
         queued_at = job.get("created_at") or job.get("queued_at") or ""
         started_at = job.get("started_at", "")
         completed_at = job.get("completed_at", "")
+        raw_log, log_collected_at = existing_logs.get(job_id, ("", None))
         db.execute(
             """INSERT OR REPLACE INTO ci_jobs
                (job_id, run_id, job_name, conclusion, queued_at, started_at, completed_at,
-                duration_sec, queue_sec, collected_at)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                duration_sec, queue_sec, raw_log, log_collected_at, collected_at)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
             (
                 job_id,
                 run_id,
@@ -251,6 +265,8 @@ def replace_run_jobs(db: sqlite3.Connection, run: dict, jobs: list[dict]) -> Non
                 completed_at,
                 _duration_seconds(started_at, completed_at),
                 _queue_seconds(queued_at, started_at),
+                job.get("raw_log", raw_log) or raw_log,
+                job.get("log_collected_at", log_collected_at) or log_collected_at,
                 collected_at,
             ),
         )
@@ -258,6 +274,78 @@ def replace_run_jobs(db: sqlite3.Connection, run: dict, jobs: list[dict]) -> Non
         "UPDATE workflow_runs SET jobs_collected_at = ? WHERE run_id = ?",
         (collected_at, run_id),
     )
+
+
+LOGGABLE_CONCLUSIONS = ("failure", "cancelled", "timed_out")
+
+
+def jobs_needing_logs(db: sqlite3.Connection, days: int, limit: int = 100, force: bool = False) -> list[dict]:
+    """Return failed-like jobs whose raw logs are missing or explicitly stale."""
+    where = [
+        "wr.created_at >= ?",
+        f"j.conclusion IN ({','.join('?' for _ in LOGGABLE_CONCLUSIONS)})",
+    ]
+    params: list[object] = [period_start(days), *LOGGABLE_CONCLUSIONS]
+    if not force:
+        where.append("(j.raw_log IS NULL OR j.raw_log = '')")
+    limit_sql = "" if limit <= 0 else " LIMIT ?"
+    if limit > 0:
+        params.append(limit)
+    rows = db.execute(
+        f"""SELECT j.job_id, j.run_id, j.job_name, j.conclusion,
+                  wr.workflow_name, wr.pipeline_type, wr.branch, wr.event,
+                  wr.url, wr.created_at
+             FROM ci_jobs j
+             JOIN workflow_runs wr ON wr.run_id = j.run_id
+             WHERE {' AND '.join(where)}
+             ORDER BY wr.created_at DESC, j.job_id ASC{limit_sql}""",
+        params,
+    ).fetchall()
+    return [
+        {
+            "job_id": job_id,
+            "run_id": run_id,
+            "job_name": job_name,
+            "conclusion": conclusion,
+            "workflow_name": workflow,
+            "pipeline_type": pipeline,
+            "branch": branch or "",
+            "event": event or "",
+            "url": url or "",
+            "created_at": created_at,
+        }
+        for job_id, run_id, job_name, conclusion, workflow, pipeline, branch, event, url, created_at in rows
+    ]
+
+
+def update_job_log(db: sqlite3.Connection, job_id: int, raw_log: str) -> None:
+    db.execute(
+        "UPDATE ci_jobs SET raw_log = ?, log_collected_at = ? WHERE job_id = ?",
+        (raw_log or "", _now(), job_id),
+    )
+
+
+def log_coverage(db: sqlite3.Connection, days: int) -> dict:
+    start = period_start(days)
+    failed_jobs = db.execute(
+        f"""SELECT COUNT(*) FROM ci_jobs
+            WHERE conclusion IN ({','.join('?' for _ in LOGGABLE_CONCLUSIONS)})
+            AND run_id IN (SELECT run_id FROM workflow_runs WHERE created_at >= ?)""",
+        (*LOGGABLE_CONCLUSIONS, start),
+    ).fetchone()[0]
+    with_logs = db.execute(
+        f"""SELECT COUNT(*) FROM ci_jobs
+            WHERE conclusion IN ({','.join('?' for _ in LOGGABLE_CONCLUSIONS)})
+            AND raw_log IS NOT NULL AND raw_log != ''
+            AND run_id IN (SELECT run_id FROM workflow_runs WHERE created_at >= ?)""",
+        (*LOGGABLE_CONCLUSIONS, start),
+    ).fetchone()[0]
+    return {
+        "collected_logs": with_logs,
+        "failed_jobs": failed_jobs,
+        "coverage_percent": round(with_logs / failed_jobs * 100, 2) if failed_jobs else 0,
+        "quality": "full" if failed_jobs and with_logs == failed_jobs else "partial",
+    }
 
 
 def period_start(days: int) -> str:
@@ -290,14 +378,14 @@ def export_runs_with_jobs(db: sqlite3.Connection, days: int) -> list[dict]:
     for row in rows:
         run_id, workflow, pipeline, conclusion, status, branch, event, url, created_at, updated_at, jobs_collected_at = row
         jobs = db.execute(
-            """SELECT job_id, job_name, conclusion, queued_at, started_at, completed_at
+            """SELECT job_id, job_name, conclusion, queued_at, started_at, completed_at, raw_log
                FROM ci_jobs
                WHERE run_id = ?
                ORDER BY job_id ASC""",
             (run_id,),
         ).fetchall()
         exported_jobs = []
-        for job_id, job_name, job_conclusion, queued_at, started_at, completed_at in jobs:
+        for job_id, job_name, job_conclusion, queued_at, started_at, completed_at, raw_log in jobs:
             item = {
                 "job_id": job_id,
                 "job_name": job_name,
@@ -307,6 +395,8 @@ def export_runs_with_jobs(db: sqlite3.Connection, days: int) -> list[dict]:
             }
             if queued_at:
                 item["created_at"] = queued_at
+            if raw_log:
+                item["raw_log"] = raw_log
             exported_jobs.append(item)
         runs.append({
             "run_id": run_id,
@@ -323,6 +413,56 @@ def export_runs_with_jobs(db: sqlite3.Connection, days: int) -> list[dict]:
             "jobs": exported_jobs,
         })
     return runs
+
+
+def export_failed_jobs_with_logs(db: sqlite3.Connection, days: int, limit: int = 0) -> list[dict]:
+    """Export workflow runs containing failed-like jobs with stored raw logs."""
+    params: list[object] = [period_start(days), *LOGGABLE_CONCLUSIONS]
+    limit_sql = "" if limit <= 0 else " LIMIT ?"
+    if limit > 0:
+        params.append(limit)
+    rows = db.execute(
+        f"""SELECT wr.run_id, wr.workflow_name, wr.pipeline_type, wr.conclusion,
+                  wr.branch, wr.event, wr.url, wr.created_at,
+                  j.job_id, j.job_name, j.conclusion, j.queued_at,
+                  j.started_at, j.completed_at, j.raw_log
+             FROM ci_jobs j
+             JOIN workflow_runs wr ON wr.run_id = j.run_id
+             WHERE wr.created_at >= ?
+               AND j.conclusion IN ({','.join('?' for _ in LOGGABLE_CONCLUSIONS)})
+               AND j.raw_log IS NOT NULL AND j.raw_log != ''
+             ORDER BY wr.created_at DESC, wr.run_id DESC, j.job_id ASC{limit_sql}""",
+        params,
+    ).fetchall()
+    by_run: dict[int, dict] = {}
+    for row in rows:
+        (
+            run_id, workflow, pipeline, run_conclusion, branch, event, url, created_at,
+            job_id, job_name, job_conclusion, queued_at, started_at, completed_at, raw_log,
+        ) = row
+        run = by_run.setdefault(run_id, {
+            "run_id": run_id,
+            "workflow_name": workflow,
+            "pipeline_type": pipeline,
+            "conclusion": run_conclusion,
+            "branch": branch or "",
+            "event": event or "",
+            "url": url or "",
+            "created_at": created_at,
+            "jobs": [],
+        })
+        job = {
+            "job_id": job_id,
+            "job_name": job_name,
+            "conclusion": job_conclusion,
+            "started_at": started_at or "",
+            "completed_at": completed_at or "",
+            "raw_log": raw_log or "",
+        }
+        if queued_at:
+            job["created_at"] = queued_at
+        run["jobs"].append(job)
+    return list(by_run.values())
 
 
 def coverage(db: sqlite3.Connection, days: int, ai_analyzed: int = 0, failed_jobs: int = 0) -> dict:
@@ -373,5 +513,6 @@ def coverage(db: sqlite3.Connection, days: int, ai_analyzed: int = 0, failed_job
             "analyzed": ai_analyzed,
             "failed_jobs": failed_jobs,
             "coverage_percent": round(ai_analyzed / failed_jobs * 100, 2) if failed_jobs else 0,
+            "log_collection": log_coverage(db, days),
         },
     }

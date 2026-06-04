@@ -9,7 +9,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from . import ci_store
-from .collector import REPO, _gh, _parse_json_output, classify_pipeline, get_run_jobs
+from .collector import REPO, _gh, _parse_json_output, classify_pipeline, get_job_log, get_run_jobs
 from .models import CIJob, CIRun, FailureReport
 from .storage import DOCS_REPORTS_DIR, LOCAL_REPORTS_DIR, read_json, write_json
 
@@ -402,6 +402,93 @@ def collect_pending_job_details(days: int = 7, limit: int = 500, force: bool = F
     }
 
 
+def collect_pending_job_logs(days: int = 7, limit: int = 100, force: bool = False) -> dict:
+    """Fetch raw logs for failed-like jobs that are already known in SQLite."""
+    db = ci_store.conn()
+    try:
+        jobs = ci_store.jobs_needing_logs(db, days=days, limit=limit, force=force)
+        for idx, job in enumerate(jobs, 1):
+            print(
+                f"  [{idx}/{len(jobs)}] {job['workflow_name']} / "
+                f"{job['job_name']} job {job['job_id']}"
+            )
+            raw_log = get_job_log(job["job_id"])
+            ci_store.update_job_log(db, job["job_id"], raw_log)
+            db.commit()
+        coverage = ci_store.coverage(db, days)
+    finally:
+        db.close()
+    return {
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "repo": REPO,
+        "days": days,
+        "log_limit": limit,
+        "force": force,
+        "logs_processed": len(jobs),
+        "coverage": coverage,
+    }
+
+
+def reports_from_store_failed_logs(days: int = 7, limit: int = 0) -> list[FailureReport]:
+    """Build FailureReport objects from SQLite failed jobs with stored logs."""
+    db = ci_store.conn()
+    try:
+        records = ci_store.export_failed_jobs_with_logs(db, days=days, limit=limit)
+    finally:
+        db.close()
+
+    generated_at = datetime.now(timezone.utc).isoformat()
+    reports: list[FailureReport] = []
+    for run in records:
+        jobs = [
+            CIJob(
+                job_id=job["job_id"],
+                job_name=job.get("job_name", ""),
+                conclusion=job.get("conclusion", "unknown"),
+                started_at=job.get("started_at", ""),
+                completed_at=job.get("completed_at", ""),
+                created_at=job.get("created_at", ""),
+                raw_log=job.get("raw_log", ""),
+            )
+            for job in run.get("jobs", [])
+        ]
+        ci_run = CIRun(
+            run_id=run["run_id"],
+            workflow_name=run.get("workflow_name", ""),
+            conclusion=run.get("conclusion", "unknown"),
+            branch=run.get("branch", ""),
+            pr_number=None,
+            created_at=run.get("created_at", ""),
+            event=run.get("event", ""),
+            pipeline_type=run.get("pipeline_type") or classify_pipeline(run.get("workflow_name", "")),
+            jobs=jobs,
+        )
+        reports.append(FailureReport(
+            pr_number=int(run["run_id"]),
+            pr_title=f"Stored CI run {run.get('workflow_name', '')}",
+            pr_author="",
+            pr_url=run.get("url", ""),
+            analyzed_at=generated_at,
+            runs=[ci_run],
+            analyses=[],
+        ))
+    return reports
+
+
+def save_coverage_from_store(days: int, ai_analyzed: int = 0, failed_jobs: int | None = None) -> dict:
+    """Persist coverage.json using SQLite counters plus AI analysis counters."""
+    db = ci_store.conn()
+    try:
+        if failed_jobs is None:
+            failed_jobs = ci_store.log_coverage(db, days)["failed_jobs"]
+        coverage = ci_store.coverage(db, days, ai_analyzed=ai_analyzed, failed_jobs=failed_jobs)
+    finally:
+        db.close()
+    write_json(LOCAL_COVERAGE_FILE, coverage)
+    write_json(DOCS_COVERAGE_FILE, coverage)
+    return coverage
+
+
 def build_ci_metadata_from_store(
     days: int = 7,
     limit: int = 0,
@@ -465,6 +552,7 @@ def metadata_to_reports(data: dict) -> list[FailureReport]:
                 started_at=job.get("started_at", ""),
                 completed_at=job.get("completed_at", ""),
                 created_at=job.get("created_at", "") or job.get("queued_at", ""),
+                raw_log=job.get("raw_log", ""),
             )
             for job in run.get("jobs", [])
             if job.get("job_id") is not None

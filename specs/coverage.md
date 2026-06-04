@@ -50,7 +50,13 @@ reports/coverage.json
   "ai_analysis": {
     "analyzed": 42,
     "failed_jobs": 185,
-    "coverage_percent": 22.7
+    "coverage_percent": 22.7,
+    "log_collection": {
+      "collected_logs": 120,
+      "failed_jobs": 185,
+      "coverage_percent": 64.86,
+      "quality": "partial"
+    }
   }
 }
 ```
@@ -66,6 +72,10 @@ reports/coverage.json
 - `measured_jobs` counts only `success` and `failure` jobs as measured
   outcomes.
 - `ai_analysis` is independent from base CI health metrics.
+- `ai_analysis.log_collection` tracks failed-like jobs whose raw logs are
+  already stored in SQLite. It is the prerequisite for `--analyze-from-store`.
+- `ai_analysis.analyzed` counts jobs that have passed through the AI analyzer,
+  not merely jobs whose logs are available.
 
 ## Dashboard Rules
 
@@ -80,6 +90,8 @@ The preferred production workflow is split into resumable stages:
 ```bash
 python -m src --collect-run-inventory --days 7 --metrics-collection-strategy date_partition
 python -m src --collect-job-details --days 7 --metrics-job-detail-limit 500
+python -m src --collect-logs --days 7 --metrics-job-detail-limit 100
+python -m src --analyze-from-store --days 7 --limit 30
 python -m src --export-ci-metadata --health --days 7 --no-notify
 ```
 
@@ -91,5 +103,9 @@ Rules:
 - If an inventoried run changes `updated_at` or moves from non-completed to
   completed, its existing `jobs_collected_at` is cleared so jobs are refreshed.
 - `--force-job-details` intentionally re-fetches already collected jobs.
+- Log collection is a separate budgeted step. `--collect-logs` only fetches
+  raw logs for failed/cancelled/timed_out jobs already present in SQLite.
+- `--analyze-from-store` builds `FailureReport` objects from SQLite-stored
+  failed-job logs and must not re-fetch workflow-run or job metadata.
 - Static export must read from SQLite, not from only the current command's API
   sample.

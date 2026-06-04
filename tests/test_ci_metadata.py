@@ -356,3 +356,76 @@ def test_split_collection_can_export_metadata_from_sqlite(monkeypatch):
     assert exported["job_detail_runs_collected"] == 1
     assert exported["job_detail_coverage_percent"] == 50
     assert len(exported["runs"]) == 1
+
+
+def test_collect_pending_job_logs_stores_failed_job_logs(monkeypatch):
+    today = datetime.now(timezone.utc).date().isoformat()
+    db = ci_store.conn()
+    run = {
+        "databaseId": 1,
+        "workflowName": "E2E-Light",
+        "conclusion": "failure",
+        "status": "completed",
+        "createdAt": f"{today}T00:00:00Z",
+        "updatedAt": f"{today}T00:01:00Z",
+    }
+    ci_store.upsert_runs(db, [run])
+    ci_store.replace_run_jobs(
+        db,
+        run,
+        [
+            {"id": 10, "name": "lint", "conclusion": "success", "started_at": "", "completed_at": ""},
+            {"id": 11, "name": "e2e", "conclusion": "failure", "started_at": "", "completed_at": ""},
+        ],
+    )
+    db.commit()
+    db.close()
+
+    fetched = []
+
+    def fake_get_job_log(job_id):
+        fetched.append(job_id)
+        return f"log for {job_id}"
+
+    monkeypatch.setattr(ci_metadata, "get_job_log", fake_get_job_log)
+
+    result = ci_metadata.collect_pending_job_logs(days=1, limit=10)
+    exported = ci_metadata.build_ci_metadata_from_store(days=1)
+
+    assert fetched == [11]
+    assert result["logs_processed"] == 1
+    assert result["coverage"]["ai_analysis"]["log_collection"]["collected_logs"] == 1
+    assert exported["runs"][0]["jobs"][1]["raw_log"] == "log for 11"
+
+
+def test_reports_from_store_failed_logs_builds_analysis_input():
+    today = datetime.now(timezone.utc).date().isoformat()
+    db = ci_store.conn()
+    run = {
+        "databaseId": 123,
+        "workflowName": "Nightly-A2",
+        "conclusion": "failure",
+        "status": "completed",
+        "headBranch": "main",
+        "event": "schedule",
+        "url": "https://example.test/run/123",
+        "createdAt": f"{today}T00:00:00Z",
+        "updatedAt": f"{today}T00:01:00Z",
+    }
+    ci_store.upsert_runs(db, [run])
+    ci_store.replace_run_jobs(
+        db,
+        run,
+        [{"id": 99, "name": "nightly job", "conclusion": "failure", "started_at": "", "completed_at": ""}],
+    )
+    ci_store.update_job_log(db, 99, "stored failure log")
+    db.commit()
+    db.close()
+
+    reports = ci_metadata.reports_from_store_failed_logs(days=1)
+
+    assert len(reports) == 1
+    assert reports[0].pr_number == 123
+    assert reports[0].runs[0].workflow_name == "Nightly-A2"
+    assert reports[0].runs[0].jobs[0].raw_log == "stored failure log"
+    assert reports[0].runs[0].jobs[0].job_id == 99

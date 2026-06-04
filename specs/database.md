@@ -53,6 +53,50 @@ python3 -m src --days 2
 
 **Constraints**: `UNIQUE(run_id, job_name)` via INSERT OR IGNORE.
 
+### workflow_runs
+
+Long-lived GitHub Actions run inventory used by split CI metadata collection.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| run_id | INTEGER PK | GitHub Actions run database ID |
+| workflow_name | TEXT | Workflow name |
+| pipeline_type | TEXT | pr_e2e, nightly, build, other |
+| conclusion | TEXT | run conclusion or status fallback |
+| status | TEXT | queued, in_progress, completed |
+| branch | TEXT | Head branch |
+| event | TEXT | GitHub event |
+| url | TEXT | Actions run URL |
+| created_at | TEXT | Run creation timestamp |
+| updated_at | TEXT | Run update timestamp |
+| jobs_collected_at | TEXT | Non-null when job detail collection is current |
+| inventory_seen_at | TEXT | Last inventory collection timestamp |
+| raw_metadata | TEXT | Original run JSON |
+
+### ci_jobs
+
+Workflow job metadata collected from `workflow_runs`. Logs are intentionally
+optional so normal dashboard refreshes remain lightweight.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| job_id | INTEGER PK | GitHub Actions job ID |
+| run_id | INTEGER | Parent workflow run ID |
+| job_name | TEXT | Full job name |
+| conclusion | TEXT | success, failure, skipped, cancelled, timed_out |
+| queued_at | TEXT | GitHub job creation timestamp |
+| started_at | TEXT | Job start timestamp |
+| completed_at | TEXT | Job completion timestamp |
+| duration_sec | REAL | completed_at - started_at |
+| queue_sec | REAL | started_at - queued_at |
+| raw_log | TEXT | Raw log text, populated only by `--collect-logs` |
+| log_collected_at | TEXT | Timestamp when `raw_log` was fetched |
+| collected_at | TEXT | Job metadata collection timestamp |
+
+`ci_jobs.raw_log` bridges Health/CI Execution fact collection and Problem
+Analysis. The dashboard can collect run/job facts first, then fetch only
+failed-like job logs and run AI analysis without re-fetching run/job metadata.
+
 ## Queries
 
 ```sql

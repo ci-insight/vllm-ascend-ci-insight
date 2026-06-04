@@ -47,3 +47,17 @@ alerts.json
 daily-snapshots.json (from SQLite aggregator)
 └── pipeline_types: {pt: [{date, success_rate, health_score, ...}]}
 ```
+
+## Store-backed AI Analysis
+
+Problem Analysis can consume the same CI fact store used by CI Execution and
+Health Overview:
+
+1. `workflow_runs` stores run inventory.
+2. `ci_jobs` stores job metadata for those runs.
+3. `--collect-logs` populates `ci_jobs.raw_log` only for failed-like jobs.
+4. `--analyze-from-store` converts logged failed jobs into `FailureReport`
+   objects and reuses the existing analyzer/reporter.
+
+This keeps Health Overview as fact statistics and Problem Analysis as AI
+inference, while avoiding redundant GitHub API calls for run/job metadata.

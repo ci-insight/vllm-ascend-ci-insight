@@ -25,11 +25,14 @@ from .storage import load_reports
 from .ci_metadata import (
     build_ci_metadata_from_store,
     collect_ci_metadata,
+    collect_pending_job_logs,
     collect_pending_job_details,
     collect_run_inventory,
     save_ci_metadata,
+    save_coverage_from_store,
     load_ci_metadata,
     metadata_to_reports,
+    reports_from_store_failed_logs,
 )
 from .static_sync import import_static_reports
 
@@ -47,8 +50,11 @@ def main():
     parser.add_argument("--refresh-ci-metrics", action="store_true", help="Collect full lightweight CI run/job metadata for health metrics")
     parser.add_argument("--collect-run-inventory", action="store_true", help="Collect only workflow-run inventory into SQLite")
     parser.add_argument("--collect-job-details", action="store_true", help="Collect missing workflow-run job details from SQLite inventory")
+    parser.add_argument("--collect-logs", action="store_true", help="Collect raw logs for failed jobs already known in SQLite")
+    parser.add_argument("--analyze-from-store", action="store_true", help="Run AI analysis from SQLite-stored failed-job logs")
     parser.add_argument("--export-ci-metadata", action="store_true", help="Export SQLite CI metadata to reports/ and docs/reports/")
     parser.add_argument("--force-job-details", action="store_true", help="Re-fetch job details even when already collected")
+    parser.add_argument("--force-logs", action="store_true", help="Re-fetch failed-job logs even when already stored")
     parser.add_argument("--metrics-limit", type=int, default=200, help="Max workflow runs to fetch for CI metrics")
     parser.add_argument(
         "--metrics-collection-strategy",
@@ -102,7 +108,7 @@ def main():
         print(f"  SQLite: data/metrics.db")
         return
 
-    if args.collect_run_inventory or args.collect_job_details or args.export_ci_metadata:
+    if args.collect_run_inventory or args.collect_job_details or args.collect_logs or args.export_ci_metadata:
         if args.collect_run_inventory:
             print(
                 "  Collecting workflow-run inventory: "
@@ -140,6 +146,24 @@ def main():
                 f"({coverage['job_details']['coverage_percent']}%, "
                 f"{coverage['job_details']['quality']})"
             )
+        if args.collect_logs:
+            print(
+                "  Collecting pending failed-job logs: "
+                f"days={args.days}, limit={args.metrics_job_detail_limit}, "
+                f"force={args.force_logs}"
+            )
+            result = collect_pending_job_logs(
+                days=args.days,
+                limit=args.metrics_job_detail_limit,
+                force=args.force_logs,
+            )
+            ai = result["coverage"].get("ai_analysis", {})
+            logs = ai.get("log_collection", {})
+            print(
+                "  Log coverage: "
+                f"{logs.get('collected_logs', 0)}/{logs.get('failed_jobs', 0)} "
+                f"({logs.get('coverage_percent', 0)}%, {logs.get('quality', 'partial')})"
+            )
         if args.export_ci_metadata:
             print("  Exporting SQLite CI metadata to static JSON")
             ci_metadata = build_ci_metadata_from_store(
@@ -149,10 +173,42 @@ def main():
                 job_detail_limit=args.metrics_job_detail_limit,
             )
             save_ci_metadata(ci_metadata)
-        if not args.health:
+        if not args.health and not args.analyze_from_store:
             return
 
-    if args.health:
+    if args.analyze_from_store:
+        print(
+            "  Analyzing failed jobs from SQLite store: "
+            f"days={args.days}, limit={args.limit}, lang={args.lang}"
+        )
+        reports = reports_from_store_failed_logs(days=args.days, limit=args.limit)
+        if not reports:
+            print("No SQLite-stored failed-job logs found. Run --collect-logs first.")
+            return
+        print(f"\nFound {len(reports)} stored CI run(s) with failed-job logs\n")
+        if not args.no_analyze:
+            print("[2/4] Analyzing with Claude CLI...")
+            cache = AnalysisCache()
+            for i, report in enumerate(reports):
+                print(f"\nAnalyzing stored run {report.pr_number} ({i + 1}/{len(reports)})")
+                analyze_report(report, cache=cache)
+        else:
+            print("[2/4] Skipping analysis (--no-analyze)")
+
+        print("\n[3/4] Generating reports...")
+        valid_reports = []
+        for report in reports:
+            generate_report(report)
+            valid_reports.append(report)
+        update_index(valid_reports)
+        analyzed_jobs = sum(len(report.analyses) for report in valid_reports)
+        save_coverage_from_store(args.days, ai_analyzed=analyzed_jobs)
+        if not args.health:
+            reports = valid_reports
+        else:
+            reports = valid_reports
+
+    elif args.health:
         # Health-only mode: reload existing reports and compute metrics
         print("  Health-only mode: computing from existing reports")
         reports = _load_existing_reports()
