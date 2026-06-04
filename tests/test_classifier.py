@@ -81,11 +81,13 @@ def test_category_lint():
     assert classify_category("E501 Line too long at src/foo.py") == "lint"
     assert classify_category("unused import os in module") == "lint"
     assert classify_category("F821 undefined name 'foo'") == "lint"
+    assert classify_category("Sphinx linkcheck found myst.xref_missing in docs") == "lint"
 
 
 def test_category_build():
     assert classify_category("cmake>=3.26.1 not found") == "build"
     assert classify_category("pip install failed: package not found") == "build"
+    assert classify_category("build-ARM64-a3-openeuler-cache failed during 构建") == "build"
 
 
 def test_category_code():
@@ -98,6 +100,7 @@ def test_category_test():
     assert classify_category("accuracy test failed for Qwen3-8B") == "test"
     assert classify_category("assertion fail: expected 42 got 0") == "test"
     assert classify_category("this is a flaky test") == "test"
+    assert classify_category("MoE 模型推理失败 for Qwen3") == "test"
 
 
 def test_category_perf():
@@ -108,6 +111,7 @@ def test_category_perf():
 def test_category_infra():
     assert classify_category("runner disconnected unexpectedly") == "infra"
     assert classify_category("HTTP 404 when fetching resource") == "infra"
+    assert classify_category("日志被截断，属于环境噪音") == "infra"
 
 
 def test_category_compat():

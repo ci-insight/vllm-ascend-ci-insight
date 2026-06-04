@@ -61,7 +61,9 @@
         "\\bruff\\b", "pre-commit", "\\bmypy\\b", "\\bflake8\\b",
         "\\bE\\d{3}\\b", "\\bF\\d{3}\\b", "\\bW\\d{3}\\b",
         "PR\\s+title", "formatting", "unused\\s+import",
-        "line\\s+too\\s+long", "undefined\\s+name", "imported\\s+but\\s+unused"
+        "line\\s+too\\s+long", "undefined\\s+name", "imported\\s+but\\s+unused",
+        "Sphinx", "linkcheck", "toctree", "toc\\.not_included",
+        "myst\\.xref_missing", "broken\\s+links?", "文档.*(?:断链|引用|锚点)"
       ]
     },
     {
@@ -72,7 +74,9 @@
       "patterns": [
         "\\bcmake\\b", "pip\\s+install", "uv\\s+pip", "setup\\.py",
         "requirements", "wheel\\s", "build\\s+(?:fail|error|broken)",
-        "UV_INDEX", "package\\s.*\\bnot\\s+found", "could\\s+not\\s+find.*version"
+        "UV_INDEX", "package\\s.*\\bnot\\s+found", "could\\s+not\\s+find.*version",
+        "\\bbuild-[A-Z0-9]", "build\\s+and\\s+release\\s+wheel",
+        "cache\\s+(?:build|artifact)", "构建"
       ]
     },
     {
@@ -93,7 +97,9 @@
       "patterns": [
         "runner\\s+(?:disconnect|fail|unreachable)", "disk\\s+(?:full|quota)",
         "node\\s+(?:alloc|fail)", "connection\\s+(?:refused|timeout|reset)",
-        "rate\\s?limit", "HTTP\\s*404", "network\\s+error"
+        "rate\\s?limit", "HTTP\\s*404", "network\\s+error",
+        "log\\s+(?:truncated|missing)", "日志.*截断", "环境噪音",
+        "runner\\s+preinstall", "预装系统包"
       ]
     },
     {
@@ -104,7 +110,8 @@
       "patterns": [
         "\\baccuracy\\s+test\\b", "\\baccuracy.*\\b(?:regression|mismatch|degrad)\\b",
         "assert.*\\b(?:fail|error)\\b", "\\bflaky\\s+test\\b",
-        "\\bregression\\b", "\\btest_case\\b", "\\btest_.*\\.py\\b"
+        "\\bregression\\b", "\\btest_case\\b", "\\btest_.*\\.py\\b",
+        "模型(?:加载|推理)", "\\bMoE\\b", "\\bQwen\\d", "vLLM Ascend test"
       ]
     },
     {

@@ -1,0 +1,149 @@
+{
+  "pr_number": 9992,
+  "pr_title": "fix(moe): zero-init fused MC2 combine output to avoid uninitialized HBM (#9170)",
+  "pr_author": "ppppangu",
+  "pr_url": "https://github.com/vllm-project/vllm-ascend/pull/9992",
+  "analyzed_at": "2026-06-04T07:38:24.880906+00:00",
+  "runs": [
+    {
+      "run_id": 26934642565,
+      "workflow_name": "E2E-Light",
+      "conclusion": "failure",
+      "branch": "fix/zero-init-fused-mc2-output",
+      "pr_number": 9992,
+      "created_at": "2026-06-04T06:20:12Z",
+      "event": "pull_request",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 79461412812,
+          "job_name": "lint-and-select-tests",
+          "conclusion": "failure",
+          "started_at": "2026-06-04T06:20:33Z",
+          "completed_at": "2026-06-04T06:20:57Z",
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Initialize containers",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Validate PR title prefix",
+              "conclusion": "failure",
+              "number": 3
+            },
+            {
+              "name": "Checkout vllm-project/vllm-ascend repo",
+              "conclusion": "skipped",
+              "number": 4
+            },
+            {
+              "name": "cp problem matchers",
+              "conclusion": "skipped",
+              "number": 5
+            },
+            {
+              "name": "Run echo \"::add-matcher::$RUNNER_TEMP/actionlint.json\"",
+              "conclusion": "skipped",
+              "number": 6
+            },
+            {
+              "name": "Run echo \"::add-matcher::$RUNNER_TEMP/markdownlint.json\"",
+              "conclusion": "skipped",
+              "number": 7
+            },
+            {
+              "name": "Run echo \"::add-matcher::$RUNNER_TEMP/mypy.json\"",
+              "conclusion": "skipped",
+              "number": 8
+            },
+            {
+              "name": "Checkout vllm-project/vllm repo",
+              "conclusion": "skipped",
+              "number": 9
+            },
+            {
+              "name": "Run dorny/paths-filter@v4",
+              "conclusion": "skipped",
+              "number": 10
+            },
+            {
+              "name": "Install vllm-ascend dev (conditional)",
+              "conclusion": "skipped",
+              "number": 11
+            },
+            {
+              "name": "Run pre-commit",
+              "conclusion": "skipped",
+              "number": 12
+            },
+            {
+              "name": "Run mypy",
+              "conclusion": "skipped",
+              "number": 13
+            },
+            {
+              "name": "Validate test coverage config",
+              "conclusion": "skipped",
+              "number": 14
+            },
+            {
+              "name": "Select tests based on changed files",
+              "conclusion": "skipped",
+              "number": 15
+            },
+            {
+              "name": "Stop containers",
+              "conclusion": "success",
+              "number": 30
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "number": 31
+            }
+          ],
+          "raw_log": "﻿2026-06-04T06:20:35.7403696Z Current runner version: '2.334.0'\n2026-06-04T06:20:35.7410228Z Runner name: 'linux-amd64-cpu-8-hk-frp8k-runner-kbpxp'\n2026-06-04T06:20:35.7411129Z Runner group name: 'Default'\n2026-06-04T06:20:35.7412055Z Machine name: 'linux-amd64-cpu-8-hk-frp8k-runner-kbpxp'\n2026-06-04T06:20:35.7416567Z ##[group]GITHUB_TOKEN Permissions\n2026-06-04T06:20:35.7419352Z Actions: read\n2026-06-04T06:20:35.7419917Z ArtifactMetadata: read\n2026-06-04T06:20:35.7420579Z Attestations: read\n2026-06-04T06:20:35.7421104Z Checks: read\n2026-06-04T06:20:35.7421602Z CodeQuality: read\n2026-06-04T06:20:35.7422129Z Contents: read\n2026-06-04T06:20:35.7422631Z Deployments: read\n2026-06-04T06:20:35.7423182Z Discussions: read\n2026-06-04T06:20:35.7423957Z Issues: read\n2026-06-04T06:20:35.7424483Z Metadata: read\n2026-06-04T06:20:35.7424985Z Models: read\n2026-06-04T06:20:35.7425466Z Packages: read\n2026-06-04T06:20:35.7426032Z Pages: read\n2026-06-04T06:20:35.7426539Z PullRequests: read\n2026-06-04T06:20:35.7427223Z RepositoryProjects: read\n2026-06-04T06:20:35.7427946Z SecurityEvents: read\n2026-06-04T06:20:35.7428446Z Statuses: read\n2026-06-04T06:20:35.7428973Z VulnerabilityAlerts: read\n2026-06-04T06:20:35.7429521Z ##[endgroup]\n2026-06-04T06:20:35.7432052Z Secret source: None\n2026-06-04T06:20:35.7432795Z Prepare workflow directory\n2026-06-04T06:20:35.8121928Z Prepare all required actions\n2026-06-04T06:20:35.8160153Z Getting action download info\n2026-06-04T06:20:36.7875709Z Download action repository 'actions/checkout@v6' (SHA:df4cb1c069e1874edd31b4311f1884172cec0e10)\n2026-06-04T06:20:40.9206647Z Download action repository 'dorny/paths-filter@v4' (SHA:fbd0ab8f3e69293af611ebaee6363fc25e6d187d)\n2026-06-04T06:20:42.5508627Z Complete job name: lint-and-select-tests\n2026-06-04T06:20:42.6207837Z ##[group]Run '/home/runner/k8s/index.js'\n2026-06-04T06:20:42.6210941Z shell: /home/runner/externals/node20/bin/node {0}\n2026-06-04T06:20:42.6211608Z ##[endgroup]\n2026-06-04T06:20:50.2289394Z (node:154) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.\n2026-06-04T06:20:50.2290407Z (Use `node --trace-deprecation ...` to show where the warning was created)\n2026-06-04T06:20:51.2419504Z ##[group]Run if [ -z \"$PR_TITLE\" ]; then\n2026-06-04T06:20:51.2419925Z \u001b[36;1mif [ -z \"$PR_TITLE\" ]; then\u001b[0m\n2026-06-04T06:20:51.2420229Z \u001b[36;1m  echo \"::error::PR title cannot be empty\"\u001b[0m\n2026-06-04T06:20:51.2420510Z \u001b[36;1m  exit 1\u001b[0m\n2026-06-04T06:20:51.2420703Z \u001b[36;1mfi\u001b[0m\n2026-06-04T06:20:51.2420879Z \u001b[36;1m\u001b[0m\n2026-06-04T06:20:51.2421082Z \u001b[36;1mecho \"Checking PR title: $PR_TITLE\"\u001b[0m\n2026-06-04T06:20:51.2421358Z \u001b[36;1m\u001b[0m\n2026-06-04T06:20:51.2421725Z \u001b[36;1mVALID_PREFIXES='\\[(BugFix|Performance|Test|CI|Feature|Doc|Misc|Community|Refactor)\\]'\u001b[0m\n2026-06-04T06:20:51.2422140Z \u001b[36;1m\u001b[0m\n2026-06-04T06:20:51.2422411Z \u001b[36;1mif ! echo \"$PR_TITLE\" | grep -iqE \"$VALID_PREFIXES\"; then\u001b[0m\n2026-06-04T06:20:51.2423075Z \u001b[36;1m  echo \"::error::PR title must contain one of the following prefixes: [BugFix], [Performance], [Test], [CI], [Feature], [Doc], [Misc], [Community], [Refactor]\"\u001b[0m\n2026-06-04T06:20:51.2424101Z \u001b[36;1m  echo \"::error::Example: '[Feature] Add new optimization pass' or 'Add new feature [Feature]'\"\u001b[0m\n2026-06-04T06:20:51.2424519Z \u001b[36;1m  exit 1\u001b[0m\n2026-06-04T06:20:51.2424709Z \u001b[36;1mfi\u001b[0m\n2026-06-04T06:20:51.2424906Z \u001b[36;1m\u001b[0m\n2026-06-04T06:20:51.2425110Z \u001b[36;1mecho \"✓ PR title prefix is valid\"\u001b[0m\n2026-06-04T06:20:51.2425690Z shell: bash -el {0}\n2026-06-04T06:20:51.2425883Z env:\n2026-06-04T06:20:51.2426218Z   PR_TITLE: fix(moe): zero-init fused MC2 combine output to avoid uninitialized HBM (#9170)\n2026-06-04T06:20:51.2426610Z ##[endgroup]\n2026-06-04T06:20:51.2577729Z ##[group]Run '/home/runner/k8s/index.js'\n2026-06-04T06:20:51.2578785Z shell: /home/runner/externals/node20/bin/node {0}\n2026-06-04T06:20:51.2579105Z ##[endgroup]\n2026-06-04T06:20:51.7191553Z (node:305) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.\n2026-06-04T06:20:51.7192848Z (Use `node --trace-deprecation ...` to show where the warning was created)\n2026-06-04T06:20:52.0506878Z Checking PR title: fix(moe): zero-init fused MC2 combine output to avoid uninitialized HBM (#9170)\n2026-06-04T06:20:52.0534917Z ##[error]PR title must contain one of the following prefixes: [BugFix], [Performance], [Test], [CI], [Feature], [Doc], [Misc], [Community], [Refactor]\n2026-06-04T06:20:52.0542421Z ##[error]Example: '[Feature] Add new optimization pass' or 'Add new feature [Feature]'\n2026-06-04T06:20:52.0641427Z ##[error]Error: failed to run script step: Error: command terminated with non-zero exit code: command terminated with exit code 1\n2026-06-04T06:20:52.0734035Z ##[error]Process completed with exit code 1.\n2026-06-04T06:20:52.0850350Z ##[error]Executing the custom container implementation failed. Please contact your self hosted runner administrator.\n2026-06-04T06:20:52.0961504Z ##[group]Run '/home/runner/k8s/index.js'\n2026-06-04T06:20:52.0962464Z shell: /home/runner/externals/node20/bin/node {0}\n2026-06-04T06:20:52.0962752Z ##[endgroup]\n2026-06-04T06:20:52.6707097Z Evaluate and set job outputs\n2026-06-04T06:20:52.6716705Z Cleaning up orphan processes\n",
+          "created_at": "2026-06-04T06:20:12Z"
+        },
+        {
+          "job_id": 79461501199,
+          "job_name": "run-selected-tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-04T06:20:57Z",
+          "completed_at": "2026-06-04T06:20:57Z",
+          "steps": [],
+          "raw_log": "",
+          "created_at": "2026-06-04T06:20:57Z"
+        }
+      ]
+    }
+  ],
+  "analyses": [
+    {
+      "job_name": "lint-and-select-tests",
+      "job_id": 79461412812,
+      "conclusion": "failure",
+      "error_snippets": [
+        "PR title: fix(moe): zero-init fused MC2 combine output to avoid uninitialized HBM (#9170)",
+        "PR title must contain one of the following prefixes: [BugFix], [Performance], [Test], [CI], [Feature], [Doc], [Misc], [Community], [Refactor]",
+        "Error: command terminated with non-zero exit code: command terminated with exit code 1",
+        "Process completed with exit code 1."
+      ],
+      "root_cause": "PR 标题使用了 conventional commits 格式 'fix(moe): ...'，但 CI 的 lint-and-select-tests job 要求 PR 标题必须包含方括号前缀如 [BugFix]、[Feature] 等。标题格式不匹配导致 PR 标题校验步骤直接退出码 1，整个 CI 流程被阻断。",
+      "related_files": [],
+      "fix_suggestions": [
+        "将 PR 标题改为 '[BugFix] fix(moe): zero-init fused MC2 combine output to avoid uninitialized HBM (#9170)' 以符合 CI 要求的方括号前缀格式",
+        "或者将 PR 标题改为 '[BugFix] zero-init fused MC2 combine output to avoid uninitialized HBM'，去掉 conventional commits 的括号前缀，直接用 CI 要求的标签",
+        "如需长期支持 conventional commits 格式，可修改 CI 脚本中的 VALID_PREFIXES 正则表达式，同时兼容 'fix:' / 'feat:' 等前缀与现有 [BugFix] / [Feature] 标签的映射"
+      ],
+      "severity": "medium",
+      "confidence": 95
+    }
+  ]
+}

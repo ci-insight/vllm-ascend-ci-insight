@@ -2,7 +2,7 @@ from src import analyzer
 from src.models import CIJob, CIRun, FailureReport
 
 
-def test_analyze_report_skips_non_failed_jobs(monkeypatch):
+def test_analyze_report_skips_non_failed_jobs(monkeypatch, tmp_path):
     calls = []
 
     def fake_claude(text):
@@ -17,6 +17,7 @@ def test_analyze_report_skips_non_failed_jobs(monkeypatch):
         }
 
     monkeypatch.setattr(analyzer, "_claude_analyze", fake_claude)
+    cache = analyzer.AnalysisCache(cache_path=tmp_path / "analysis-cache.json")
 
     report = FailureReport(
         pr_number=1,
@@ -42,7 +43,7 @@ def test_analyze_report_skips_non_failed_jobs(monkeypatch):
         ],
     )
 
-    analyzer.analyze_report(report)
+    analyzer.analyze_report(report, cache=cache)
 
     assert len(calls) == 1
     assert len(report.analyses) == 1

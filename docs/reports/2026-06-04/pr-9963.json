@@ -1,0 +1,149 @@
+{
+  "pr_number": 9963,
+  "pr_title": "fix: [Help Wanted]: Recover full custom ops test",
+  "pr_author": "arnavnagzirkar",
+  "pr_url": "https://github.com/vllm-project/vllm-ascend/pull/9963",
+  "analyzed_at": "2026-06-04T07:40:30.721624+00:00",
+  "runs": [
+    {
+      "run_id": 26910609564,
+      "workflow_name": "E2E-Light",
+      "conclusion": "failure",
+      "branch": "fix-5336",
+      "pr_number": 9963,
+      "created_at": "2026-06-03T20:19:43Z",
+      "event": "pull_request",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 79387313529,
+          "job_name": "lint / pre-commit",
+          "conclusion": "failure",
+          "started_at": "2026-06-03T20:20:05Z",
+          "completed_at": "2026-06-03T20:20:29Z",
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Initialize containers",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Validate PR title prefix",
+              "conclusion": "failure",
+              "number": 3
+            },
+            {
+              "name": "Checkout vllm-project/vllm-ascend repo",
+              "conclusion": "skipped",
+              "number": 4
+            },
+            {
+              "name": "cp problem matchers",
+              "conclusion": "skipped",
+              "number": 5
+            },
+            {
+              "name": "Run echo \"::add-matcher::$RUNNER_TEMP/actionlint.json\"",
+              "conclusion": "skipped",
+              "number": 6
+            },
+            {
+              "name": "Run echo \"::add-matcher::$RUNNER_TEMP/markdownlint.json\"",
+              "conclusion": "skipped",
+              "number": 7
+            },
+            {
+              "name": "Run echo \"::add-matcher::$RUNNER_TEMP/mypy.json\"",
+              "conclusion": "skipped",
+              "number": 8
+            },
+            {
+              "name": "Checkout vllm-project/vllm repo",
+              "conclusion": "skipped",
+              "number": 9
+            },
+            {
+              "name": "Run dorny/paths-filter@v4",
+              "conclusion": "skipped",
+              "number": 10
+            },
+            {
+              "name": "Install vllm-ascend dev (conditional)",
+              "conclusion": "skipped",
+              "number": 11
+            },
+            {
+              "name": "Run pre-commit",
+              "conclusion": "skipped",
+              "number": 12
+            },
+            {
+              "name": "Run mypy",
+              "conclusion": "skipped",
+              "number": 13
+            },
+            {
+              "name": "Stop containers",
+              "conclusion": "success",
+              "number": 26
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "number": 27
+            }
+          ],
+          "raw_log": "﻿2026-06-03T20:20:07.9112809Z Current runner version: '2.334.0'\n2026-06-03T20:20:07.9119709Z Runner name: 'linux-amd64-cpu-8-hk-frp8k-runner-pbw8l'\n2026-06-03T20:20:07.9120680Z Runner group name: 'Default'\n2026-06-03T20:20:07.9121679Z Machine name: 'linux-amd64-cpu-8-hk-frp8k-runner-pbw8l'\n2026-06-03T20:20:07.9124771Z ##[group]GITHUB_TOKEN Permissions\n2026-06-03T20:20:07.9127094Z Contents: read\n2026-06-03T20:20:07.9127665Z Metadata: read\n2026-06-03T20:20:07.9128202Z ##[endgroup]\n2026-06-03T20:20:07.9130231Z Secret source: None\n2026-06-03T20:20:07.9131035Z Prepare workflow directory\n2026-06-03T20:20:07.9774640Z Prepare all required actions\n2026-06-03T20:20:07.9812050Z Getting action download info\n2026-06-03T20:20:08.9583434Z Download action repository 'actions/checkout@v6' (SHA:df4cb1c069e1874edd31b4311f1884172cec0e10)\n2026-06-03T20:20:12.4540219Z Download action repository 'dorny/paths-filter@v4' (SHA:fbd0ab8f3e69293af611ebaee6363fc25e6d187d)\n2026-06-03T20:20:14.0482071Z Uses: vllm-project/vllm-ascend/.github/workflows/_pre_commit.yml@refs/pull/9963/merge (cc0b1f94d75c5214f99dd91f5a87475f2eb6234e)\n2026-06-03T20:20:14.0486497Z ##[group] Inputs\n2026-06-03T20:20:14.0486843Z   vllm: 9090368b650896bf5fc990c921df7eb4c20355a5\n2026-06-03T20:20:14.0487153Z ##[endgroup]\n2026-06-03T20:20:14.0487387Z Complete job name: lint / pre-commit\n2026-06-03T20:20:14.1156578Z ##[group]Run '/home/runner/k8s/index.js'\n2026-06-03T20:20:14.1159562Z shell: /home/runner/externals/node20/bin/node {0}\n2026-06-03T20:20:14.1160217Z ##[endgroup]\n2026-06-03T20:20:21.7097071Z (node:155) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.\n2026-06-03T20:20:21.7098007Z (Use `node --trace-deprecation ...` to show where the warning was created)\n2026-06-03T20:20:22.7055363Z ##[group]Run # Fail if PR title is empty\n2026-06-03T20:20:22.7055873Z \u001b[36;1m# Fail if PR title is empty\u001b[0m\n2026-06-03T20:20:22.7056165Z \u001b[36;1mif [ -z \"$PR_TITLE\" ]; then\u001b[0m\n2026-06-03T20:20:22.7056504Z \u001b[36;1m  echo \"::error::PR title cannot be empty\"\u001b[0m\n2026-06-03T20:20:22.7056802Z \u001b[36;1m  exit 1\u001b[0m\n2026-06-03T20:20:22.7057014Z \u001b[36;1mfi\u001b[0m\n2026-06-03T20:20:22.7057216Z \u001b[36;1m\u001b[0m\n2026-06-03T20:20:22.7057427Z \u001b[36;1mecho \"Checking PR title: $PR_TITLE\"\u001b[0m\n2026-06-03T20:20:22.7057693Z \u001b[36;1m\u001b[0m\n2026-06-03T20:20:22.7057916Z \u001b[36;1m# Define valid prefixes (case-insensitive)\u001b[0m\n2026-06-03T20:20:22.7058328Z \u001b[36;1m# Check if PR title contains any valid prefix (not necessarily at the start)\u001b[0m\n2026-06-03T20:20:22.7058868Z \u001b[36;1mVALID_PREFIXES='\\[(BugFix|Performance|Test|CI|Feature|Doc|Misc|Community|Refactor)\\]'\u001b[0m\n2026-06-03T20:20:22.7059266Z \u001b[36;1m\u001b[0m\n2026-06-03T20:20:22.7059526Z \u001b[36;1m# Check if PR title contains a valid prefix (case-insensitive)\u001b[0m\n2026-06-03T20:20:22.7059979Z \u001b[36;1mif ! echo \"$PR_TITLE\" | grep -iqE \"$VALID_PREFIXES\"; then\u001b[0m\n2026-06-03T20:20:22.7060644Z \u001b[36;1m  echo \"::error::PR title must contain one of the following prefixes: [BugFix], [Performance], [Test], [CI], [Feature], [Doc], [Misc], [Community], [Refactor]\"\u001b[0m\n2026-06-03T20:20:22.7061408Z \u001b[36;1m  echo \"::error::Example: '[Feature] Add new optimization pass' or 'Add new feature [Feature]'\"\u001b[0m\n2026-06-03T20:20:22.7061934Z \u001b[36;1m  exit 1\u001b[0m\n2026-06-03T20:20:22.7062293Z \u001b[36;1mfi\u001b[0m\n2026-06-03T20:20:22.7062593Z \u001b[36;1m\u001b[0m\n2026-06-03T20:20:22.7062804Z \u001b[36;1mecho \"✓ PR title prefix is valid\"\u001b[0m\n2026-06-03T20:20:22.7066077Z shell: sh -e {0}\n2026-06-03T20:20:22.7066311Z env:\n2026-06-03T20:20:22.7066574Z   PR_TITLE: fix: [Help Wanted]: Recover full custom ops test\n2026-06-03T20:20:22.7066893Z ##[endgroup]\n2026-06-03T20:20:22.7204257Z ##[group]Run '/home/runner/k8s/index.js'\n2026-06-03T20:20:22.7205276Z shell: /home/runner/externals/node20/bin/node {0}\n2026-06-03T20:20:22.7205581Z ##[endgroup]\n2026-06-03T20:20:23.1786177Z (node:306) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.\n2026-06-03T20:20:23.1787541Z (Use `node --trace-deprecation ...` to show where the warning was created)\n2026-06-03T20:20:23.4699415Z Checking PR title: fix: [Help Wanted]: Recover full custom ops test\n2026-06-03T20:20:23.4728824Z ##[error]PR title must contain one of the following prefixes: [BugFix], [Performance], [Test], [CI], [Feature], [Doc], [Misc], [Community], [Refactor]\n2026-06-03T20:20:23.4739900Z ##[error]Example: '[Feature] Add new optimization pass' or 'Add new feature [Feature]'\n2026-06-03T20:20:23.4826458Z ##[error]Error: failed to run script step: Error: command terminated with non-zero exit code: command terminated with exit code 1\n2026-06-03T20:20:23.4887193Z ##[error]Process completed with exit code 1.\n2026-06-03T20:20:23.5005918Z ##[error]Executing the custom container implementation failed. Please contact your self hosted runner administrator.\n2026-06-03T20:20:23.5110761Z ##[group]Run '/home/runner/k8s/index.js'\n2026-06-03T20:20:23.5111690Z shell: /home/runner/externals/node20/bin/node {0}\n2026-06-03T20:20:23.5111986Z ##[endgroup]\n2026-06-03T20:20:24.1939677Z Cleaning up orphan processes\n",
+          "created_at": "2026-06-03T20:19:44Z"
+        },
+        {
+          "job_id": 79387446778,
+          "job_name": "run-selected-tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-03T20:20:30Z",
+          "completed_at": "2026-06-03T20:20:29Z",
+          "steps": [],
+          "raw_log": "",
+          "created_at": "2026-06-03T20:20:30Z"
+        },
+        {
+          "job_id": 79387446845,
+          "job_name": "select-tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-03T20:20:30Z",
+          "completed_at": "2026-06-03T20:20:29Z",
+          "steps": [],
+          "raw_log": "",
+          "created_at": "2026-06-03T20:20:30Z"
+        }
+      ]
+    }
+  ],
+  "analyses": [
+    {
+      "job_name": "lint / pre-commit",
+      "job_id": 79387313529,
+      "conclusion": "failure",
+      "error_snippets": [
+        "Checking PR title: fix: [Help Wanted]: Recover full custom ops test",
+        "PR title must contain one of the following prefixes: [BugFix], [Performance], [Test], [CI], [Feature], [Doc], [Misc], [Community], [Refactor]",
+        "command terminated with exit code 1"
+      ],
+      "root_cause": "PR 标题使用了 '[Help Wanted]' 标签，该项目预提交检查要求标题必须包含指定的类别前缀（如 [BugFix]、[Feature]、[CI] 等），[Help Wanted] 不在允许列表中，导致 lint 检查失败。",
+      "related_files": [
+        ".github/workflows/_pre_commit.yml"
+      ],
+      "fix_suggestions": [
+        "将 PR 标题中 '[Help Wanted]' 替换为有效的类别标签，根据 PR 内容推测应使用 '[CI]' 或 '[BugFix]'（因为 PR 内容是恢复完整自定义算子测试）",
+        "建议标题改为：'[CI] Recover full custom ops test' 或 '[BugFix] Recover full custom ops test'"
+      ],
+      "severity": "medium",
+      "confidence": 95
+    }
+  ]
+}

@@ -1,0 +1,149 @@
+{
+  "pr_number": 9981,
+  "pr_title": "test-m2m-0604",
+  "pr_author": "zhao-stack",
+  "pr_url": "https://github.com/vllm-project/vllm-ascend/pull/9981",
+  "analyzed_at": "2026-06-04T07:38:36.995296+00:00",
+  "runs": [
+    {
+      "run_id": 26928611306,
+      "workflow_name": "E2E-Light",
+      "conclusion": "failure",
+      "branch": "test-m2m-0604",
+      "pr_number": 9981,
+      "created_at": "2026-06-04T03:29:54Z",
+      "event": "pull_request",
+      "pipeline_type": "pr_e2e",
+      "jobs": [
+        {
+          "job_id": 79443717208,
+          "job_name": "lint-and-select-tests",
+          "conclusion": "failure",
+          "started_at": "2026-06-04T03:30:14Z",
+          "completed_at": "2026-06-04T03:30:39Z",
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Initialize containers",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Validate PR title prefix",
+              "conclusion": "failure",
+              "number": 3
+            },
+            {
+              "name": "Checkout vllm-project/vllm-ascend repo",
+              "conclusion": "skipped",
+              "number": 4
+            },
+            {
+              "name": "cp problem matchers",
+              "conclusion": "skipped",
+              "number": 5
+            },
+            {
+              "name": "Run echo \"::add-matcher::$RUNNER_TEMP/actionlint.json\"",
+              "conclusion": "skipped",
+              "number": 6
+            },
+            {
+              "name": "Run echo \"::add-matcher::$RUNNER_TEMP/markdownlint.json\"",
+              "conclusion": "skipped",
+              "number": 7
+            },
+            {
+              "name": "Run echo \"::add-matcher::$RUNNER_TEMP/mypy.json\"",
+              "conclusion": "skipped",
+              "number": 8
+            },
+            {
+              "name": "Checkout vllm-project/vllm repo",
+              "conclusion": "skipped",
+              "number": 9
+            },
+            {
+              "name": "Run dorny/paths-filter@v4",
+              "conclusion": "skipped",
+              "number": 10
+            },
+            {
+              "name": "Install vllm-ascend dev (conditional)",
+              "conclusion": "skipped",
+              "number": 11
+            },
+            {
+              "name": "Run pre-commit",
+              "conclusion": "skipped",
+              "number": 12
+            },
+            {
+              "name": "Run mypy",
+              "conclusion": "skipped",
+              "number": 13
+            },
+            {
+              "name": "Validate test coverage config",
+              "conclusion": "skipped",
+              "number": 14
+            },
+            {
+              "name": "Select tests based on changed files",
+              "conclusion": "skipped",
+              "number": 15
+            },
+            {
+              "name": "Stop containers",
+              "conclusion": "success",
+              "number": 30
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success",
+              "number": 31
+            }
+          ],
+          "raw_log": "﻿2026-06-04T03:30:16.8039044Z Current runner version: '2.334.0'\n2026-06-04T03:30:16.8046185Z Runner name: 'linux-amd64-cpu-8-hk-frp8k-runner-fqtft'\n2026-06-04T03:30:16.8047112Z Runner group name: 'Default'\n2026-06-04T03:30:16.8048151Z Machine name: 'linux-amd64-cpu-8-hk-frp8k-runner-fqtft'\n2026-06-04T03:30:16.8053549Z ##[group]GITHUB_TOKEN Permissions\n2026-06-04T03:30:16.8056726Z Actions: read\n2026-06-04T03:30:16.8057334Z ArtifactMetadata: read\n2026-06-04T03:30:16.8057898Z Attestations: read\n2026-06-04T03:30:16.8058482Z Checks: read\n2026-06-04T03:30:16.8058994Z CodeQuality: read\n2026-06-04T03:30:16.8059510Z Contents: read\n2026-06-04T03:30:16.8060045Z Deployments: read\n2026-06-04T03:30:16.8060666Z Discussions: read\n2026-06-04T03:30:16.8061189Z Issues: read\n2026-06-04T03:30:16.8061707Z Metadata: read\n2026-06-04T03:30:16.8062202Z Models: read\n2026-06-04T03:30:16.8062722Z Packages: read\n2026-06-04T03:30:16.8063466Z Pages: read\n2026-06-04T03:30:16.8063971Z PullRequests: read\n2026-06-04T03:30:16.8064684Z RepositoryProjects: read\n2026-06-04T03:30:16.8065397Z SecurityEvents: read\n2026-06-04T03:30:16.8065927Z Statuses: read\n2026-06-04T03:30:16.8066515Z VulnerabilityAlerts: read\n2026-06-04T03:30:16.8067075Z ##[endgroup]\n2026-06-04T03:30:16.8069712Z Secret source: None\n2026-06-04T03:30:16.8070585Z Prepare workflow directory\n2026-06-04T03:30:16.8841096Z Prepare all required actions\n2026-06-04T03:30:16.8879852Z Getting action download info\n2026-06-04T03:30:17.7497146Z Download action repository 'actions/checkout@v6' (SHA:df4cb1c069e1874edd31b4311f1884172cec0e10)\n2026-06-04T03:30:21.6184499Z Download action repository 'dorny/paths-filter@v4' (SHA:fbd0ab8f3e69293af611ebaee6363fc25e6d187d)\n2026-06-04T03:30:24.2624770Z Complete job name: lint-and-select-tests\n2026-06-04T03:30:24.3306737Z ##[group]Run '/home/runner/k8s/index.js'\n2026-06-04T03:30:24.3309605Z shell: /home/runner/externals/node20/bin/node {0}\n2026-06-04T03:30:24.3310204Z ##[endgroup]\n2026-06-04T03:30:31.9130003Z (node:156) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.\n2026-06-04T03:30:31.9130966Z (Use `node --trace-deprecation ...` to show where the warning was created)\n2026-06-04T03:30:32.9349639Z ##[group]Run if [ -z \"$PR_TITLE\" ]; then\n2026-06-04T03:30:32.9350103Z \u001b[36;1mif [ -z \"$PR_TITLE\" ]; then\u001b[0m\n2026-06-04T03:30:32.9350428Z \u001b[36;1m  echo \"::error::PR title cannot be empty\"\u001b[0m\n2026-06-04T03:30:32.9350718Z \u001b[36;1m  exit 1\u001b[0m\n2026-06-04T03:30:32.9350906Z \u001b[36;1mfi\u001b[0m\n2026-06-04T03:30:32.9351088Z \u001b[36;1m\u001b[0m\n2026-06-04T03:30:32.9351305Z \u001b[36;1mecho \"Checking PR title: $PR_TITLE\"\u001b[0m\n2026-06-04T03:30:32.9351582Z \u001b[36;1m\u001b[0m\n2026-06-04T03:30:32.9351932Z \u001b[36;1mVALID_PREFIXES='\\[(BugFix|Performance|Test|CI|Feature|Doc|Misc|Community|Refactor)\\]'\u001b[0m\n2026-06-04T03:30:32.9352363Z \u001b[36;1m\u001b[0m\n2026-06-04T03:30:32.9352614Z \u001b[36;1mif ! echo \"$PR_TITLE\" | grep -iqE \"$VALID_PREFIXES\"; then\u001b[0m\n2026-06-04T03:30:32.9353514Z \u001b[36;1m  echo \"::error::PR title must contain one of the following prefixes: [BugFix], [Performance], [Test], [CI], [Feature], [Doc], [Misc], [Community], [Refactor]\"\u001b[0m\n2026-06-04T03:30:32.9354332Z \u001b[36;1m  echo \"::error::Example: '[Feature] Add new optimization pass' or 'Add new feature [Feature]'\"\u001b[0m\n2026-06-04T03:30:32.9354746Z \u001b[36;1m  exit 1\u001b[0m\n2026-06-04T03:30:32.9354934Z \u001b[36;1mfi\u001b[0m\n2026-06-04T03:30:32.9355106Z \u001b[36;1m\u001b[0m\n2026-06-04T03:30:32.9355305Z \u001b[36;1mecho \"✓ PR title prefix is valid\"\u001b[0m\n2026-06-04T03:30:32.9355936Z shell: bash -el {0}\n2026-06-04T03:30:32.9356127Z env:\n2026-06-04T03:30:32.9356318Z   PR_TITLE: test-m2m-0604\n2026-06-04T03:30:32.9356628Z ##[endgroup]\n2026-06-04T03:30:32.9506932Z ##[group]Run '/home/runner/k8s/index.js'\n2026-06-04T03:30:32.9507952Z shell: /home/runner/externals/node20/bin/node {0}\n2026-06-04T03:30:32.9508247Z ##[endgroup]\n2026-06-04T03:30:33.4105976Z (node:307) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.\n2026-06-04T03:30:33.4107333Z (Use `node --trace-deprecation ...` to show where the warning was created)\n2026-06-04T03:30:33.7187950Z Checking PR title: test-m2m-0604\n2026-06-04T03:30:33.7214549Z ##[error]PR title must contain one of the following prefixes: [BugFix], [Performance], [Test], [CI], [Feature], [Doc], [Misc], [Community], [Refactor]\n2026-06-04T03:30:33.7222491Z ##[error]Example: '[Feature] Add new optimization pass' or 'Add new feature [Feature]'\n2026-06-04T03:30:33.7314577Z ##[error]Error: failed to run script step: Error: command terminated with non-zero exit code: command terminated with exit code 1\n2026-06-04T03:30:33.7384078Z ##[error]Process completed with exit code 1.\n2026-06-04T03:30:33.7498757Z ##[error]Executing the custom container implementation failed. Please contact your self hosted runner administrator.\n2026-06-04T03:30:33.7609150Z ##[group]Run '/home/runner/k8s/index.js'\n2026-06-04T03:30:33.7610080Z shell: /home/runner/externals/node20/bin/node {0}\n2026-06-04T03:30:33.7610380Z ##[endgroup]\n2026-06-04T03:30:34.2571317Z Evaluate and set job outputs\n2026-06-04T03:30:34.2580811Z Cleaning up orphan processes\n",
+          "created_at": "2026-06-04T03:29:55Z"
+        },
+        {
+          "job_id": 79443808643,
+          "job_name": "run-selected-tests",
+          "conclusion": "skipped",
+          "started_at": "2026-06-04T03:30:40Z",
+          "completed_at": "2026-06-04T03:30:40Z",
+          "steps": [],
+          "raw_log": "",
+          "created_at": "2026-06-04T03:30:40Z"
+        }
+      ]
+    }
+  ],
+  "analyses": [
+    {
+      "job_name": "lint-and-select-tests",
+      "job_id": 79443717208,
+      "conclusion": "failure",
+      "error_snippets": [
+        "PR title must contain one of the following prefixes: [BugFix], [Performance], [Test], [CI], [Feature], [Doc], [Misc], [Community], [Refactor]",
+        "Checking PR title: test-m2m-0604",
+        "Process completed with exit code 1."
+      ],
+      "root_cause": "PR 标题 \"test-m2m-0604\" 未包含项目要求的分类前缀标记（如 [BugFix]、[Test]、[CI] 等），导致 lint-and-select-tests 阶段的标题校验步骤直接失败退出。这不是代码问题，而是 PR 命名规范不符合仓库的 CI 要求。",
+      "related_files": [
+        "无代码文件涉及——失败发生在 CI workflow 的 PR 标题校验步骤"
+      ],
+      "fix_suggestions": [
+        "将 PR 标题修改为符合规范的格式，例如 \"[Test] test-m2m-0604\" 或 \"[Misc] test-m2m-0604\"",
+        "如果是用于测试目的且不希望被 CI 自动关闭，使用 '[CI]' 前缀表明这是一个 CI/基础设施相关的变更"
+      ],
+      "severity": "medium",
+      "confidence": 95
+    }
+  ]
+}

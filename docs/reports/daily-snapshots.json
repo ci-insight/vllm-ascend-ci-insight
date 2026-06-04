@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-04T04:06:27.598167+00:00",
+  "generated_at": "2026-06-04T09:33:27.274586+00:00",
   "trend_axes": {
     "execution_trends": "CI execution date from job completed_at/started_at",
     "pipeline_types": "dashboard snapshot date from collection/export time"
