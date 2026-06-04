@@ -34,7 +34,7 @@ body {
   overflow-x: hidden;
 }
 
-/* 鈹€鈹€ Header 鈹€鈹€ */
+/* Header */
 header {
   background: var(--surface);
   border-bottom: 1px solid var(--border);
@@ -66,7 +66,7 @@ header {
   flex-wrap: wrap;
 }
 
-/* 鈹€鈹€ Tab Navigation 鈹€鈹€ */
+/* Tab Navigation */
 .tabs {
   display: flex;
   gap: 0;
@@ -99,7 +99,7 @@ header {
 .tab-content { display: none; }
 .tab-content.active { display: block; }
 
-/* 鈹€鈹€ Filters Bar 鈹€鈹€ */
+/* Filters Bar */
 .filters-bar {
   display: flex;
   gap: 8px;
@@ -154,7 +154,7 @@ button:hover { opacity: 0.85; }
   text-decoration: underline;
 }
 
-/* 鈹€鈹€ Main Layout 鈹€鈹€ */
+/* Main Layout */
 main {
   width: min(100%, 1440px);
   margin: 0 auto;
@@ -177,7 +177,7 @@ main {
   color: var(--text);
 }
 
-/* 鈹€鈹€ Metric Cards 鈹€鈹€ */
+/* Metric Cards */
 .metrics {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
@@ -244,7 +244,7 @@ main {
 .metric-card.medium .metric-value { color: var(--medium); }
 .metric-card.low .metric-value { color: var(--low); }
 
-/* 鈹€鈹€ Alert Banners 鈹€鈹€ */
+/* Alert Banners */
 .alert-banner {
   padding: 10px 16px;
   border-radius: 6px;
@@ -253,7 +253,7 @@ main {
   color: var(--text);
 }
 
-/* 鈹€鈹€ Charts Grid 鈹€鈹€ */
+/* Charts Grid */
 .charts {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -353,7 +353,7 @@ main {
   cursor: pointer;
 }
 
-/* 鈹€鈹€ Report List 鈹€鈹€ */
+/* Report List */
 .report-section { margin-top: 8px; }
 
 .report-section h3 {
@@ -442,7 +442,7 @@ main {
 .badge-effort-medium { background: #ca8a04; color: #000; }
 .badge-effort-high { background: #dc2626; }
 
-/* 鈹€鈹€ Modal 鈹€鈹€ */
+/* Modal */
 .modal {
   display: none;
   position: fixed;
@@ -537,7 +537,7 @@ main {
 .loading { text-align: center; color: var(--text-dim); padding: 40px; }
 .empty { color: var(--text-dim); padding: 20px 0; text-align: center; }
 
-/* 鈹€鈹€ Data Table 鈹€鈹€ */
+/* Data Table */
 .table-wrap {
   overflow-x: auto;
   width: 100%;

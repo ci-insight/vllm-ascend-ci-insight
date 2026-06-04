@@ -547,7 +547,7 @@ function renderHealthCharts(pipelines, worst) {
   });
 }
 
-// 鈹€鈹€ Pipeline Detail Drill-Down 鈹€鈹€
+// Pipeline Detail Drill-Down
 
 function buildWorkflowFailureContribution() {
   const byWorkflow = {};
@@ -848,7 +848,7 @@ function showPipelineDetail(ptype) {
       html += `<div style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:8px 12px;margin:4px 0;font-size:13px">
         <span class="badge badge-${j.conclusion === 'failure' ? 'critical' : 'medium'}">${j.conclusion}</span>
         <span style="margin-left:8px">${escapeHtml(j.job_name.length > 60 ? j.job_name.slice(0, 60) + '...' : j.job_name)}</span>
-        <a href="${runUrl}" target="_blank" style="color:var(--link);margin-left:8px;font-size:12px">Run 鈫?/a>
+        <a href="${runUrl}" target="_blank" style="color:var(--link);margin-left:8px;font-size:12px">Run -&gt;</a>
         <span style="color:var(--text-dim);margin-left:8px;font-size:12px">${fmtDuration(j.duration)}</span>
       </div>`;
     });
@@ -891,7 +891,7 @@ function showWorkflowHealthDetail(wfName) {
       <span style="margin-left:8px">${escapeHtml(j.job_name.length > 50 ? j.job_name.slice(0, 50) + '...' : j.job_name)}</span>
       <span style="color:var(--text-dim);margin-left:8px;font-size:12px">${fmtDuration(j.duration)}</span>
       <span style="color:var(--text-dim);margin-left:8px;font-size:12px">${date}</span>
-      <a href="${runUrl}" target="_blank" style="color:var(--link);margin-left:8px;font-size:12px">Run 鈫?/a>
+      <a href="${runUrl}" target="_blank" style="color:var(--link);margin-left:8px;font-size:12px">Run -&gt;</a>
       ${j.conclusion === "failure" ? `<span style="margin-left:8px">${relatedAiBadge({ pipeline: j.pipeline_type, workflow: j.workflow_name, jobName: j.job_name, jobId: j.job_id })}</span>` : ""}
     </div>`;
   });

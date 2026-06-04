@@ -98,7 +98,7 @@ function classifyJob(analysis, jobName) {
   return "other";
 }
 
-// 鈹€鈹€ I18n 鈹€鈹€
+// I18n
 
 function applyI18n() {
   document.title = t("title");
@@ -164,7 +164,7 @@ function applyI18n() {
   });
 }
 
-// 鈹€鈹€ Tab Switching 鈹€鈹€
+// Tab Switching
 
 function switchTab(name) {
   activeTab = name;
@@ -182,7 +182,7 @@ function switchTab(name) {
   }
 }
 
-// 鈹€鈹€ Data Loading 鈹€鈹€
+// Data Loading
 
 async function loadReports() {
   applyI18n();
@@ -299,7 +299,7 @@ function renderDataSourceBanner(indexData) {
     const jobCoverage = ciCoverage?.job_details || null;
     const selection = ciMetadata.job_detail_selection;
     const targetText = target
-      ? ` 路 target ${target}/pipeline (${Object.entries(byPipeline).map(([k, v]) => `${k}:${v}`).join(", ")})`
+      ? ` | target ${target}/pipeline (${Object.entries(byPipeline).map(([k, v]) => `${k}:${v}`).join(", ")})`
       : "";
     const dateText = executionDates.length
       ? ` | ${executionDates.length}${executionTarget ? `/${executionTarget}` : ""} execution day(s): ${executionDates[0]}..${executionDates[executionDates.length - 1]}`
@@ -313,7 +313,7 @@ function renderDataSourceBanner(indexData) {
 
   el.innerHTML = `
     <div><strong>CI Execution / Health:</strong> ${escapeHtml(ciText)}</div>
-    <div><strong>Problem Analysis:</strong> historical failure reports 路 ${reportCount} reports 路 generated ${escapeHtml(historicalTime)}</div>
+    <div><strong>Problem Analysis:</strong> historical failure reports | ${reportCount} reports | generated ${escapeHtml(historicalTime)}</div>
     <div><strong>Refresh:</strong> reloads static JSON artifacts only; dynamic collection must update reports separately.</div>
   `;
 }
@@ -400,7 +400,7 @@ async function loadAnalysesData() {
   if (allJobs.length && activeTab === "ci-stats") renderCIStats();
 }
 
-// 鈹€鈹€ Filtered Data Helpers 鈹€鈹€
+// Filtered Data Helpers
 
 function getActiveFilters() {
   return {
@@ -421,7 +421,7 @@ function getFilteredAnalyses() {
   });
 }
 
-// 鈹€鈹€ Metrics (Analysis Tab) 鈹€鈹€
+// Metrics (Analysis Tab)
 
 function normalizeMatchText(value) {
   return (value || "").toString().replace(/\s+/g, " ").trim().toLowerCase();
@@ -465,7 +465,7 @@ function relatedAiBadge(options = {}) {
   const label = summary.count
     ? `AI-derived from failed samples: ${summary.count} related`
     : "No related AI analysis in collected failed samples";
-  const categoryText = summary.topCategory ? ` 路 top category ${tCategory(summary.topCategory)}` : "";
+  const categoryText = summary.topCategory ? ` | top category ${tCategory(summary.topCategory)}` : "";
   return `<button class="link-button" onclick="showRelatedAiAnalysesFromHealth(${jsString(options.pipeline)}, ${jsString(options.workflow)}, ${jsString(options.jobName)}, ${jsString(options.jobId)})">${escapeHtml(label + categoryText)}</button>`;
 }
 
@@ -537,7 +537,7 @@ async function showRelatedAiAnalysesFromHealth(pipeline = "", workflow = "", job
   const matches = summary.matches;
   const title = jobName || workflow || (pipeline ? (t("pipeline_" + pipeline) || pipeline) : "Health selection");
   let html = `<h2>${escapeHtml(title)} <span style="color:var(--text-dim);font-size:14px">AI-derived from failed samples</span></h2>`;
-  html += `<div class="meta-line">Related AI analyses: ${matches.length}${summary.topCategory ? ` 路 top category ${escapeHtml(tCategory(summary.topCategory))}` : ""}${summary.topSeverity ? ` 路 top severity ${escapeHtml(tSeverity(summary.topSeverity))}` : ""}</div>`;
+  html += `<div class="meta-line">Related AI analyses: ${matches.length}${summary.topCategory ? ` | top category ${escapeHtml(tCategory(summary.topCategory))}` : ""}${summary.topSeverity ? ` | top severity ${escapeHtml(tSeverity(summary.topSeverity))}` : ""}</div>`;
   html += `<div style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0">
     <button onclick="focusProblemAnalysisFromHealth(${jsString(pipeline)}, ${jsString(workflow)})">Open Problem Analysis</button>
   </div>`;
@@ -577,7 +577,7 @@ function renderMetrics() {
   const filtered = getFilteredAnalyses();
   const base = filtered.length ? filtered : allAnalyses;
 
-  // 鈹€鈹€ Pipeline-level stats from allJobs 鈹€鈹€
+  // Pipeline-level stats from allJobs
   const ptStats = {};
   const jobPool = historicalJobs.length ? historicalJobs : [];
   jobPool.forEach(j => {
@@ -589,7 +589,7 @@ function renderMetrics() {
     if (j.conclusion === "failure") ptStats[pt].failed++;
   });
 
-  // 鈹€鈹€ Severity counts from analyses 鈹€鈹€
+  // Severity counts from analyses
   const totalJobs = base.length;
   let crit = 0, high = 0, med = 0, low = 0, confSum = 0;
   base.forEach(a => {
@@ -611,7 +611,7 @@ function renderMetrics() {
     ptCards += `<div class="metric-card clickable" onclick="showPipelineDetail('${pt}')">
       <div class="metric-value">${s.failed}</div>
       <div class="metric-label">${label}</div>
-      <div style="font-size:10px;color:var(--text-dim);margin-top:3px">${s.workflows.size} Workflows 路 ${s.runs.size} Runs 路 ${s.total} Jobs</div>
+      <div style="font-size:10px;color:var(--text-dim);margin-top:3px">${s.workflows.size} Workflows | ${s.runs.size} Runs | ${s.total} Jobs</div>
     </div>`;
   });
 
@@ -625,7 +625,7 @@ function renderMetrics() {
   `;
 }
 
-// 鈹€鈹€ Charts (Analysis Tab) 鈹€鈹€
+// Charts (Analysis Tab)
 
 function destroyCharts() { Object.values(charts).forEach(c => c.destroy()); charts = {}; }
 
@@ -703,7 +703,7 @@ function renderCategoryChart(filtered) {
   });
 }
 
-// 鈹€鈹€ CI Execution Analysis 鈹€鈹€
+// CI Execution Analysis
 
 function destroyCICharts() { Object.values(ciCharts).forEach(c => c.destroy()); ciCharts = {}; }
 
@@ -760,7 +760,7 @@ function renderCIStatsV2() {
   const ptFilter = document.getElementById("ciPipelineFilter")?.value || "";
   const jobs = ptFilter ? allJobs.filter(j => j.pipeline_type === ptFilter) : allJobs;
 
-  // 鈹€鈹€ Job-level metrics 鈹€鈹€
+  // Job-level metrics
   const timedJobs = jobs.filter(j => j.duration !== null && j.duration !== undefined);
   const durations = timedJobs.map(j => j.duration).filter(d => d > 0);
   const queueTimes = jobs.map(j => j.queue_time).filter(q => q !== null && q !== undefined && q >= 0);
@@ -771,7 +771,7 @@ function renderCIStatsV2() {
   const failure = jobs.filter(j => j.conclusion === "failure").length;
   const measured = success + failure;
 
-  // 鈹€鈹€ Workflow-run-level metrics 鈹€鈹€
+  // Workflow-run-level metrics
   const wfKey = j => `${j.workflow_name}::${j.run_id}`;
   const wfGroups = {};
   jobs.forEach(j => { (wfGroups[wfKey(j)] ||= []).push(j); });
@@ -817,7 +817,7 @@ function renderCIStatsV2() {
   const wfAvgJobs = _wfRuns.reduce((s, w) => s + w.jobCount, 0) / (wfTotal || 1);
   const wfAvgEfficiency = _wfRuns.reduce((s, w) => s + w.parallelEfficiency, 0) / (wfTotal || 1);
 
-  // 鈹€鈹€ Metric cards: Job row + Workflow row 鈹€鈹€
+  // Metric cards: Job row + Workflow row
   document.getElementById("ciMetrics").innerHTML = `
     <div style="grid-column:1/-1;font-size:12px;color:var(--text-dim);margin-bottom:-8px">Job metrics ${ciMetadata ? "(current CI metadata)" : "(historical failure reports)"}</div>
     <div class="metric-card"><div class="metric-value">${totalJobs}</div><div class="metric-label">${t("ciTotalJobs")}</div></div>
@@ -955,7 +955,7 @@ function renderCIStatsV2() {
             },
             afterTitle: items => {
               const job = slowest[items[0].dataIndex];
-              return job ? `${job.workflow_name || ""} 路 run ${job.run_id || ""}` : "";
+              return job ? `${job.workflow_name || ""} | run ${job.run_id || ""}` : "";
             },
             label: item => `${t("ciDuration")}: ${fmtDuration(item.raw)}`,
           },
@@ -968,7 +968,7 @@ function renderCIStatsV2() {
     },
   });
 
-  // 鈹€鈹€ Workflow Runs Detail Table 鈹€鈹€
+  // Workflow Runs Detail Table
   const tbody = document.getElementById("ciTableBody");
   if (!tbody) return;
 
@@ -1003,7 +1003,7 @@ function renderCIStatsV2() {
   }).join("");
 }
 
-// 鈹€鈹€ Report List 鈹€鈹€
+// Report List
 
 function renderReports() {
   const search = (document.getElementById("searchInput").value || "").toLowerCase();
@@ -1049,7 +1049,7 @@ function renderReports() {
   }).join("");
 }
 
-// 鈹€鈹€ Detail Modal 鈹€鈹€
+// Detail Modal
 
 async function openDetail(prNumber) {
   const report = allReports.find(r => r.pr_number === prNumber);
@@ -1124,7 +1124,7 @@ function renderDetail(data) {
 
 function closeDetail() { document.getElementById("detailModal").classList.remove("open"); }
 
-// 鈹€鈹€ Drill Down 鈹€鈹€
+// Drill Down
 
 let _wfRuns = []; // cached for queue detail drill-down
 
@@ -1214,7 +1214,7 @@ function showDrillDown(filterType, filterValue, displayName) {
           <span class="badge badge-${a.severity}">${tSeverity(a.severity)}</span>
           <span class="badge badge-${a._category}">${tCategory(a._category)}</span>
           <span style="font-size:13px;color:var(--text-dim)">${escapeHtml(a.job_name)}</span>
-          <span style="font-size:12px;color:var(--text-dim);margin-left:auto">${date} 路 ${a.confidence}%</span>
+          <span style="font-size:12px;color:var(--text-dim);margin-left:auto">${date} | ${a.confidence}%</span>
         </div>
         ${renderCiFactContextForAnalysis(a)}
         <div class="root-cause" style="font-size:13px;margin:0">${escapeHtml(a.root_cause || t("noRootCause"))}</div>
@@ -1233,7 +1233,7 @@ function escapeHtml(text) {
   return div.innerHTML;
 }
 
-// 鈹€鈹€ Event Handlers 鈹€鈹€
+// Event Handlers
 
 function onAnalysisFilterChange() {
   if (activeTab !== "analysis") return;
@@ -1248,7 +1248,7 @@ document.getElementById("categoryFilter").addEventListener("change", onAnalysisF
 const pipeFilter = document.getElementById("pipelineFilter");
 if (pipeFilter) pipeFilter.addEventListener("change", onAnalysisFilterChange);
 
-// 鈹€鈹€ Boot 鈹€鈹€
+// Boot
 
 applyI18n();
 loadReports();
